@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby coding: utf-8 -*-
+
+require 'optparse'
+require_relative "../lib/rgraphum"
+
+code_or_file = nil
+
+if ARGV.first.nil?
+  ARGV.push "-h"
+end
+
+ARGV.clone.options do |opts|
+  script_name = File.basename($0)
+  opts.banner = "Usage: rgraphum_runner [options] ('Some.ruby(code)' or a filename)"
+
+  opts.separator ""
+
+  opts.on("-h", "--help", "Show this help message.") { $stdout.puts opts; exit }
+
+  opts.separator ""
+  opts.separator "$ cat sample.rb"
+  opts.separator "graph = Rgraphum::Graph.new"
+  opts.separator ""
+  opts.separator "vertex1 = graph.vertices.build(label: \"Vertex 1\")"
+  opts.separator "vertex2 = graph.vertices.build(label: \"Vertex 2\")"
+  opts.separator "vertex3 = graph.vertices.build(label: \"Vertex 3\")"
+  opts.separator ""
+  opts.separator "edge1 = graph.edges.build(source: vertex1, target: vertex2, weight: 1)"
+  opts.separator "edge2 = graph.edges.build(source: vertex2, target: vertex3, weight: 1)"
+  opts.separator "edge3 = graph.edges.build(source: vertex3, target: vertex1, weight: 1)"
+  opts.separator ""
+  opts.separator "open('sample.gexf', 'w') do |f|"
+  opts.separator "  f.puts graph.to_gephi"
+  opts.separator "end"
+  opts.separator ""
+  opts.separator "$ rgraphum_runner example.rb"
+
+  opts.order! { |o| code_or_file ||= o } rescue retry
+end
+
+ARGV.delete(code_or_file)
+
+if code_or_file.nil?
+  $stderr.puts "Run '#{$0} -h' for help."
+  exit 1
+elsif File.exist?(code_or_file)
+  $0 = code_or_file
+  eval(File.read(code_or_file), nil, code_or_file)
+else
+  eval(code_or_file)
+end

@@ -1,0 +1,20 @@
+{
+  "result": [{
+      "@type": "d", "@rid": "#-2:0", "@version": 0, 
+"in": "#6:0", 
+"out": "#6:1", 
+"statusIds": "999999999999999999", 
+"weight": 1.0, 
+"created_at": 1373554121, 
+  "@fieldTypes": "weight=f,created_at=l"
+    }, {
+      "@type": "d", "@rid": "#-2:1", "@version": 0, 
+"in": "#6:2", 
+"out": "#6:1", 
+"statusIds": "999999999999999999", 
+"weight": 1.0, 
+"created_at": 1373553637, 
+  "@fieldTypes": "weight=f,created_at=l"
+    }
+  ]
+}

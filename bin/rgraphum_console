@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby coding: utf-8 -*-
+
+require 'optparse'
+require 'fileutils'
+require 'irb'
+require 'irb/completion'
+require_relative "../lib/rgraphum"
+
+options = {}
+
+ARGV.clone.options do |opts|
+  script_name = File.basename($0)
+  opts.banner = "Usage: rgraphum_console [options]"
+
+  opts.separator ""
+
+  opts.on("--debugger", 'Enable ruby-debugging for the console.') { |v| options[:debugger] = true }
+
+  opts.separator ""
+
+  opts.on("-h", "--help", "Show this help message.") { $stdout.puts opts; exit }
+
+  opts.separator ""
+  opts.separator "> graph = Graph.new"
+  opts.separator ">"
+  opts.separator "> vertex1 = graph.vertices.build(label: \"Vertex 1\")"
+  opts.separator "> vertex2 = graph.vertices.build(label: \"Vertex 2\")"
+  opts.separator "> vertex3 = graph.vertices.build(label: \"Vertex 3\")"
+  opts.separator "> "
+  opts.separator "> edge1 = graph.edges.build(source: vertex1, target: vertex2, weight: 1)"
+  opts.separator "> edge2 = graph.edges.build(source: vertex2, target: vertex3, weight: 1)"
+  opts.separator "> edge3 = graph.edges.build(source: vertex3, target: vertex1, weight: 1)"
+  opts.separator "> "
+  opts.separator "> open('sample.gexf', 'w') do |f|"
+  opts.separator ">   f.puts graph.to_gephi"
+  opts.separator "> end"
+
+  opts.parse!
+end
+
+if options[:debugger]
+  begin
+    require 'ruby-debug'
+    puts "=> Debugger enabled"
+  rescue Exception
+    puts "You need to install ruby-debug to run the console in debugging mode. With gems, use 'gem install ruby-debug'"
+    exit
+  end
+end
+
+ENV['IRBRC'] = File.join(File.dirname(__FILE__), '.irbrc')
+
+IRB.init_config(FileUtils.pwd)
+
+IRB.start

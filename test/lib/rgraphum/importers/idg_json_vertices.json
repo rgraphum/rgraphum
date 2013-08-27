@@ -1,0 +1,46 @@
+{
+  "result": [{
+      "@type": "d", "@rid": "#-2:0", "@version": 0, 
+"rid": "#6:0", 
+"x": 999.99999, 
+"y": 999.99999, 
+"r": 99.999999, 
+"rgb": 99999999, 
+"screen_name": "person_a", 
+"actor_type": 0, 
+"c_id": 0, 
+"c_is_parent": 0, 
+"c_r": 99.999999, 
+"c_rgb": 9999999, 
+  "@fieldTypes": "x=f,y=f,r=f,c_r=f"
+    }, {
+      "@type": "d", "@rid": "#-2:1", "@version": 0, 
+"rid": "#6:1", 
+"x": 999.99999, 
+"y": 999.99999, 
+"r": 99.99999, 
+"rgb": 99999999, 
+"screen_name": "person_b", 
+"actor_type": 0, 
+"c_id": 0, 
+"c_is_parent": 1, 
+"c_r": 99.999999, 
+"c_rgb": 9999999, 
+  "@fieldTypes": "x=f,y=f,r=f,c_r=f"
+    }, {
+      "@type": "d", "@rid": "#-2:2", "@version": 0, 
+"rid": "#6:2", 
+"x": 999.99999, 
+"y": 999.99999, 
+"r": 99.999999, 
+"rgb": 99999999, 
+"screen_name": "person_c", 
+"actor_type": 0, 
+"c_id": 0, 
+"c_is_parent": 0, 
+"c_r": 99.999999, 
+"c_rgb": 9999999, 
+  "@fieldTypes": "x=f,y=f,r=f,c_r=f"
+    }
+  ]
+}
