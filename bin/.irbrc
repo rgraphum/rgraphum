@@ -19,10 +19,6 @@ IRB.conf[:PROMPT][:RGRAPHUM] = {
 # IRB.conf[:PROMPT_MODE] = :RGRAPHUM
 IRB.conf[:AUTO_INDENT] = true
 
-require 'rgraphum'
-
-include Rgraphum
-
 puts "Welcome to Rgraphum!"
 puts
 puts "This is an example for Rgraphum"

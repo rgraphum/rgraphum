@@ -2,7 +2,12 @@
 # -*- mode: ruby coding: utf-8 -*-
 
 require 'optparse'
-require_relative "../lib/rgraphum"
+begin
+  require 'rgraphum'
+rescue LoadError
+  require_relative "../lib/rgraphum"
+end
+include Rgraphum
 
 code_or_file = nil
 

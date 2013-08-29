@@ -5,7 +5,14 @@ require 'optparse'
 require 'fileutils'
 require 'irb'
 require 'irb/completion'
-require_relative "../lib/rgraphum"
+
+begin
+  require 'rgraphum'
+rescue LoadError
+  require_relative "../lib/rgraphum"
+end
+
+include Rgraphum
 
 options = {}
 
@@ -50,7 +57,5 @@ if options[:debugger]
 end
 
 ENV['IRBRC'] = File.join(File.dirname(__FILE__), '.irbrc')
-
-IRB.init_config(FileUtils.pwd)
 
 IRB.start
