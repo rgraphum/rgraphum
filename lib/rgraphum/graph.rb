@@ -147,21 +147,6 @@ class Rgraphum::Graph
     self
   end
 
-  # pickup start vertices
-  # it mean pick vertices having no in degree
-  def start_root_vertices
-    vertices.select do |vertex|
-      vertex.inE.empty?
-    end
-  end
-
-  # pickup end vertices
-  # it mean pick vertices having no out degree
-  def end_root_vertices
-    vertices.select do |vertex|
-      vertex.outE.empty?
-    end
-  end
 
   def dup
     new_graph = Rgraphum::Graph.new

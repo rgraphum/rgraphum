@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class Rgraphum::Cluster
+class Rgraphum::PhraseCluster
   include Enumerable
 
   def initialize(*paths)

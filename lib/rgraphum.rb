@@ -31,7 +31,7 @@ require_relative 'rgraphum/importer'
 require_relative 'rgraphum/graph'
 
 require_relative 'rgraphum/path'
-require_relative 'rgraphum/cluster'
+#require_relative 'rgraphum/cluster'
 
 require_relative 'rgraphum/analyzer'
 

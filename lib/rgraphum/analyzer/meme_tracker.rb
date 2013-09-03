@@ -1,5 +1,25 @@
 # -*- coding: utf-8 -*-
 
+require_relative 'phrase_cluster'
+
+class Rgraphum::Graph
+  # pickup start vertices
+  # it mean pick vertices having no in degree
+  def start_root_vertices
+    vertices.select do |vertex|
+      vertex.inE.empty?
+    end
+  end
+
+  # pickup end vertices
+  # it mean pick vertices having no out degree
+  def end_root_vertices
+    vertices.select do |vertex|
+      vertex.outE.empty?
+    end
+  end
+end
+
 class Rgraphum::Analyzer::MemeTracker
   attr_accessor :distance_max_limit
   attr_accessor :graph
@@ -50,18 +70,26 @@ class Rgraphum::Analyzer::MemeTracker
     graph_start_root_vertices = start_root_vertices(new_graph)
     graph_end_root_vertices   = end_root_vertices(new_graph)
 
-    clusters, cluster_keys = [], []
+    end_root_vertex_path_hashs, end_root_vertex_path_hash_keys_array = [], []
     graph_start_root_vertices.each do |graph_start_root_vertex|
-      cluster = build_cluster(graph_start_root_vertex)
-      clusters << cluster
-      cluster_keys << cluster.paths.map { |path| path.end_vertex }
+      end_root_vertex_path_hash = build_end_root_vertex_path_hash(graph_start_root_vertex)
+      end_root_vertex_path_hashs << end_root_vertex_path_hash
+      end_root_vertex_path_hash_keys_array << end_root_vertex_path_hash.paths.map { |path| path.end_vertex }
     end
-    cluster_keys = vertex_id_map(cluster_keys)
 
+p   "##"
+    end_root_vertex_path_hashs.each {|cluster| cluster.paths.each{ |path| p path } }
+p   "##"
+p   end_root_vertex_path_hash_keys_array
+    end_root_vertex_path_hash_kyes_array = vertex_id_map(end_root_vertex_path_hash_keys_array)
+p   end_root_vertex_path_hash_kyes_array
+p   "##"
+
+    # sets {end_path_key => start_root_vertex}
     sets = {}
-    clusters.each_with_index do |end_path, i|
-      cluster_keys.each do |end_path_keys|
-        unless (end_path.paths.map { |path| path.end_vertex } & end_path_keys).empty?
+    end_root_vertex_path_hashs.each_with_index do |end_root_vertex_path_hash, i|
+      end_root_vertex_path_hash_keys_array.each do |end_path_keys|
+        unless (end_root_vertex_path_hash.paths.map { |path| path.end_vertex } & end_path_keys).empty?
           sets[end_path_keys] ||= []
           sets[end_path_keys] << graph_start_root_vertices[i]
           break
@@ -94,6 +122,7 @@ class Rgraphum::Analyzer::MemeTracker
   end
 
   def vertex_id_map(cluster_keys)
+#    [cluster_keys.flatten.uniq]
     return cluster_keys if cluster_keys.size < 2
     id_map = cluster_keys.dup
 
@@ -151,6 +180,7 @@ class Rgraphum::Analyzer::MemeTracker
 
   def find_cluster_with_used_vertices(start_vertex, end_vertex, used_vertices)
     # FIXME rename cluster
+    # used_vertices = { start_vertex => }
     if used_vertex = used_vertices[start_vertex]
       if used_vertex == end_vertex
         return [[], used_vertices]
@@ -186,29 +216,33 @@ class Rgraphum::Analyzer::MemeTracker
     [cluster, used_vertices]
   end
 
-  # NOTE 孤立した cluster を探してるかも?
-  def build_cluster(start_vertex, cluster=nil)
-    cluster ||= Rgraphum::Cluster.new
+  # {end_root_vertex => [vertex,vertex],end_root_vertex => [vertex,vertex]}
+  def build_end_root_vertex_path_hash(start_vertex, cluster=nil)
+    cluster ||= Rgraphum::PhraseCluster.new
     start_vertex.out.each do |vertex|
       next if cluster.have_vertex_in_path?(vertex, start_vertex)
-      if vertex.out.empty?
+
+      if !vertex.out.empty? # not reach end_root_vertex, vertex != end_root_vertex
+       # remove loop edge
+       found = cluster.have_vertex?(vertex) && cluster.have_vertex?(start_vertex)
+       next if found
+
+        cluster = build_end_root_vertex_path_hash(vertex, cluster) # recursive call
+        cluster.each_path do |path|
+          if path.include?(vertex) and !path.include?(start_vertex)
+            cluster.append_vertex path, start_vertex
+          end
+        end
+
+      else
         if cluster.have_end_vertex?(vertex)
           path = cluster.find_path(vertex.id)
           cluster.append_vertex path, start_vertex
         else
           cluster.add_path Rgraphum::Path.new(vertex, [vertex, start_vertex])
         end
-      else
-        found = cluster.have_vertex?(vertex) && cluster.have_vertex?(start_vertex)
-        next if found
-
-        cluster = build_cluster(vertex, cluster)
-        cluster.each_path do |path|
-          if path.include?(vertex) and !path.include?(start_vertex)
-            cluster.append_vertex path, start_vertex
-          end
-        end
       end
+
     end
     cluster
   end

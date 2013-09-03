@@ -158,25 +158,25 @@ class MemeTrackerTest < MiniTest::Test
     ###################################
     # test for find path from start vertices
     start_vertex = @graph.vertices.where(id: 8).first
-    cluster = @meme_tracker.build_cluster(start_vertex)
+    cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     path = cluster.find_path(13)
     rg_assert_equal({id: 13}, path.end_vertex)
     rg_assert_equal([{id: 13}, {id: 8}], path.vertices)
 
     start_vertex = @graph.vertices.where(id: 9).first
-    cluster = @meme_tracker.build_cluster(start_vertex)
+    cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     path = cluster.find_path(13)
     rg_assert_equal({id: 13}, path.end_vertex)
     rg_assert_equal([{id: 13}, {id: 9}], path.vertices)
 
     start_vertex = @graph.vertices.where(id: 4).first
-    cluster = @meme_tracker.build_cluster(start_vertex)
+    cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     path = cluster.find_path(13)
     rg_assert_equal({id: 13}, path.end_vertex)
     rg_assert_equal([{id: 13}, {id: 8}, {id: 4}], path.vertices)
 
     start_vertex = @graph.vertices.where(id: 5).first
-    cluster = @meme_tracker.build_cluster(start_vertex)
+    cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     expected = {
       13 => [{id: 13}, {id: 8}, {id: 5}, {id: 9}],
       14 => [{id: 14}, {id: 10}, {id: 5}],
@@ -185,7 +185,7 @@ class MemeTrackerTest < MiniTest::Test
     rg_assert_equal expected[14], cluster.find_path(14).vertices
 
     start_vertex = @graph.vertices.where(id: 1).first
-    cluster = @meme_tracker.build_cluster(start_vertex)
+    cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     expected = {
       13 => [{id: 13}, {id: 8},  {id: 4}, {id: 1}, {id: 5}, {id: 9} ],
       14 => [{id: 14}, {id: 10}, {id: 5}, {id: 1}],
@@ -197,7 +197,7 @@ class MemeTrackerTest < MiniTest::Test
   def test_phrase_clusters_3
     # fail test
     start_vertex = Rgraphum::Vertex.new
-    assert @meme_tracker.build_cluster(start_vertex).empty?
+    assert @meme_tracker.build_end_root_vertex_path_hash(start_vertex).empty?
   end
 
   def test_phrase_clusters_4
