@@ -255,19 +255,27 @@ p   "##"
     target_graph.vertices.find_all{ |vertex| !vertex.in.empty? and vertex.out.empty? }
   end
 
-  def find_path(target_vertex, vertices=Rgraphum::Vertices.new)
-    return vertices if vertices.include?(target_vertex)
-    return vertices << target_vertex if target_vertex.out.empty?
-    path_vertices = target_vertex.out.inject(vertices) do |vertices, vertex|
+##################
+  
+  def find_path( options )
+    options = { :vertices=>Rgraphum::Vertices.new, :cut => true }.merge(options)
+
+    vertices = options[:vertices]
+    source_vertex = options[:source_vertex]
+
+    return vertices if vertices.include?(source_vertex)
+
+    return vertices << source_vertex if source_vertex.out.empty? # if end_root_vertex
+    path_vertices = source_vertex.out.inject(vertices) do |vertices, vertex|
       size = vertices.size
-      vertices = find_path(vertex, vertices)
-      if vertices.size == size
-        edge_to_delete = target_vertex.edges.where(target: vertex).first
-        target_vertex.edges.delete(edge_to_delete)
+      vertices = find_path( {source_vertex:vertex,vertices:vertices} ) #
+      if vertices.size == size and options[:cut] == true
+        edge_to_delete = source_vertex.edges.where(target: vertex).first
+        source_vertex.edges.delete(edge_to_delete)
       end
       vertices
     end
-    path_vertices << target_vertex
+    path_vertices << source_vertex
   end
 
   def make_path_graph(graph=@graph)
@@ -278,7 +286,7 @@ p   "##"
     graph_start_root_vertices = start_root_vertices(graph)
 
     p "find path and to_graph" if Rgraphum.verbose?
-    graphes = graph_start_root_vertices.map { |vertex| Rgraphum::Vertices.new(find_path(vertex)).to_graph }
+    graphes = graph_start_root_vertices.map { |vertex| Rgraphum::Vertices.new(find_path(source_vertex:vertex)).to_graph }
   end
 
   def cut_edges_with_srn(graph=@graph)

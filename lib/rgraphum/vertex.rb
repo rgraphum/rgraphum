@@ -262,12 +262,23 @@ class Rgraphum::Vertex #< Hash
     0
   end
 
+  # chech self and another have alive on sama term
   def within_term(another)
     return false unless self.start < another.start
     return false unless another.start < self.end
     true
   end
-
+  
+  def start_root_vertex?
+    return true if self.in.empty?
+    false
+  end
+  
+  def end_root_vertex?
+    return true if self.out.empty?
+    false 
+  end
+  
   # accessors
 
   # attr_accessor :id

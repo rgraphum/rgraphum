@@ -339,10 +339,70 @@ class MemeTrackerTest < MiniTest::Test
     rg_assert_equal expected, graphes[0].edges.sort_by(){|edge| edge.id}
   end
 
+  # 1 -> 2 -> 3 -> 4
+  #      ^    |
+  #      |   \|
+  # 5 -> 6 -> 7
+  #      ^
+  #      |
+  # 8 -> 9
+
+  ###
+
+  # 1 -> 2 -> 3 -> 4
+  #           |
+  #          \|
+  # 5 -> 6    7
+
+  #      2 -> 3 -> 4
+  #      ^    |
+  #      |   \|
+  # 5 -> 6    7
+
+  # 
+  #     
+  # 8 -> 9
+
+  def test_find_path_to_all_end_root_vertices
+    g = Rgraphum::Graph.new
+    v_1 = g.vertices.build( { id:1 } )
+    v_2 = g.vertices.build( { id:2 } )
+    v_3 = g.vertices.build( { id:3 } )
+    v_4 = g.vertices.build( { id:4 } )
+    v_5 = g.vertices.build( { id:5 } )
+    v_6 = g.vertices.build( { id:6 } )
+    v_7 = g.vertices.build( { id:7 } )
+    v_8 = g.vertices.build( { id:8 } )
+    v_9 = g.vertices.build( { id:9 } )
+
+    e_1 = g.edges.build( source:1, target:2)
+    e_2 = g.edges.build( source:2, target:3)
+    e_3 = g.edges.build( source:3, target:4)
+
+    e_4 = g.edges.build( source:5, target:6)
+    e_6 = g.edges.build( source:6, target:7)
+    e_5 = g.edges.build( source:6, target:2)
+    e_7 = g.edges.build( source:3, target:7)
+
+    e_9 = g.edges.build( source:9, target:6)
+    e_8 = g.edges.build( source:8, target:9)
+
+p "#0#"
+p    v_1_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_1).to_graph
+     Rgraphum::Parsers::GraphvizParser.export(v_1_g,"v_1_g","jpg")
+p "#0#"
+p    v_5_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_5).to_graph
+     Rgraphum::Parsers::GraphvizParser.export(v_5_g,"v_5_g","jpg")
+p "#0#"
+p    v_8_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_8).to_graph
+     Rgraphum::Parsers::GraphvizParser.export(v_8_g,"v_8_g","jpg")
+p "#0#"
+  end
+
   def test_cut_edges_with_srn
     @graph = Rgraphum::Analyzer::MemeTracker.new.cut_edges_with_srn(@graph)
     @graph.edges.sort_by{|edge| edge.id }.each do |edge|
-      #p     edge
+      
     end
   end
 
