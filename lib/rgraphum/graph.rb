@@ -70,7 +70,7 @@ class Rgraphum::Graph
   end
 
 
-  # 再計算が必要な物にnilをセットする。
+  # reculc method
   def clear_cache
     @m = nil
     @m_with_weight = nil
