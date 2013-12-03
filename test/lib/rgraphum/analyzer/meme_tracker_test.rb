@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'rgraphum'
 
-class MemeTrackerTest < MiniTest::Test
+class MemeTrackerTest < MiniTest::Unit::TestCase
   def setup
     @meme_tracker = make_base_phrase_graph
     @graph = make_sample_graph_for_cluster

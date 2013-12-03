@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class TfIdfTest  < MiniTest::Test
+class TfIdfTest  < MiniTest::Unit::TestCase
 
   def test_tf_idf_c
     labels  = [  "A", "B", "C", "D", "E" ]

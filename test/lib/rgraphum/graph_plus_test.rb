@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumPlusTest < MiniTest::Test
+class RgraphumPlusTest < MiniTest::Unit::TestCase
   def setup
     @graph_a = Rgraphum::Graph.new
     @graph_a.vertices = [

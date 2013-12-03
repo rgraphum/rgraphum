@@ -19,7 +19,7 @@ class Rgraphum::RgraphumArray < Array
   end
 
   def self.reset_id
-    remove_instance_variable :@new_id
+    remove_instance_variable :@new_id if defined? @new_id
   end
 
   # FIXME maybe better id to start from 1

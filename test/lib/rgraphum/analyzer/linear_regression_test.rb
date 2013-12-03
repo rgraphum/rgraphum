@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'rgraphum'
 
-class LinearRegressionTest < MiniTest::Test
+class LinearRegressionTest < MiniTest::Unit::TestCase
   def test_analyze
     lr = Rgraphum::Analyzer::LinearRegression.new
 
