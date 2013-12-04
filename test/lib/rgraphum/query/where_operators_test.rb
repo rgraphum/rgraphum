@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumQueryWhereOperatorsTest < MiniTest::Test
+class RgraphumQueryWhereOperatorsTest < MiniTest::Unit::TestCase
   def setup
     @array = [
       OpenStruct.new(id: 1,  label: "aaa"),

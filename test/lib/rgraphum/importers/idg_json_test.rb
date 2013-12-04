@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumImporterIdgJsonTest < MiniTest::Test
+class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
   def test_parse_vertex
     vertices_json_str = <<-EOT
 {

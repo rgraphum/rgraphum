@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-require 'minitest'
 require 'minitest/autorun'
 require 'tempfile'
 require 'pp'
 
-class MiniTest::Test
+class MiniTest::Unit::TestCase
   # Add more helper methods to be used by all tests here...
 
   # alias :original_assert_equal :assert_equal

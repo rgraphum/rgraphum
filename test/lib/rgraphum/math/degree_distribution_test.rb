@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class  DegreeDistributionTest < MiniTest::Test
+class  DegreeDistributionTest < MiniTest::Unit::TestCase
 
 
   def setup

@@ -4,7 +4,7 @@ require 'test_helper'
 require 'rgraphum'
 require 'csv'
 
-class RTAtMarkTest < MiniTest::Test
+class RTAtMarkTest < MiniTest::Unit::TestCase
   def setup
     twits
   end
