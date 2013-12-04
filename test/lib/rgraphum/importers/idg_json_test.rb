@@ -4,7 +4,7 @@ require 'rgraphum'
 require 'test_helper'
 
 class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
-  def test_parse_vertex
+  def test_build_vertex
     vertices_json_str = <<-EOT
 {
   "result": [{
@@ -26,7 +26,7 @@ class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
 }
     EOT
 
-    graph = Rgraphum::Graph.parse(format: :idg_json, vertices: vertices_json_str)
+    graph = Rgraphum::Graph.build(format: :idg_json, vertices: vertices_json_str)
     assert_equal 1, graph.vertices.size
     assert_equal 0, graph.edges.size
 
@@ -34,7 +34,7 @@ class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
     assert_equal "person_1", vertex.label
   end
 
-  def test_parse_vertices
+  def test_build_vertices
     vertices_json_str = <<-EOT
 {
   "result": [{
@@ -84,7 +84,7 @@ class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
 }
     EOT
 
-    graph = Rgraphum::Graph.parse(format: :idg_json, vertices: vertices_json_str)
+    graph = Rgraphum::Graph.build(format: :idg_json, vertices: vertices_json_str)
     assert_equal 3, graph.vertices.size
     assert_equal 0, graph.edges.size
 
@@ -93,7 +93,7 @@ class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
     assert_equal "person_c", graph.vertices[2].label
   end
 
-  def test_parse_vertices_and_edges
+  def test_build_vertices_and_edges
     vertices_json_str = <<-EOT
 {
   "result": [{
@@ -170,7 +170,7 @@ class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
       field :created_at # FIXME
     }
 
-    graph = Rgraphum::Graph.parse(format: :idg_json, vertices: vertices_json_str, edges: edges_json_str)
+    graph = Rgraphum::Graph.build(format: :idg_json, vertices: vertices_json_str, edges: edges_json_str)
     assert_equal 3, graph.vertices.size
     assert_equal 2, graph.edges.size
 
