@@ -11,27 +11,32 @@ module Rgraphum
       #
       #
       def load(options={})
-        parse_options = options.dup
-        parse_options[:vertices] &&= open(parse_options[:vertices])
-        parse_options[:edges]    &&= open(parse_options[:edges])
-        parse_options[:path]     &&= open(parse_options[:path])
-        parse_options[:options]  = options[:options]
-        parse parse_options
+        build_options = options.dup
+        build_options[:vertices] &&= open(build_options[:vertices])
+        build_options[:edges]    &&= open(build_options[:edges])
+        build_options[:path]     &&= open(build_options[:path])
+        build_options[:options]  = options[:options]
+        build build_options
       end
 
       # Parse str and load graph
       #
+      # options[:options][:format] is source file format.
+      # To build graph, method "build_graph_from_#{options[:options][:format]}" will be called.
       #
-      def parse(options={})
+      def build(options={})
         graph = Rgraphum::Graph.new
 
         case options[:format]
-        when :idg_json
-          build_graph_from_idg_json graph, options[:vertices], options[:edges], (options[:options] || {})
         when :dump
           graph = load_from(options[:path])
         else
-          raise ArgumentError, "Rgraphum::Importer::ClassMethods.parse: Unknown format: '#{options[:format]}'"
+          build_method_name = "build_graph_from_#{options[:format]}".to_sym
+          if respond_to?(build_method_name, true)
+            send build_method_name, graph, options
+          else
+            raise ArgumentError, "Rgraphum::Importer::ClassMethods.build: Unknown format: '#{options[:format]}'"
+          end
         end
 
         graph
@@ -39,7 +44,11 @@ module Rgraphum
 
       private
 
-      def build_graph_from_idg_json(graph, vertices_json_str_or_stream, edges_json_str_or_stream, options={})
+      def build_graph_from_idg_json(graph, build_options={})
+        vertices_json_str_or_stream = build_options[:vertices]
+        edges_json_str_or_stream    = build_options[:edges]
+        options = build_options[:options] || {}
+
         vertex_id_hash = {}
         community_hash = {}
         verbose = options[:verbose]
