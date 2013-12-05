@@ -31,9 +31,12 @@ module Rgraphum
         when :dump
           graph = load_from(options[:path])
         else
-          build_method_name = "build_graph_from_#{options[:format]}".to_sym
-          if respond_to?(build_method_name, true)
-            send build_method_name, graph, options
+          build_method_name1 = "build_graph_from_#{options[:format]}".to_sym
+          build_method_name2 = "build_#{options[:format]}".to_sym
+          if respond_to?(build_method_name1, true)
+            send build_method_name1, graph, options
+          elsif respond_to?(build_method_name2, true)
+            send build_method_name2, graph, options
           else
             raise ArgumentError, "Rgraphum::Importer::ClassMethods.build: Unknown format: '#{options[:format]}'"
           end
