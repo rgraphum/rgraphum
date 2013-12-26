@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'rgraphum'
 
-class RgraphumQueryEnumerableTest < MiniTest::Test
+class RgraphumQueryEnumerableTest < MiniTest::Unit::TestCase
   def setup
     @array = [
       OpenStruct.new(id: 1,  label: "aaa"),
