@@ -387,16 +387,14 @@ class MemeTrackerTest < MiniTest::Test
     e_9 = g.edges.build( source:9, target:6)
     e_8 = g.edges.build( source:8, target:9)
 
-p "#0#"
-p    v_1_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_1).to_graph
+     v_1_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_1).to_graph
      Rgraphum::Parsers::GraphvizParser.export(v_1_g,"v_1_g","jpg")
-p "#0#"
-p    v_5_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_5).to_graph
+
+     v_5_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_5).to_graph
      Rgraphum::Parsers::GraphvizParser.export(v_5_g,"v_5_g","jpg")
-p "#0#"
-p    v_8_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_8).to_graph
+
+     v_8_g = Rgraphum::Analyzer::MemeTracker.new.find_path(source_vertex:v_8).to_graph
      Rgraphum::Parsers::GraphvizParser.export(v_8_g,"v_8_g","jpg")
-p "#0#"
   end
 
   def test_cut_edges_with_srn
