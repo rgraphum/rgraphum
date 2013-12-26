@@ -77,13 +77,7 @@ class Rgraphum::Analyzer::MemeTracker
       end_root_vertex_path_hash_keys_array << end_root_vertex_path_hash.paths.map { |path| path.end_vertex }
     end
 
-p   "##"
-    end_root_vertex_path_hashs.each {|cluster| cluster.paths.each{ |path| p path } }
-p   "##"
-p   end_root_vertex_path_hash_keys_array
     end_root_vertex_path_hash_kyes_array = vertex_id_map(end_root_vertex_path_hash_keys_array)
-p   end_root_vertex_path_hash_kyes_array
-p   "##"
 
     # sets {end_path_key => start_root_vertex}
     sets = {}
