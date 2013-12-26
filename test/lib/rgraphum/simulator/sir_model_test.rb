@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'rgraphum'
 
-class SIRModelTest < MiniTest::Test
+class SIRModelTest < MiniTest::Unit::TestCase
   def setup
     # A -- B -- C
     # |    |    |

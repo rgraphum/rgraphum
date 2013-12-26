@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumVerticesTest < MiniTest::Test
+class RgraphumVerticesTest < MiniTest::Unit::TestCase
   def setup
     @graph = Rgraphum::Graph.new
     @graph.vertices << { id: 1, label: "hoge" }

@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumMathClusteringCoefficientTest < MiniTest::Test
+class RgraphumMathClusteringCoefficientTest < MiniTest::Unit::TestCase
   def setup
   end
 

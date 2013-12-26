@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'rgraphum'
 
-class RgraphumSimulatorTest < MiniTest::Test
+class RgraphumSimulatorTest < MiniTest::Unit::TestCase
   include Rgraphum::Simulator
 
   def setup

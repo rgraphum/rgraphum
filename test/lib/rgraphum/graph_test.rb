@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumTest < MiniTest::Test
+class RgraphumTest < MiniTest::Unit::TestCase
   def setup
     make_test_graph
   end

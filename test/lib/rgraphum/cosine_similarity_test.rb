@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class CosineSimilarityTest < MiniTest::Test
+class CosineSimilarityTest < MiniTest::Unit::TestCase
   
   def test_similarity
     csm  = CosineSimilarityMatrix.new

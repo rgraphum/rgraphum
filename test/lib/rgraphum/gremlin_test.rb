@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumGremlinTest < MiniTest::Test
+class RgraphumGremlinTest < MiniTest::Unit::TestCase
   # FIXME
   class Rgraphum::Vertex
     field :name, :age, :lang

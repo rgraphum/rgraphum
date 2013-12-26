@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumGraphBuilderTest < MiniTest::Test
+class RgraphumGraphBuilderTest < MiniTest::Unit::TestCase
 
   def test_build_from_from_adjacency_matrix
     labels =   ["hoge","huga","piyo","puyo"] 

@@ -3,7 +3,7 @@
 require 'rgraphum'
 require 'test_helper'
 
-class RgraphumMathQuickAverageDistanceMatrixTest < MiniTest::Test
+class RgraphumMathQuickAverageDistanceMatrixTest < MiniTest::Unit::TestCase
   def setup
     @graph = Rgraphum::Graph.new
     # @graph.vertices = [
