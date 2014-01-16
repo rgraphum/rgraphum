@@ -18,24 +18,25 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
   def test_edges
     assert_instance_of Rgraphum::Vertex, @vertex0
     assert_instance_of Rgraphum::Edges,  @vertex0.edges
+    assert_instance_of Rgraphum::Edges,  @vertex0.in_edges
+    assert_instance_of Rgraphum::Edges,  @vertex0.out_edges
 
-    # rg_assert_equal [ { id: 0, :source => @vertex0, target: @vertex1 } ], @vertex0.edges
-    # rg_assert_equal [ { id: 0, :source => @vertex0, target: @vertex1 } ], @vertex1.edges
-    # rg_assert_equal [ { id: 0, :source => @vertex0, target: @vertex1 } ], @graph.edges
-
-    # rg_assert_equal [ { id: 0, :source => @vertex0, target: @vertex1 } ], @vertex0.edges
     assert_equal 1, @vertex0.edges.size
+    assert_equal 1, @vertex0.out_edges.size
+    assert_equal 0, @vertex0.in_edges.size
+
     assert_equal 0, @vertex0.edges[0].id
     rg_assert_equal @vertex0, @vertex0.edges[0].source
     rg_assert_equal @vertex1, @vertex0.edges[0].target
 
-    # rg_assert_equal [ { id: 0, :source => @vertex0, target: @vertex1 } ], @vertex1.edges
     assert_equal 1, @vertex1.edges.size
+    assert_equal 0, @vertex1.out_edges.size
+    assert_equal 1, @vertex1.in_edges.size
+
     assert_equal 0, @vertex1.edges[0].id
     rg_assert_equal @vertex0, @vertex1.edges[0].source
     rg_assert_equal @vertex1, @vertex1.edges[0].target
 
-    # rg_assert_equal [ { id: 0, :source => @vertex0, target: @vertex1 } ], @graph.edges
     assert_equal 1, @graph.edges.size
     assert_equal 0, @graph.edges[0].id
     rg_assert_equal @vertex0, @graph.edges[0].source
@@ -100,8 +101,10 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
     #  +-----------------------------------------------------+
     assert_equal 10, graph.vertices.size
     assert_equal 10, graph.edges.size
-    graph.vertices do |vertex|
+    graph.vertices.each do |vertex|
       assert_equal 2, vertex.edges.size
+      assert_equal 1, vertex.in_edges.size
+      assert_equal 1, vertex.out_edges.size
     end
 
     graph.edges.delete_if { |edge| edge.weight.odd? }
@@ -117,8 +120,9 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
     assert_equal  6, graph.edges[3].weight
     assert_equal  8, graph.edges[4].weight
 
-    graph.vertices do |vertex|
+    graph.vertices.each do |vertex|
       assert_equal 1, vertex.edges.size
+      assert_equal 1, ( vertex.in_edges.size + vertex.out_edges.size )
     end
   end
 

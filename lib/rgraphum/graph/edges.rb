@@ -102,8 +102,12 @@ class Rgraphum::Edges < Rgraphum::RgraphumArray
 
         edge.id = new_id(edge.id)
         edge.graph = @graph
+
         edge.source.edges.build(edge, false)
+        edge.source.out_edges.build(edge, false)
+
         edge.target.edges.build(edge, false)
+        edge.target.in_edges.build(edge, false)
       end
       original_push_1 edge
     end
@@ -138,11 +142,16 @@ class Rgraphum::Edges < Rgraphum::RgraphumArray
     if @vertex and @vertex.graph
       if recursive
         @vertex.graph.edges.delete(target_edge, false)
+#        @vertex.graph.in_edges.delete(target_edge, false)
+#        @vertex.graph.out_edges.delete(target_edge, false)
       end
     else
       if @graph
         target_edge.source.edges.delete(target_edge, false)
+        target_edge.source.out_edges.delete(target_edge, false)
+
         target_edge.target.edges.delete(target_edge, false)
+        target_edge.target.in_edges.delete(target_edge, false)
       end
     end
     @id_edge_map.delete id
