@@ -266,6 +266,7 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     clusters = @meme_tracker.phrase_clusters
     assert clusters
     assert_equal 3, clusters.size
+
     (0...clusters_b.size).each do |i|
       rg_assert_equal clusters_b[i].vertices, clusters[i].vertices
     end

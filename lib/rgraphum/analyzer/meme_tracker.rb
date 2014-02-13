@@ -280,7 +280,10 @@ class Rgraphum::Analyzer::MemeTracker
     graph_start_root_vertices = start_root_vertices(graph)
 
     p "find path and to_graph" if Rgraphum.verbose?
-    graphes = graph_start_root_vertices.map { |vertex| Rgraphum::Vertices.new(find_path(source_vertex:vertex)).to_graph }
+    graphes = graph_start_root_vertices.map do |vertex|
+      path = find_path(source_vertex:vertex)
+      Rgraphum::Vertices.new(path).to_graph
+    end
   end
 
   def cut_edges_with_srn(graph=@graph)
