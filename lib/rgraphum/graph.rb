@@ -115,6 +115,14 @@ class Rgraphum::Graph
     @edges
   end
 
+  def in_edges
+    @in_edges
+  end
+
+  def out_edges
+    @out_edges
+  end
+
   def edges=(edge_array)
     @edges = @edges.substitute(edge_array) do |edge|
       Rgraphum::Edge(edge)

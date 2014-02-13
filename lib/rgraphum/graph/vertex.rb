@@ -22,7 +22,12 @@ class Rgraphum::Vertex #< Hash
       end
     end
     @edges = Rgraphum::Edges.new
+    @in_edges = Rgraphum::Edges.new
+    @out_edges = Rgraphum::Edges.new
+
     @edges.vertex = self
+#    @in_edges.vertex = self
+#    @out_edges.vertex = self
   end
 
   # Gremlin: inE
@@ -72,6 +77,7 @@ class Rgraphum::Vertex #< Hash
   #     ==>v[2]
   #     ==>v[4]
   #
+
   def outE(*key)
     find_edges(key, :out)
   end
@@ -173,7 +179,6 @@ class Rgraphum::Vertex #< Hash
 
   # Non-Gremlin methods
 
-
   def dup
     super.tap { |vertex|
       vertex.graph = nil
@@ -195,12 +200,22 @@ class Rgraphum::Vertex #< Hash
     @edges
   end
 
+  def in_edges
+    @in_edges
+  end
+
+  def out_edges
+    @out_edges
+  end
+
   def find_edges(labels=[], direction=:both)
     case direction
     when :in
       results = @edges.where(target: self).all
+#      results = @in_edges
     when :out
       results = @edges.where(source: self).all
+#      results = @out_edges
     else # :both
       results = @edges
     end
