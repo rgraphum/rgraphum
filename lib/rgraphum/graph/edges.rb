@@ -142,8 +142,6 @@ class Rgraphum::Edges < Rgraphum::RgraphumArray
     if @vertex and @vertex.graph
       if recursive
         @vertex.graph.edges.delete(target_edge, false)
-#        @vertex.graph.in_edges.delete(target_edge, false)
-#        @vertex.graph.out_edges.delete(target_edge, false)
       end
     else
       if @graph
