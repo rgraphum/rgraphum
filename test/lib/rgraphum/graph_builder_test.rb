@@ -61,4 +61,16 @@ class RgraphumGraphBuilderTest < MiniTest::Unit::TestCase
     rg_assert_equal graph.edges[5].weight, 1.0
         
   end
+
+  def test_simirality_graph_builder
+    # no data make not rise error but return builder 
+    graph_builder = GraphBuilder.new("simirarity_graph")
+
+    # count graph
+    data = [["hoge","x"]]
+
+    GraphBuilder.new.vertex_value_matrix(data)
+
+
+  end
 end

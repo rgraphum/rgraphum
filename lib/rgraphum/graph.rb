@@ -67,6 +67,7 @@ class Rgraphum::Graph
     end
 
     @aspect = "real"
+    self
   end
 
 
