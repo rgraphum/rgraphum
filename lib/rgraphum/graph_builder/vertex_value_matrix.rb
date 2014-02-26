@@ -10,11 +10,8 @@ class VertexValueMatrix
       data = add_count_values(data) if data[0].size == 2
       
       # make label and index hash
-      value_label_index_hash = {}
-      value_labels.each_with_index{|value_label,i| value_label_index_hash[value_label] = i }
-      
-      vertex_label_index_hash = {}
-      vertex_labels.each_with_index{|vertex_label,i| vertex_label_index_hash[vertex_label] = i }
+      value_label_index_hash = make_index_hash(value_labels)
+      vertex_label_index_hash = make_index_hash(vertex_labels)
       
       puts "size vertex:      #{vertex_labels.size}"
       puts "size vector_size: #{value_labels.size}"
@@ -53,7 +50,7 @@ class VertexValueMatrix
   p   vertex_value_matrix.size   
   p   "y size"
   p   vertex_value_matrix[0].size
-  
+      [vertex_value_matrix,vertex_labels]
     end
     
     def pickup_vertex_labels(data)
@@ -62,6 +59,12 @@ class VertexValueMatrix
 
     def picup_value_labels(data)
       labels = data.transpose[1].uniq
+    end
+
+    def make_index_hash(array)
+      index_hash = {}
+      array.each_with_index{|value,i| index_hash[value] = i }
+      index_hash
     end
 
     def add_count_values(data)

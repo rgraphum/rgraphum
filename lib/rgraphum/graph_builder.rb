@@ -28,93 +28,15 @@ class GraphBuilder
   
   # data = [vertex_label,vertex_label] or [vertex_label,value_label,value]
   def similarity_graph(data,options={})
-    vertex_column = data.transpose[0]
-    value_column = data.transpose[1]
 
-    # value_be_check
-    count_flag = true if data[0].size == 2
-
-    # make label and index hash
-    vertelabels = vertex_labels.uniq
-    value_labels  = value_labels.uniq
-
-    value_label_index_hash = {}
-    value_labels.each_with_index{|value_label,i| value_label_index_hash[value_lavel] = i }
-
-    vertex_label_index_hash = {}
-    vertex_labels.each_with_index{|vertex_label,i| vertex_label_index_hash[vertex_lavel] = i }
-
-    puts "size vertex:      #{vetex_label.size}"
-    puts "size vector_size: #{value_label.size}"
-
-    vertex_value_matrix = Array.new(vertex_labels.size).map!{ |i| Array.new( value_labels.size, 0.0 ) }
-    count_array = Array.new(vertex_labels.size).map!{ |i| Array.new( value_labels.size, 0   ) }
-
-    # make item_user_matrix
-    # examle:
-    #           valueA valueB
-    # vertexA [ [   1      2   ],
-    # vertexB   [   0      1   ] ]
-
-    data.each_with_index do  |vertex_label,value_label,value,row_i|
-      j = vertex_label_index_hash[vertex_label]
-      i = value_label_index_hash[value_label]
-
-      if count_flg
-        value = 1
-      else
-        next p row_i.to_s + ":no value data" unless value
-      end
-
-      vertex_value_matrix[ vertex_label_index_hash[vertex_label] ] [ value_label_index_hash[value_label] ] ||=0
-      vertex_value_matrix[ vertex_label_index_hash[vertex_label] ] [ value_label_index_hash[value_label] ] += value
-    end
-
-    ############################################
-    # del with vale size all zero value
-    t_vertex_value_matrix = vertex_value_matrix.transpose
-    t_vertex_value_matrix.delete_if do |values|
-      flg = true
-      values.each do |value|
-        break flg = false if value > 0.0
-      end
-      flg
-    end
-    vertex_value_matrix = t_vertex_value_matrix.transpose
-
-    # del with item size
-    i = 0
-    item_customer_matrix.delete_if do |item|
-      if item.inject(:+) < 30
-        item_label.delete_at(i)
-        next true
-      end
-      i = i + 1
-      false
-    end
-
-    # sample
-    sample_index = (0...item_customer_matrix.size).to_a.sample(10000)
-    item_label = sample_index.map { |index| item_label[index] }.compact
-    item_customer_matrix = sample_index.map { |index| item_customer_matrix[index] }.compact
-
-    # del with customer zero
-    t_item_customer_matrix = item_customer_matrix.transpose
-    t_item_customer_matrix.delete_if do |customer|
-      customer.inject(:+) == 0
-    end
-    item_customer_matrix = t_item_customer_matrix.transpose
-
-##############################################################################
-p   "x sise"
-p   item_customer_matrix.size   
-p   "y size"
-p   item_customer_matrix[0].size
+    vertex_value_matrix,labels = VertexValueMatrix.build(data)
+p labels
+p vertex_value_matrix
    
     #tf-idf
     p "tf-idf"
     tf_idf = TfIdf.new
-    tf_idf_matrix = tf_idf.tf_idf(item_customer_matrix) 
+    tf_idf_matrix = tf_idf.tf_idf(vertex_value_matrix) 
     p Time.now
 
     # cosine sim
@@ -133,7 +55,7 @@ p   item_customer_matrix[0].size
 
     # make graph
     p "make graph"
-    graph = Rgraphum::Graph.build_from_adjacency_matrix(csm_matrix,item_label,options)
+    graph = Rgraphum::Graph.build_from_adjacency_matrix(csm_matrix,labels,options)
 
   end
 

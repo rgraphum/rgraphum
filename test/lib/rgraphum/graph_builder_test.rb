@@ -69,7 +69,7 @@ class RgraphumGraphBuilderTest < MiniTest::Unit::TestCase
     # count graph
     data = [["hoge","x"]]
 
-    GraphBuilder.new.vertex_value_matrix(data)
+    GraphBuilder.new.similarity_graph(data)
 
 
   end
