@@ -3,6 +3,7 @@
 class VertexValueMatrix
   class << self
     def build(data,options={})
+      options = { sample_size:10_000 }.merge(options)
       vertex_labels = pickup_vertex_labels(data)
       value_labels = picup_value_labels(data)
       
@@ -37,8 +38,11 @@ class VertexValueMatrix
       
       
       # sampling
-      vertex_value_matrix,vertex_labels = data_sampling(vertex_value_matrix,vertex_labels,10000)
- 
+      if vertex_labels.size > options[:sample_size]
+puts    "sampling" 
+        vertex_value_matrix,vertex_labels = data_sampling(vertex_value_matrix,vertex_labels,options[:sample_size])
+      end
+
       # del with customer zero
       t_vertex_value_matrix = vertex_value_matrix.transpose
       t_vertex_value_matrix.delete_if do |values|
@@ -54,7 +58,7 @@ class VertexValueMatrix
     end
     
     def pickup_vertex_labels(data)
-      labels = data.transpose[0].uniq
+p      labels = data.transpose[0].uniq
     end
 
     def picup_value_labels(data)

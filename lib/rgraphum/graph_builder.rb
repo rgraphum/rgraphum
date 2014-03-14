@@ -8,36 +8,39 @@ require_relative 'graph_builder/cosine_similarity_matrix'
 
 class GraphBuilder
   TEMPLATE_NAME_METHOD_SYN_MAP = {
-    "imilaritygraph"  => :similarity_graph,
-    "flowgraph"       => :flow_graph
+    "similarity"  => :similarity_graph,
+    "flow"       => :flow_graph
   }
   
 
-  def initialize(graph_template_syn = nil,data=[])
+  def initialize(graph_template_syn = nil,data=[],options = {} )
     return self unless graph_template_syn
     if data == []
       puts "no data"
       return self
     end
 
-    template_name = graph_template_name.dup.downcase.gsub(/[^a-z0-9]/, "")
+    template_name = graph_template_name.dup.downcase.gsub(/[^a-z0-9]/, "").gsub(/graph/,"")
     method_syn = TEMPLATE_NAME_METHOD_SYN_MAP[template_name]
     raise ArgumentError, "Graph template not found: '#{template_name}'" unless method_syn
-    self.send( method_syn, data)    
+    self.send( method_syn, data,options)    
   end
   
   # data = [vertex_label,vertex_label] or [vertex_label,value_label,value]
   def similarity_graph(data,options={})
+    options = { tf_idf:true, cosine_similarity:true, limit:0.01 }.merge(options)
 
     vertex_value_matrix,labels = VertexValueMatrix.build(data)
-p labels
-p vertex_value_matrix
    
     #tf-idf
-    p "tf-idf"
-    tf_idf = TfIdf.new
-    tf_idf_matrix = tf_idf.tf_idf(vertex_value_matrix) 
-    p Time.now
+    if options[:tf_idf]
+      p "tf-idf"
+      tf_idf = TfIdf.new
+      tf_idf_matrix = tf_idf.tf_idf(vertex_value_matrix) 
+      p Time.now
+    else
+      tf_idf_matrix = vertex_value_matrix
+    end
 
     # cosine sim
     p "cosine sim"
@@ -46,16 +49,22 @@ p vertex_value_matrix
     p Time.now
 
 
+    matrix = []
     # downer traiangle matrix to 0
     csm_matrix.each_with_index do |row,row_i|
+      matrix << []
       row.each_with_index do |item,col_i|
-        item = 0 if row_i > col_i
+        if row_i > col_i
+          matrix[row_i] << 0
+        else
+          matrix[row_i] << item
+        end
       end
     end    
 
     # make graph
     p "make graph"
-    graph = Rgraphum::Graph.build_from_adjacency_matrix(csm_matrix,labels,options)
+    graph = Rgraphum::Graph.build_from_adjacency_matrix(matrix,labels,options)
 
   end
 

@@ -19,7 +19,7 @@ class Rgraphum::Graph
   class << self
 
     def build_from_adjacency_matrix( matrix, vertex_labels = [], options={} )
-      options = { loop: false, limit: 0.65 }.merge(options)
+      options = { loop: false, limit: 0 }.merge(options)
 
       graph = new
       if vertex_labels.size == matrix.size
@@ -37,6 +37,7 @@ class Rgraphum::Graph
           next if col_index == row_index and !options[:loop]
           
           if weight and weight >= options[:limit]
+p row_index
             graph.edges.build( {source:graph.vertices[row_index], target:graph.vertices[col_index],weight:weight} )
           end
         end
