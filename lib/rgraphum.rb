@@ -12,8 +12,6 @@ require_relative 'rgraphum/parsers'
 require_relative 'rgraphum/marshal'
 require_relative 'rgraphum/simulator'
 
-require_relative 'rgraphum/tf_idf'
-require_relative 'rgraphum/cosine_similarity_matrix'
 
 require_relative 'rgraphum/rgraphum_random'
 
@@ -36,3 +34,5 @@ require_relative 'rgraphum/path'
 require_relative 'rgraphum/analyzer'
 
 require_relative 'rgraphum/t'
+
+require_relative 'rgraphum/graph_builder'
