@@ -8,7 +8,7 @@ def Rgraphum::Edge(hash_or_edge)
   end
 end
 
-class Rgraphum::Edge #< Hash
+class Rgraphum::Edge # < Hash
   attr_accessor :graph
   # attr_accessor :vertex
 

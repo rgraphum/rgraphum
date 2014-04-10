@@ -8,7 +8,7 @@ def Rgraphum::Vertex(hash_or_vertex)
   end
 end
 
-class Rgraphum::Vertex #< Hash
+class Rgraphum::Vertex < Hash
   attr_accessor :graph
 
   def initialize(fields={})
