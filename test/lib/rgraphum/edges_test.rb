@@ -26,21 +26,21 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
     assert_equal 0, @vertex0.in_edges.size
 
     assert_equal 0, @vertex0.edges[0].id
-    rg_assert_equal @vertex0, @vertex0.edges[0].source
-    rg_assert_equal @vertex1, @vertex0.edges[0].target
+    assert_equal @vertex0.object_id, @vertex0.edges[0].source.object_id
+    assert_equal @vertex1.object_id, @vertex0.edges[0].target.object_id
 
     assert_equal 1, @vertex1.edges.size
     assert_equal 0, @vertex1.out_edges.size
     assert_equal 1, @vertex1.in_edges.size
 
     assert_equal 0, @vertex1.edges[0].id
-    rg_assert_equal @vertex0, @vertex1.edges[0].source
-    rg_assert_equal @vertex1, @vertex1.edges[0].target
+    assert_equal @vertex0.object_id, @vertex1.edges[0].source.object_id
+    assert_equal @vertex1.object_id, @vertex1.edges[0].target.object_id
 
     assert_equal 1, @graph.edges.size
     assert_equal 0, @graph.edges[0].id
-    rg_assert_equal @vertex0, @graph.edges[0].source
-    rg_assert_equal @vertex1, @graph.edges[0].target
+    assert_equal @vertex0.object_id, @graph.edges[0].source.object_id
+    assert_equal @vertex1.object_id, @graph.edges[0].target.object_id
   end
 
   def test_edges_dump_and_load
@@ -54,9 +54,9 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
     data = Marshal.dump(edges)
     edges_dash = Marshal.load(data)
 
-    rg_assert_equal edges, edges_dash
-    rg_refute_equal edges_dash[0], edges_dash[1]
-    assert_same  edges_dash[0], edges_dash[2]
+    assert_equal edges, edges_dash
+    refute_equal edges_dash[0].object_id, edges_dash[1].object_id
+    assert_equal edges_dash[0].object_id, edges_dash[2].object_id
   end
 
   def test_delete
@@ -75,10 +75,10 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
     assert_equal 1, @graph.edges.size
     assert_equal 1, @vertex0.edges.size
     assert_equal 1, @vertex1.edges.size
-    rg_assert_equal @edge1,@vertex0.edges[0]
-    rg_assert_equal @edge1,@vertex1.edges[0]
-    rg_assert_equal @edge1.source, @vertex1
-    rg_assert_equal @edge1.target, @vertex0
+    assert_equal @edge1.object_id,@vertex0.edges[0].object_id
+    assert_equal @edge1.object_id,@vertex1.edges[0].object_id
+    assert_equal @edge1.source.object_id, @vertex1.object_id
+    assert_equal @edge1.target.object_id, @vertex0.object_id
   end
 
   # delete_if calls delete

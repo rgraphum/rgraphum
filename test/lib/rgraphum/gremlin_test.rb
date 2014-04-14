@@ -14,9 +14,9 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
   end
 
   def test_v
-    rg_assert_equal ({id:1,name:"marko", age:29}), @graph.v(1)
-    rg_assert_equal [{id:1,name:"marko",age:29},{id:2,name:"vadas",age:27},{id:3,name:"lop",lang:"java"}], @graph.v(1,2,3)
-    rg_assert_equal [{id:1,name:"marko",age:29},{id:2,name:"vadas",age:27},{id:3,name:"lop",lang:"java"}], @graph.v([1,2,3])
+    assert_equal ({id:1,name:"marko", age:29}), @graph.v(1)
+    assert_equal [{id:1,name:"marko",age:29},{id:2,name:"vadas",age:27},{id:3,name:"lop",lang:"java"}], @graph.v(1,2,3)
+    assert_equal [{id:1,name:"marko",age:29},{id:2,name:"vadas",age:27},{id:3,name:"lop",lang:"java"}], @graph.v([1,2,3])
   end
 
   def test_e
@@ -27,10 +27,10 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
 
   def test_addVertex
     g = Rgraphum::Graph.new
-    rg_assert_equal({id:0}, g.addVertex())
-    rg_assert_equal({id:100}, g.addVertex(100))
+    assert_equal({id:0}, g.addVertex())
+    assert_equal({id:100}, g.addVertex(100))
 
-    rg_assert_equal({id:101,name:"stephen"}, g.addVertex(nil,{name:"stephen"}))
+    assert_equal({id:101,name:"stephen"}, g.addVertex(nil,{name:"stephen"}))
   end
 
   def test_addEdge
@@ -39,22 +39,22 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
     v2 = g.addVertex(200)
 
     e = g.addEdge(v1,v2,'friend')
-    rg_assert_equal v1, e.outV
-    rg_assert_equal v2, e.inV
+    assert_equal v1.object_id, e.outV.object_id
+    assert_equal v2.object_id, e.inV.object_id
 
     e = g.addEdge(1000,v1,v2,'friend')
-    rg_assert_equal({:id=>1000, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>1}, e)
+    assert_equal({:id=>1000, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>1}, e)
 
     e = g.addEdge(nil,v1,v2,'friend',{weight:0.75})
-    rg_assert_equal({:id=>1001, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>0.75}, e)
+    assert_equal({:id=>1001, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>0.75}, e)
     
   end
 
   def test_both
     v = @graph.v(4)
-    rg_assert_equal [{id:1,name:"marko",age:29},{id:5,name:"ripple",lang:"java"},{id:3,name:"lop",lang:"java"}], v.both
-    rg_assert_equal [{id:1,name:"marko",age:29}], v.both('knows')
-    rg_assert_equal [{id:1,name:"marko",age:29},{id:5,name:"ripple",lang:"java"},{id:3,name:"lop",lang:"java"}], v.both('knows','created')
+    assert_equal [{id:1,name:"marko",age:29},{id:5,name:"ripple",lang:"java"},{id:3,name:"lop",lang:"java"}], v.both
+    assert_equal [{id:1,name:"marko",age:29}], v.both('knows')
+    assert_equal [{id:1,name:"marko",age:29},{id:5,name:"ripple",lang:"java"},{id:3,name:"lop",lang:"java"}], v.both('knows','created')
   end
 
   def test_bothE
@@ -66,9 +66,9 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
 
   def test_outV_inV_both_V
     e = @graph.e(12)
-    rg_assert_equal({id:6,name:"peter",age:35}, e.outV)
-    rg_assert_equal({id:3,name:"lop",lang:"java"}, e.inV)
-    rg_assert_equal [{id:6,name:"peter", age:35},{id:3,name:"lop",lang:"java"}], e.bothV
+    assert_equal({id:6,name:"peter",age:35}, e.outV)
+    assert_equal({id:3,name:"lop",lang:"java"}, e.inV)
+    assert_equal [{id:6,name:"peter", age:35},{id:3,name:"lop",lang:"java"}], e.bothV
   end
 
   def test_id
@@ -81,7 +81,7 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
 
   def test_V
     assert_equal [1,2,3,4,5,6], @graph.V.id
-    rg_assert_equal [{id:1,name:"marko",age:29}], @graph.V(:name,"marko")
+    assert_equal [{id:1,name:"marko",age:29}], @graph.V(:name,"marko")
     assert_equal ["marko"], @graph.V(:name,"marko").name
   end
 
@@ -92,21 +92,21 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
 
   def test_in_inE
     v = @graph.v(4)
-    rg_assert_equal [{id:1,name:"marko",age:29}], v.inE.outV
-    rg_assert_equal [{id:1,name:"marko",age:29}], v.in
+    assert_equal [{id:1,name:"marko",age:29}], v.inE.outV
+    assert_equal [{id:1,name:"marko",age:29}], v.in
 
     v = @graph.v(3)
-    rg_assert_equal [{id:1,name:"marko",age:29},{id:4,name:"josh",age:32},{id:6,name:"peter", age:35}], v.in('created')
-    rg_assert_equal [{id:1,name:"marko",age:29},{id:4,name:"josh",age:32},{id:6,name:"peter", age:35}], v.inE('created').outV
+    assert_equal [{id:1,name:"marko",age:29},{id:4,name:"josh",age:32},{id:6,name:"peter", age:35}], v.in('created')
+    assert_equal [{id:1,name:"marko",age:29},{id:4,name:"josh",age:32},{id:6,name:"peter", age:35}], v.inE('created').outV
   end
 
   def test_out_outE
     v = @graph.v(1)
-    rg_assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32},{id:3,name:"lop",lang:"java"}], v.outE.inV
-    rg_assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32},{id:3,name:"lop",lang:"java"}], v.out
+    assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32},{id:3,name:"lop",lang:"java"}], v.outE.inV
+    assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32},{id:3,name:"lop",lang:"java"}], v.out
 
-    rg_assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32}], v.outE('knows').inV
-    rg_assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32}], v.out('knows')
+    assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32}], v.outE('knows').inV
+    assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32}], v.out('knows')
   end
 
   def test_has

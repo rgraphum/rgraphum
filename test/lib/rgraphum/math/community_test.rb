@@ -48,7 +48,7 @@ class RgraphumMathCommunityTest < MiniTest::Unit::TestCase
       { id: 1, source: 1, target: 3, weight: 1 },
       { id: 2, source: 2, target: 3, weight: 1 },
     ]
-    rg_assert_equal expected, community.edges
+    assert_equal expected.object_id, community.edges.object_id
 
     rg_assert_equal [{ id: 0, source: 1, target: 2, weight: 1 }], community.inter_edges
     expected = [

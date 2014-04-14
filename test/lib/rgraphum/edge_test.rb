@@ -43,9 +43,9 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
     data = Marshal.dump(edge)
     edge_dash = Marshal.load(data)
 
-    rg_assert_equal edge, edge_dash
-    rg_assert_equal edge.source, edge_dash.source
-    rg_assert_equal edge.target, edge_dash.target
+    assert_equal edge.object_id, edge_dash.object_id
+    assert_equal edge.source.object_id, edge_dash.source.object_id
+    assert_equal edge.target.object_id, edge_dash.target.object_id
   end
 
   def test_invalid_field

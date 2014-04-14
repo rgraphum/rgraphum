@@ -37,7 +37,6 @@ class Rgraphum::Graph
           next if col_index == row_index and !options[:loop]
           
           if weight and weight >= options[:limit]
-p row_index
             graph.edges.build( {source:graph.vertices[row_index], target:graph.vertices[col_index],weight:weight} )
           end
         end
@@ -185,64 +184,64 @@ p row_index
     new_graph
   end
 
-  def compact_with_label(options={})
-    compact_with(:label, self, options)
-  end
+#  def compact_with_label(options={})
+#    compact_with(:label, self, options)
+#  end
 
-  def marge_with_label(target)
-    new_graph = self + target
-    new_graph.compact_with_label
-  end
+#  def marge_with_label(target)
+#    new_graph = self + target
+#    new_graph.compact_with_label
+#  end
 
-  def divide_by_time(interval=20)
-    @vertices.divide_by_time(interval)
-    @edges.divide_by_time(interval)
+#  def divide_by_time(interval=20)
+#    @vertices.divide_by_time(interval)
+#    @edges.divide_by_time(interval)
+#
+#    new_edges = Rgraphum::Edges.new
+#    new_edges.graph = self
+#    @edges.each do |edge|
+#      conditions = { source: edge.source, target: edge.target, start: edge.start }
+#      same_edge = new_edges.where(conditions).first
+#      if same_edge
+#        same_edge.weight += edge.weight
+#      else
+#        new_edges << edge
+#      end
+#    end
+#    self.edges = new_edges
+#  end
 
-    new_edges = Rgraphum::Edges.new
-    new_edges.graph = self
-    @edges.each do |edge|
-      conditions = { source: edge.source, target: edge.target, start: edge.start }
-      same_edge = new_edges.where(conditions).first
-      if same_edge
-        same_edge.weight += edge.weight
-      else
-        new_edges << edge
-      end
-    end
-    self.edges = new_edges
-  end
+#  def compact_with(method_name, graph=self, options ={})
+#    new_vertices = Rgraphum::Vertices.new
+#    new_vertices.graph = graph
+#    graph.vertices.each do |vertex|
+#      same_vertex = new_vertices.find{ |v| v.send(method_name) == vertex.send(method_name) }
+#      unless same_vertex
+#        new_vertex = vertex.dup
+#        new_vertex.edges = Rgraphum::Edges.new
+#        new_vertices << new_vertex
+#      end
+#    end
 
-  def compact_with(method_name, graph=self, options ={})
-    new_vertices = Rgraphum::Vertices.new
-    new_vertices.graph = graph
-    graph.vertices.each do |vertex|
-      same_vertex = new_vertices.find{ |v| v.send(method_name) == vertex.send(method_name) }
-      unless same_vertex
-        new_vertex = vertex.dup
-        new_vertex.edges = Rgraphum::Edges.new
-        new_vertices << new_vertex
-      end
-    end
+#    new_edges = Rgraphum::Edges.new
+#    graph.edges.each do |edge|
+#      source_label = edge.source.send(method_name)
+#      target_label = edge.target.send(method_name)
+#      edge.source = new_vertices.find{ |vertex| vertex.send(method_name) == source_label }
+#      edge.target = new_vertices.find{ |vertex| vertex.send(method_name) == target_label }
+#
+#      same_edge = new_edges.find{ |e| e.source.equal?(edge.source) and e.source.equal?(edge.source) }
+#      if same_edge
+#        same_edge.weight += edge.weight
+#      else
+#        new_edges << edge
+#      end
+#    end
 
-    new_edges = Rgraphum::Edges.new
-    graph.edges.each do |edge|
-      source_label = edge.source.send(method_name)
-      target_label = edge.target.send(method_name)
-      edge.source = new_vertices.find{ |vertex| vertex.send(method_name) == source_label }
-      edge.target = new_vertices.find{ |vertex| vertex.send(method_name) == target_label }
-
-      same_edge = new_edges.find{ |e| e.source.equal?(edge.source) and e.source.equal?(edge.source) }
-      if same_edge
-        same_edge.weight += edge.weight
-      else
-        new_edges << edge
-      end
-    end
-
-    graph.vertices = new_vertices
-    graph.edges = new_edges
-    graph
-  end
+#    graph.vertices = new_vertices
+#    graph.edges = new_edges
+#    graph
+#  end
 
   def ==(other)
     return false unless aspect   == other.aspect

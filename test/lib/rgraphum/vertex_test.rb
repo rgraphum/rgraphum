@@ -35,7 +35,7 @@ class RgraphumVertexTest < MiniTest::Unit::TestCase
     data = Marshal.dump(vertex)
     vertex_dash = Marshal.load(data)
 
-    rg_assert_equal vertex, vertex_dash
+    assert_equal vertex, vertex_dash
   end
 
   def test_invalid_field
