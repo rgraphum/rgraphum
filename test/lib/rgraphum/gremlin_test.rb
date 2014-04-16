@@ -5,9 +5,9 @@ require 'test_helper'
 
 class RgraphumGremlinTest < MiniTest::Unit::TestCase
   # FIXME
-  class Rgraphum::Vertex
-    field :name, :age, :lang
-  end
+#  class Rgraphum::Vertex
+#    field :name, :age, :lang
+#  end
 
   def setup
     make_gremlin_sample

@@ -90,7 +90,8 @@ class RgraphumTest < MiniTest::Unit::TestCase
 
   def test_delete_edge
     delete_edge = @graph_a.edges.where(id: 1).first
-    remain_edge = @graph_a.edges.where(id: 2).first
+p    remain_edge = @graph_a.edges.where(id: 2).first
+
     @graph_a.edges.delete(delete_edge)
     assert_equal ([remain_edge]), @graph_a.edges
     assert_equal ([remain_edge]), @graph_a.vertices[0].edges
@@ -139,12 +140,12 @@ class RgraphumTest < MiniTest::Unit::TestCase
       {:id=>1, :source=>1, :target=>2, :weight=>1 },
       {:id=>2, :source=>2, :target=>1, :weight=>1 },
     ]
-    rg_assert_equal expected, id_aspect_vertices[0].edges
+    assert_equal expected, id_aspect_vertices[0].edges
     expected = [
       {:id=>1, :source=>1, :target=>2, :weight=>1 },
       {:id=>2, :source=>2, :target=>1, :weight=>1 },
     ]
-    rg_assert_equal expected, id_aspect_vertices[1].edges
+    assert_equal expected, id_aspect_vertices[1].edges
   end
 
   def test_real_aspect!

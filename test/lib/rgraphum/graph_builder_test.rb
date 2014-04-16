@@ -83,22 +83,8 @@ class RgraphumGraphBuilderTest < MiniTest::Unit::TestCase
                     { source:"hoge", target:"piyo", weight:0.5},
                     { source:"huga", target:"piyo", weight:0.5} ]
 
-p    graph.edges.size
     except_data.zip(graph.edges) do |pair|
-p     "##"
-      p pair[1].source[:label]
-      p pair[1].target[:label]
-      p pair[1].weight
-#      assert_equal pair[0][:source], pair[1].source[:label]
-#      assert_equal pair[0][:target], pair[1].target[:label]
-#      assert_equal pair[0][:weight], pair[1].weight
     end
 
-#    graph = GraphBuilder.new.similarity_graph(data,{tf_idf:false})
-#    graph.edges.each do |edge|
-#      p edge.source.label
-#      p edge.target.label
-#      p edge.weight
-#    end
   end
 end

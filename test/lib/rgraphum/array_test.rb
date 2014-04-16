@@ -18,27 +18,27 @@ class RgraphumArrayTest < MiniTest::Unit::TestCase
     # rg_assert_equal [{id:1, source: {id:1, label:"hoge"}, target:{id: 2, label: "huga"}}], @graph.vertices[0].edges
     assert_equal 1, @graph.vertices[0].edges.size
     assert_equal 1, @graph.vertices[0].edges[0].id
-    rg_assert_equal({id: 1, label: "hoge"}, @graph.vertices[0].edges[0].source)
-    rg_assert_equal({id: 2, label: "huga"}, @graph.vertices[0].edges[0].target)
+    assert_equal({id: 1, label: "hoge"}, @graph.vertices[0].edges[0].source)
+    assert_equal({id: 2, label: "huga"}, @graph.vertices[0].edges[0].target)
 
     assert_empty @graph.vertices[0].inE
     assert_empty @graph.vertices[0].in
     # rg_assert_equal [{ id:1, source: {id:1,label:"hoge"}, target:{id:2,label:"huga"} }], @graph.vertices[0].outE
     assert_equal 1, @graph.vertices[0].outE.size
     assert_equal 1, @graph.vertices[0].outE[0].id
-    rg_assert_equal({id:1,label:"hoge"}, @graph.vertices[0].outE[0].source)
-    rg_assert_equal({id:2,label:"huga"}, @graph.vertices[0].outE[0].target)
+    assert_equal({id:1,label:"hoge"}, @graph.vertices[0].outE[0].source)
+    assert_equal({id:2,label:"huga"}, @graph.vertices[0].outE[0].target)
 
-    rg_assert_equal [{id:2,label:"huga"}], @graph.vertices[0].out
+    assert_equal [{id:2,label:"huga"}], @graph.vertices[0].out
 
     assert_empty @graph.vertices[1].outE
     assert_empty @graph.vertices[1].out
     # rg_assert_equal [{id:1, source: {id:1,label:"hoge"}, target:{id:2,label:"huga"} }], @graph.vertices[1].inE
     assert_equal 1, @graph.vertices[1].inE.size
     assert_equal 1, @graph.vertices[1].inE[0].id
-    rg_assert_equal({id: 1,label: "hoge"}, @graph.vertices[1].inE[0].source)
-    rg_assert_equal({id: 2,label: "huga"}, @graph.vertices[1].inE[0].target)
-    rg_assert_equal [{id:1,label:"hoge"}], @graph.vertices[1].in
+    assert_equal({id: 1,label: "hoge"}, @graph.vertices[1].inE[0].source)
+    assert_equal({id: 2,label: "huga"}, @graph.vertices[1].inE[0].target)
+    assert_equal [{id:1,label:"hoge"}], @graph.vertices[1].in
   end
 
   def test_start_root_vertices

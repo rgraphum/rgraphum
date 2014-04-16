@@ -29,11 +29,9 @@ class Rgraphum::RgraphumArray < Array
   # end
 
   def new_id(id=nil)
-    # self.class.new_id
     @new_id ||= -1
     if id
       @new_id = id if @new_id < id
-      id
     else
       @new_id += 1
     end

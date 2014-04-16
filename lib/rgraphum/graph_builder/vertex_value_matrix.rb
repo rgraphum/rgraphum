@@ -14,9 +14,6 @@ class VertexValueMatrix
       value_label_index_hash = make_index_hash(value_labels)
       vertex_label_index_hash = make_index_hash(vertex_labels)
       
-      puts "size vertex:      #{vertex_labels.size}"
-      puts "size vector_size: #{value_labels.size}"
-      
       vertex_value_matrix = Array.new(vertex_labels.size).map!{ |i| Array.new( value_labels.size, 0.0 ) }
       count_array = Array.new(vertex_labels.size).map!{ |i| Array.new( value_labels.size, 0   ) }
       
@@ -39,7 +36,6 @@ class VertexValueMatrix
       
       # sampling
       if vertex_labels.size > options[:sample_size]
-puts    "sampling" 
         vertex_value_matrix,vertex_labels = data_sampling(vertex_value_matrix,vertex_labels,options[:sample_size])
       end
 
@@ -50,15 +46,11 @@ puts    "sampling"
       end
       vertex_value_matrix = t_vertex_value_matrix.transpose
       
-  p   "x sise"
-  p   vertex_value_matrix.size   
-  p   "y size"
-  p   vertex_value_matrix[0].size
       [vertex_value_matrix,vertex_labels]
     end
     
     def pickup_vertex_labels(data)
-p      labels = data.transpose[0].uniq
+      labels = data.transpose[0].uniq
     end
 
     def picup_value_labels(data)
