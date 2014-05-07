@@ -147,11 +147,11 @@ class Rgraphum::RgraphumArray < Array
   end
 
   def method_missing(name, *args)
-    if first.class.has_field?(name)
+#    if first.class.has_feilds?(name)
       map{|item| item.send(name)}
-    else
-      super(name,*args)
-    end
+#    else
+#      super(name,*args)
+#    end
   end
 
 end

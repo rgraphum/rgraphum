@@ -92,9 +92,9 @@ module Rgraphum
               source: vertex_id_hash[edge_hash["in"]],
               target: vertex_id_hash[edge_hash["out"]],
             }
-            if graph.class::RGRAPHUM::Edge.has_field?(:created_at)
+#            if graph.class::RGRAPHUM::Edge.has_field?(:created_at)
               params[:created_at] = Time.at(edge_hash["created_at"].to_i)
-            end
+#            end
             graph.edges.build(params)
           end
         end

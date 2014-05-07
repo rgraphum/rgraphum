@@ -97,7 +97,7 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
 
     [vertices, @graph.vertices].transpose.each do |a, b|
       assert_instance_of Rgraphum::Vertex, a
-      rg_assert_equal b, a
+      assert_equal b, a
       refute_same b, a
 
       refute_empty a.edges
@@ -112,11 +112,11 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
         refute_same b.edges[i], edge
 
         unless edge.target == a
-          rg_assert_equal a, edge.source
+          assert_equal a, edge.source
         end
 
         unless edge.source == a
-          rg_assert_equal a, edge.target
+          assert_equal a, edge.target
         end
 
         assert edge.source.object_id == a.object_id || edge.target.object_id == a.object_id

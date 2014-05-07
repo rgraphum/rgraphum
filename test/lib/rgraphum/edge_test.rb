@@ -43,23 +43,23 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
     data = Marshal.dump(edge)
     edge_dash = Marshal.load(data)
 
-    assert_equal edge.object_id, edge_dash.object_id
-    assert_equal edge.source.object_id, edge_dash.source.object_id
-    assert_equal edge.target.object_id, edge_dash.target.object_id
+    assert_equal edge, edge_dash
+    assert_equal edge.source, edge_dash.source
+    assert_equal edge.target, edge_dash.target
   end
 
-  def test_invalid_field
-    v1 = Rgraphum::Vertex.new(label: "1")
-    v2 = Rgraphum::Vertex.new(label: "2")
-
-    assert_raises(ArgumentError) do
-      Rgraphum::Edge.new(source: v1, target: v2, labeeeeeeeeeeeeeeeeeeeel: "label")
-    end
-
-    assert_raises(ArgumentError) do
-      Rgraphum::Edge.new(source: v1, target: v2, label: "label", labeeeeeeeeeeeeeeeeeeeel: "label")
-    end
-  end
+#  def test_invalid_field
+#    v1 = Rgraphum::Vertex.new(label: "1")
+#    v2 = Rgraphum::Vertex.new(label: "2")
+#
+#    assert_raises(ArgumentError) do
+#      Rgraphum::Edge.new(source: v1, target: v2, labeeeeeeeeeeeeeeeeeeeel: "label")
+#    end
+#
+#    assert_raises(ArgumentError) do
+#      Rgraphum::Edge.new(source: v1, target: v2, label: "label", labeeeeeeeeeeeeeeeeeeeel: "label")
+#    end
+#  end
 
   def test_invalid_source
     v1 = Rgraphum::Vertex.new(label: "1")

@@ -51,7 +51,7 @@ class RgraphumVerticesTest < MiniTest::Unit::TestCase
     vertices_dash = Marshal.load(data)
 
     assert_equal vertices, vertices_dash
-    rg_refute_equal vertices_dash[0], vertices_dash[1]
+    refute_equal vertices_dash[0], vertices_dash[1]
     assert_same  vertices_dash[0], vertices_dash[2]
   end
 

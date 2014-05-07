@@ -52,6 +52,7 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
 
   def test_both
     v = @graph.v(4)
+
     assert_equal [{id:1,name:"marko",age:29},{id:5,name:"ripple",lang:"java"},{id:3,name:"lop",lang:"java"}], v.both
     assert_equal [{id:1,name:"marko",age:29}], v.both('knows')
     assert_equal [{id:1,name:"marko",age:29},{id:5,name:"ripple",lang:"java"},{id:3,name:"lop",lang:"java"}], v.both('knows','created')
@@ -103,6 +104,7 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
   def test_out_outE
     v = @graph.v(1)
     assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32},{id:3,name:"lop",lang:"java"}], v.outE.inV
+
     assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32},{id:3,name:"lop",lang:"java"}], v.out
 
     assert_equal [{id:2,name:"vadas",age:27},{id:4,name:"josh",age:32}], v.outE('knows').inV

@@ -90,7 +90,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
 
   def test_delete_edge
     delete_edge = @graph_a.edges.where(id: 1).first
-p    remain_edge = @graph_a.edges.where(id: 2).first
+    remain_edge = @graph_a.edges.where(id: 2).first
 
     @graph_a.edges.delete(delete_edge)
     assert_equal ([remain_edge]), @graph_a.edges
@@ -140,7 +140,7 @@ p    remain_edge = @graph_a.edges.where(id: 2).first
       {:id=>1, :source=>1, :target=>2, :weight=>1 },
       {:id=>2, :source=>2, :target=>1, :weight=>1 },
     ]
-    assert_equal expected, id_aspect_vertices[0].edges
+    assert_equal expected, id_aspect_vertices[0].edges.map{ |edge| edge.to_h }
     expected = [
       {:id=>1, :source=>1, :target=>2, :weight=>1 },
       {:id=>2, :source=>2, :target=>1, :weight=>1 },
@@ -256,12 +256,12 @@ p    remain_edge = @graph_a.edges.where(id: 2).first
     ]
 
     @graph.id_aspect!
-    assert_equal ( {id:0,source:0,target:1,weight:1} ), @graph.edges[0]
-    assert_equal ( {id:1,source:0,target:2,weight:1} ), @graph.edges[1]
-    assert_equal ( {id:2,source:1,target:2,weight:1} ), @graph.edges[2]
-    assert_equal ( {id:3,source:2,target:3,weight:1} ), @graph.edges[3]
-    assert_equal ( {id:4,source:2,target:4,weight:1} ), @graph.edges[4]
-    assert_equal ( {id:5,source:3,target:4,weight:1} ), @graph.edges[5]
+    assert_equal ( {id:0,source:0,target:1,weight:1} ), @graph.edges[0].to_h
+    assert_equal ( {id:1,source:0,target:2,weight:1} ), @graph.edges[1].to_h
+    assert_equal ( {id:2,source:1,target:2,weight:1} ), @graph.edges[2].to_h
+    assert_equal ( {id:3,source:2,target:3,weight:1} ), @graph.edges[3].to_h
+    assert_equal ( {id:4,source:2,target:4,weight:1} ), @graph.edges[4].to_h
+    assert_equal ( {id:5,source:3,target:4,weight:1} ), @graph.edges[5].to_h
 
     # add edge to vertex
     @graph = Rgraphum::Graph.new
@@ -280,27 +280,29 @@ p    remain_edge = @graph_a.edges.where(id: 2).first
     @graph.vertices[3].edges << {source:3,target:4,weight:1}
 
     @graph.id_aspect!
-    rg_assert_equal({id:0,source:0,target:1,weight:1}, @graph.edges[0])
-    rg_assert_equal({id:1,source:0,target:2,weight:1}, @graph.edges[1])
-    rg_assert_equal({id:2,source:1,target:2,weight:1}, @graph.edges[2])
-    rg_assert_equal({id:3,source:2,target:3,weight:1}, @graph.edges[3])
-    rg_assert_equal({id:4,source:2,target:4,weight:1}, @graph.edges[4])
-    rg_assert_equal({id:5,source:3,target:4,weight:1}, @graph.edges[5])
+    assert_equal({id:0,source:0,target:1,weight:1}, @graph.edges[0])
+    assert_equal({id:1,source:0,target:2,weight:1}, @graph.edges[1])
+    assert_equal({id:2,source:1,target:2,weight:1}, @graph.edges[2])
+    assert_equal({id:3,source:2,target:3,weight:1}, @graph.edges[3])
+    assert_equal({id:4,source:2,target:4,weight:1}, @graph.edges[4])
+    assert_equal({id:5,source:3,target:4,weight:1}, @graph.edges[5])
 
   end
+
   def test_add_edge_with_id_aspect
     @graph = Rgraphum::Graph.new
     @graph.vertices = [{ :label => "hoge" },{:label => "huga"}]
     assert_equal ([{ :id => 0, :label => "hoge"}, {:id => 1, :label => "huga"}]), @graph.vertices
 
     @graph.edges << { :source => 1, :target =>0 }
+
     @graph.id_aspect!
-    rg_assert_equal [ { :id => 0, :source => 1, :target => 0, :weight => 1}], @graph.edges
+    assert_equal [ { :id => 0, :source => 1, :target => 0, :weight => 1}], @graph.edges.map { |edge| edge.to_h }.to_a
 
     @graph.real_aspect!
     @graph.edges << { :source => 0, :target => 1 }
     @graph.id_aspect!
-    rg_assert_equal [ { :id => 0, :source => 1, :target => 0, :weight => 1 },{ :id => 1, :source => 0, :target => 1, :weight => 1}], @graph.edges
+    assert_equal [ { :id => 0, :source => 1, :target => 0, :weight => 1 },{ :id => 1, :source => 0, :target => 1, :weight => 1}], @graph.edges
   end
 
   def test_edges_input_with_array
@@ -314,7 +316,7 @@ p    remain_edge = @graph_a.edges.where(id: 2).first
       {:source => 2, :target => 1, :weight => 1},
     ]
     @graph.id_aspect!
-    assert_equal [ {:id => 0, :source => 1, :target => 2, :weight => 1},{ :id => 1, :source => 2, :target => 1, :weight => 1}], @graph.edges
+    assert_equal [ {:id => 0, :source => 1, :target => 2, :weight => 1},{ :id => 1, :source => 2, :target => 1, :weight => 1}], @graph.edges.map{ |edge| edge.to_h }
   end
 
 #  def test_divide_by_time
