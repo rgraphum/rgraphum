@@ -230,9 +230,16 @@ class Rgraphum::Vertex < Hash
 
   def edges=(array)
     return unless array.is_a?(Array)
-    @edges = Rgraphum::Edges(array)
-    @edges.vertex = self
+    object_init
+
+    array.each do |edge|
+      self.edges << edge
+    end
     @edges
+
+#    @edges = Rgraphum::Edges(array)
+#   @edges.vertex = self
+#   @edges
   end
 
   def inter_edges

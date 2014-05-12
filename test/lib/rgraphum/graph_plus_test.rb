@@ -44,9 +44,6 @@ class RgraphumPlusTest < MiniTest::Unit::TestCase
       vertex.edges.each_with_index do |edge, edge_index|
         added_edge = added_vertex.edges[edge_index]
 
-p       "edges test 47"
-p       edge
-p       added_edge
         assert_equal edge, added_edge
         refute_same  edge, added_edge
 

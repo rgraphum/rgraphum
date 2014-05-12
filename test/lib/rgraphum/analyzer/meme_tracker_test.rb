@@ -305,9 +305,6 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
   end
 
   def test_path_graph
-    @graph.vertices.each { |vertex|
-      vertex.label == (vertex.label = vertex.id.to_s) # FIXME Why == is here?
-    }
     meme_tracker = Rgraphum::Analyzer::MemeTracker.new
 
     # please see under test of fint_path
@@ -317,25 +314,25 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     assert_equal 4, graphes.size
 
     expected = [
-      {id: 13, label: "13"},
-      {id: 8,  label: "8"},
-      {id: 4,  label: "4"},
-      {id: 9,  label: "9"},
-      {id: 14, label: "14"},
-      {id: 10, label: "10"},
-      {id: 5,  label: "5"},
-      {id: 1,  label: "1"},
+      {id: 13},
+      {id: 8},
+      {id: 4},
+      {id: 9},
+      {id: 14},
+      {id: 10},
+      {id: 5},
+      {id: 1},
     ]
     assert_equal expected, graphes[0].vertices
 
     expected = [
-      {id: 0,  source: {id: 1,  label: "1"}, target: {id: 4,  label: "4"},  weight: 1},
-      {id: 1,  source: {id: 1,  label: "1"}, target: {id: 5,  label: "5"},  weight: 1},
-      {id: 7,  source: {id: 4,  label: "4"}, target: {id: 8,  label: "8"},  weight: 1},
-      {id: 9,  source: {id: 5,  label: "5"}, target: {id: 9,  label: "9"},  weight: 1},
-      {id: 10, source: {id: 5,  label: "5"}, target: {id: 10, label: "10"}, weight: 1},
-      {id: 15, source: {id: 8,  label: "8"}, target: {id: 13, label: "13"}, weight: 1},
-      {id: 17, source: {id: 10, label: "10"},target: {id: 14, label: "14"}, weight: 1},
+      {id: 0,  source: {id: 1}, target: {id: 4},  weight: 1},
+      {id: 1,  source: {id: 1}, target: {id: 5},  weight: 1},
+      {id: 7,  source: {id: 4}, target: {id: 8},  weight: 1},
+      {id: 9,  source: {id: 5}, target: {id: 9},  weight: 1},
+      {id: 10, source: {id: 5}, target: {id: 10}, weight: 1},
+      {id: 15, source: {id: 8}, target: {id: 13}, weight: 1},
+      {id: 17, source: {id: 10},target: {id: 14}, weight: 1},
     ]
     assert_equal expected, graphes[0].edges.sort_by(){|edge| edge.id}
   end
@@ -437,6 +434,7 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
       {source: 12, target: 15},
     ]
     graph.edges.each { |edge| edge.weight = 1 }
+
     graph
   end
 end
