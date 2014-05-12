@@ -21,11 +21,11 @@ class Rgraphum::Vertices < Rgraphum::RgraphumArray
     end
   end
 
-  def find_by_id(vertex_id)
-    if vertex_id.is_a?(Rgraphum::Vertex)
-      id = vertex_id.id
+  def find_by_id(vertex_or_id)
+    if vertex_or_id.is_a?(Rgraphum::Vertex)
+      id = vertex_or_id.id
     else
-      id = vertex_id
+      id = vertex_or_id
     end
     @id_vertex_map[id]
   end
@@ -51,7 +51,7 @@ class Rgraphum::Vertices < Rgraphum::RgraphumArray
   def build(vertex_hash)
     vertex = Rgraphum::Vertex(vertex_hash)
     vertex.graph = @graph
-    vertex.id = new_id(vertex.id)
+    vertex[:id] = new_id(vertex[:id])
     original_push_1(vertex)
     @id_vertex_map[vertex.id] = vertex
     vertex

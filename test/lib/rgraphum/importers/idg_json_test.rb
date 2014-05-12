@@ -166,9 +166,9 @@ class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
 }
     EOT
 
-    Rgraphum::Edge.instance_eval {
-      field :created_at # FIXME
-    }
+#    Rgraphum::Edge.instance_eval {
+#      field :created_at # FIXME
+#    }
 
     graph = Rgraphum::Graph.build(format: :idg_json, vertices: vertices_json_str, edges: edges_json_str)
     assert_equal 3, graph.vertices.size

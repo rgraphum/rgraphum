@@ -4,9 +4,9 @@ require 'time'
 
 class Rgraphum::Analyzer::RTAtMark
 
-  class Rgraphum::Vertex
-    field :twits
-  end
+#  class Rgraphum::Vertex
+#    field :twits
+#  end
 
   def make_graph(twits)
     @graph = Rgraphum::Graph.new

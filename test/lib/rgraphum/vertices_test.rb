@@ -26,20 +26,20 @@ class RgraphumVerticesTest < MiniTest::Unit::TestCase
     # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @vertex0.edges
     assert_equal 1, @vertex0.edges.size
     assert_equal 0, @vertex0.edges[0].id
-    rg_assert_equal @vertex0, @vertex0.edges[0].source
-    rg_assert_equal @vertex1, @vertex0.edges[0].target
+    assert_equal @vertex0.object_id, @vertex0.edges[0].source.object_id
+    assert_equal @vertex1.object_id, @vertex0.edges[0].target.object_id
 
     # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @vertex1.edges
     assert_equal 1, @vertex1.edges.size
     assert_equal 0, @vertex1.edges[0].id
-    rg_assert_equal @vertex0, @vertex1.edges[0].source
-    rg_assert_equal @vertex1, @vertex1.edges[0].target
+    assert_equal @vertex0.object_id, @vertex1.edges[0].source.object_id
+    assert_equal @vertex1.object_id, @vertex1.edges[0].target.object_id
 
     # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @graph.edges
     assert_equal 1, @graph.edges.size
     assert_equal 0, @graph.edges[0].id
-    rg_assert_equal @vertex0, @graph.edges[0].source
-    rg_assert_equal @vertex1, @graph.edges[0].target
+    assert_equal @vertex0.object_id, @graph.edges[0].source.object_id
+    assert_equal @vertex1.object_id, @graph.edges[0].target.object_id
   end
 
   def test_vertices_dump_and_load
@@ -50,8 +50,8 @@ class RgraphumVerticesTest < MiniTest::Unit::TestCase
     data = Marshal.dump(vertices)
     vertices_dash = Marshal.load(data)
 
-    rg_assert_equal vertices, vertices_dash
-    rg_refute_equal vertices_dash[0], vertices_dash[1]
+    assert_equal vertices, vertices_dash
+    refute_equal vertices_dash[0], vertices_dash[1]
     assert_same  vertices_dash[0], vertices_dash[2]
   end
 

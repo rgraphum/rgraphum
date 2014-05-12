@@ -27,11 +27,11 @@ class MiniTest::Unit::TestCase
   #   original_assert_equal(exp, act, msg)
   # end
 
-  def rg_assert_equal(exp, act, msg = nil)
-    binding.pry if @breakpoint
-    exp, act = rg_convert_exp_and_act(exp, act)
-    assert_equal(exp, act, msg)
-  end
+#  def rg_assert_equal(exp, act, msg = nil)
+#    binding.pry if @breakpoint
+#    exp, act = rg_convert_exp_and_act(exp, act)
+#    assert_equal(exp, act, msg)
+#  end
 
   def rg_refute_equal(exp, act, msg = nil)
     binding.pry if @breakpoint

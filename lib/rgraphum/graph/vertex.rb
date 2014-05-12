@@ -8,19 +8,19 @@ def Rgraphum::Vertex(hash_or_vertex)
   end
 end
 
-class Rgraphum::Vertex #< Hash
+class Rgraphum::Vertex < Hash
   attr_accessor :graph
 
   def initialize(fields={})
-    unless fields.empty?
-      unknown_fields = fields.keys - @@field_names
-      unless unknown_fields.empty?
-        raise ArgumentError, "No such field(s) in Vertex: #{unknown_fields.join(', ')}"
-      end
-      fields.each do |name, value|
-        self.send("#{name}=", value)
-      end
+    tmp = super(nil)
+    tmp.object_init
+    fields.each do |key,value|
+      tmp.store(key,value)
     end
+    tmp
+  end
+
+  def object_init
     @edges = Rgraphum::Edges.new
     @in_edges = Rgraphum::Edges.new
     @out_edges = Rgraphum::Edges.new
@@ -125,7 +125,7 @@ class Rgraphum::Vertex #< Hash
   #     ==>v[6]
   #
   def in(*key)
-    find_vertices(key, :in)
+    inE(*key).outV
   end
 
   # Gremlin: out
@@ -150,7 +150,7 @@ class Rgraphum::Vertex #< Hash
   #     ==>v[4]
   #
   def out(*key)
-    find_vertices(key, :out)
+    outE(*key).inV
   end
 
   # Gremlin: both
@@ -171,7 +171,7 @@ class Rgraphum::Vertex #< Hash
   #     ==>v[3]
   #
   def both(*key)
-    find_vertices(key, :both)
+    inE(*key).outV + outE(*key).inV
   end
 
 
@@ -209,12 +209,10 @@ class Rgraphum::Vertex #< Hash
   def find_edges(labels=[], direction=:both)
     case direction
     when :in
-      results = @edges.where(target: self).all
-#      results = @in_edges
+      results = @in_edges
     when :out
-      results = @edges.where(source: self).all
-#      results = @out_edges
-    else # :both
+      results = @out_edges
+    else :both
       results = @edges
     end
 
@@ -226,28 +224,22 @@ class Rgraphum::Vertex #< Hash
     end
   end
 
-  def find_vertices(labels=[], direction=:both)
-    case direction
-    when :in
-      vertices = find_edges(labels, :in).map(&:source)
-    when :out
-      vertices = find_edges(labels, :out).map(&:target)
-    else # :both
-      vertices  = find_edges(labels, :in).map(&:source)
-      vertices += find_edges(labels, :out).map(&:target)
-    end
-    Rgraphum::Vertices(vertices)
-  end
-
   def neighborhoods
     raise NotImplementedError
   end
 
   def edges=(array)
     return unless array.is_a?(Array)
-    @edges = Rgraphum::Edges(array)
-    @edges.vertex = self
+    object_init
+
+    array.each do |edge|
+      self.edges << edge
+    end
     @edges
+
+#    @edges = Rgraphum::Edges(array)
+#   @edges.vertex = self
+#   @edges
   end
 
   def inter_edges
@@ -292,35 +284,15 @@ class Rgraphum::Vertex #< Hash
     false 
   end
   
-  # accessors
-
-  # attr_accessor :id
-  # attr_accessor :source, :target
-  # attr_accessor :start,  :end
-  # attr_accessor :label
-  # attr_accessor :count
-  # attr_accessor :attvalues
-  # attr_accessor :community
-  # attr_accessor :edges
-  # attr_accessor :words
-
-  def [](key)
-    send(key)
-  end
-
-  def []=(key, value)
-    send("#{key}=")
-  end
-
-  def ==(other)
-    if other.is_a?(Rgraphum::Vertex)
-      return false unless id == other.id
-    else
-      return id == other
-    end
-    return false unless edges == other.edges
-    true
-  end
+#  def ==(other)
+#    if other.is_a?(Rgraphum::Vertex)
+#      return false unless id == other.id
+#    else
+#      return id == other
+#    end
+#    return false unless edges == other.edges
+#    true
+#  end
 
   def to_hash
     hash = {}
@@ -341,38 +313,67 @@ class Rgraphum::Vertex #< Hash
     to_hash.to_s
   end
 
-  # FIXME
-  def self.field(*field_names)
-    @@field_names ||= []
-    field_names = [field_names] unless field_names.is_a?(Array)
-    field_names.each do |field_name|
-      @@field_names << field_name.to_sym
-      class_eval <<-EOT, __FILE__, __LINE__ + 1
-        def #{field_name}
-          # self[:#{field_name}]
-          @#{field_name}
-        end
-        def #{field_name}=(rhs)
-          # self[:#{field_name}] = rhs if respond_to?(:[]=) # FIXME
-          @#{field_name} = rhs
-        end
-       EOT
-    end
+  def id
+    self.[](:id)
+  end
+  def id=(tmp)
+    self.store(:id,tmp)
   end
 
-  def self.has_field?(field_name)
-    @@field_names.include?(field_name.to_sym)
+  def label
+    self.[](:label)
+  end
+  def label=(tmp)
+    self.store(:label,tmp)
   end
 
-  field :id
-  field :source, :target
-  field :start,  :end
-  field :label
-  field :weight
-  field :count
-  field :attvalues
-  # field :community
-  field :community_id
-  # field :edges
-  field :words
+  def community_id
+    self.[](:community_id)
+  end
+  def community_id=(tmp) 
+    self.store(:community_id,tmp)
+  end
+
+  def name
+    self.[](:name)
+  end
+  def age
+    self.[](:age)
+  end
+
+  def twits
+    self.[](:twits)
+  end
+  def twits=(tmp) 
+    self.store(:twits,tmp)
+  end
+
+  def words
+    self.[](:words)
+  end
+  def words=(tmp) 
+    self.store(:words,tmp)
+  end
+
+  def start
+    self.[](:start)
+  end
+  def start=(tmp) 
+    self.store(:start,tmp)
+  end
+
+  def end
+    self.[](:end)
+  end
+  def end=(tmp) 
+    self.store(:end,tmp)
+  end
+
+  def count
+    self.[](:count)
+  end
+  def count=(tmp)
+    self.store(:count,tmp)
+  end
+
 end

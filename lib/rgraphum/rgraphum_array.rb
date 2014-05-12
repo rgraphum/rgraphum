@@ -29,11 +29,10 @@ class Rgraphum::RgraphumArray < Array
   # end
 
   def new_id(id=nil)
-    # self.class.new_id
     @new_id ||= -1
     if id
-      @new_id = id if @new_id < id
-      id
+#      @new_id = id if @new_id < id
+      @new_id = id
     else
       @new_id += 1
     end
@@ -149,11 +148,11 @@ class Rgraphum::RgraphumArray < Array
   end
 
   def method_missing(name, *args)
-    if first.class.has_field?(name)
+#    if first.class.has_feilds?(name)
       map{|item| item.send(name)}
-    else
-      super(name,*args)
-    end
+#    else
+#      super(name,*args)
+#    end
   end
 
 end

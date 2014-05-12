@@ -17,26 +17,26 @@ class RTAtMarkTest < MiniTest::Unit::TestCase
 
     vertex = graph.vertices.detect { |vertex| vertex.id == 0 }
     assert vertex
-    rg_assert_equal({id: 0, label: "piyo",
+    assert_equal({id: 0, label: "piyo",
                          twits: [["221257277779353600", "piyo", "I remember it",    "2013-04-04 15:30:00", "ja"],
                                  ["221257277779353602", "piyo", "I like it",        "2013-04-04 15:30:00", "ja"],
                                  ["221257277779353605", "piyo", "I forget it",      "2013-04-04 15:30:00", "ja"],
                                  ["221257277779353605", "piyo", "@hura I forget it","2013-04-04 15:30:00", "ja"]]}, vertex )
     vertex = graph.vertices.detect { |vertex| vertex.id == 1 }
     assert vertex
-    rg_assert_equal({id: 1, label: "hoge",
+    assert_equal({id: 1, label: "hoge",
                          twits: [["221257277779353601","hoge","@hoge remember me!","2013-01-01 12:00:00","ja"],
                                  ["221257277779353604","hoge","Jast me @huga Do you mean @Hoge remember me!","2013-03-03 14:20:00","ja"]]}, vertex)
 
     vertex = graph.vertices.detect { |vertex| vertex.id == 2 }
     assert vertex
-    rg_assert_equal({id: 2, label: "huga",
+    assert_equal({id: 2, label: "huga",
                          twits: [["221257277779353603","huga","Do you mean @hoge remember me!","2013-02-02 13:10:00","ja"],
                                  ["221257277779353604","huga","Do you mean @Hoge remember me!","2013-03-03 14:20:00","ja"]]}, vertex)
 
     vertex = graph.vertices.detect { |vertex| vertex.id == 3 }
     assert vertex
-    rg_assert_equal({id: 3, label: "hura"}, vertex)
+    assert_equal({id: 3, label: "hura"}, vertex)
   
     assert_equal 5, graph.edges.size
 

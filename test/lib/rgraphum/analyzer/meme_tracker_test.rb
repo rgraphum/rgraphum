@@ -26,20 +26,20 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
 
     edge = graph.edges[0]
     assert_equal 0,        edge.id
-    rg_assert_equal phrase_a, edge.source
-    rg_assert_equal phrase_b, edge.target
+    assert_equal phrase_a, edge.source
+    assert_equal phrase_b, edge.target
     assert_equal 1.0/3.0,  edge.weight
 
     edge = graph.edges[1]
     assert_equal 1,        edge.id
-    rg_assert_equal phrase_a, edge.source
-    rg_assert_equal phrase_c, edge.target
+    assert_equal phrase_a, edge.source
+    assert_equal phrase_c, edge.target
     assert_equal 1.0/4.0,  edge.weight
 
     edge = graph.edges[2]
     assert_equal 2,        edge.id
-    rg_assert_equal phrase_b, edge.source
-    rg_assert_equal phrase_c, edge.target
+    assert_equal phrase_b, edge.source
+    assert_equal phrase_c, edge.target
     assert_equal 1.0/5.0,  edge.weight
   end
 
@@ -148,10 +148,10 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     #####################################
     # test start_vertices and end_vertices
     start_root_vertices = @meme_tracker.start_root_vertices
-    rg_assert_equal [{id: 1}, {id: 2}, {id: 3}, {id: 12}], start_root_vertices
+    assert_equal [{id: 1}, {id: 2}, {id: 3}, {id: 12}], start_root_vertices
 
     end_root_vertices = @meme_tracker.end_root_vertices
-    rg_assert_equal [{id: 13}, {id: 14}, {id: 15}], end_root_vertices
+    assert_equal [{id: 13}, {id: 14}, {id: 15}], end_root_vertices
   end
 
   def test_phrase_clusters_2
@@ -160,20 +160,20 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     start_vertex = @graph.vertices.where(id: 8).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     path = cluster.find_path(13)
-    rg_assert_equal({id: 13}, path.end_vertex)
-    rg_assert_equal([{id: 13}, {id: 8}], path.vertices)
+    assert_equal({id: 13}, path.end_vertex)
+    assert_equal([{id: 13}, {id: 8}], path.vertices)
 
     start_vertex = @graph.vertices.where(id: 9).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     path = cluster.find_path(13)
-    rg_assert_equal({id: 13}, path.end_vertex)
-    rg_assert_equal([{id: 13}, {id: 9}], path.vertices)
+    assert_equal({id: 13}, path.end_vertex)
+    assert_equal([{id: 13}, {id: 9}], path.vertices)
 
     start_vertex = @graph.vertices.where(id: 4).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     path = cluster.find_path(13)
-    rg_assert_equal({id: 13}, path.end_vertex)
-    rg_assert_equal([{id: 13}, {id: 8}, {id: 4}], path.vertices)
+    assert_equal({id: 13}, path.end_vertex)
+    assert_equal([{id: 13}, {id: 8}, {id: 4}], path.vertices)
 
     start_vertex = @graph.vertices.where(id: 5).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
@@ -181,8 +181,8 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
       13 => [{id: 13}, {id: 8}, {id: 5}, {id: 9}],
       14 => [{id: 14}, {id: 10}, {id: 5}],
     }
-    rg_assert_equal expected[13], cluster.find_path(13).vertices
-    rg_assert_equal expected[14], cluster.find_path(14).vertices
+    assert_equal expected[13], cluster.find_path(13).vertices
+    assert_equal expected[14], cluster.find_path(14).vertices
 
     start_vertex = @graph.vertices.where(id: 1).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
@@ -190,8 +190,8 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
       13 => [{id: 13}, {id: 8},  {id: 4}, {id: 1}, {id: 5}, {id: 9} ],
       14 => [{id: 14}, {id: 10}, {id: 5}, {id: 1}],
     }
-    rg_assert_equal expected[13], cluster.find_path(13).vertices
-    rg_assert_equal expected[14], cluster.find_path(14).vertices
+    assert_equal expected[13], cluster.find_path(13).vertices
+    assert_equal expected[14], cluster.find_path(14).vertices
   end
 
   def test_phrase_clusters_3
@@ -208,19 +208,19 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     end_vertex = end_root_vertices[0] # (13)
     start_vertex = @graph.vertices.where(id: 8).first
     cluster = @meme_tracker.find_cluster(start_vertex, end_vertex)
-    rg_assert_equal [{id: 13}, {id: 8}], cluster
+    assert_equal [{id: 13}, {id: 8}], cluster
 
     start_vertex = @graph.vertices.where(id: 9).first
     cluster = @meme_tracker.find_cluster(start_vertex, end_vertex)
-    rg_assert_equal [{id: 13}, {id: 9}], cluster
+    assert_equal [{id: 13}, {id: 9}], cluster
 
     start_vertex = @graph.vertices.where(id: 4).first
     cluster = @meme_tracker.find_cluster(start_vertex, end_vertex)
-    rg_assert_equal [{id: 13}, {id: 8}, {id: 4}], cluster
+    assert_equal [{id: 13}, {id: 8}, {id: 4}], cluster
 
     start_vertex = @graph.vertices.where(id: 1).first
     cluster = @meme_tracker.find_cluster(start_vertex, end_vertex)
-    rg_assert_equal [{id: 13}, {id: 8}, {id: 4}, {id: 9}, {id: 5}, {id: 1}], cluster
+    assert_equal [{id: 13}, {id: 8}, {id: 4}, {id: 9}, {id: 5}, {id: 1}], cluster
   end
 
   def test_phrase_clusters_5
@@ -238,7 +238,7 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     ]
     # rg_assert_equal expected, clusters_a
     (0...expected.size).each do |i|
-      rg_assert_equal expected[i], clusters_a[i].vertices
+      assert_equal expected[i], clusters_a[i].vertices
     end
 
     # sum_sigma_in
@@ -257,7 +257,7 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
       [ {:id => 15}, {:id => 12} ],
     ]
     (0...expected.size).each do |i|
-      rg_assert_equal expected[i], clusters_b[i].vertices
+      assert_equal expected[i], clusters_b[i].vertices
     end
 
     # sum_sigma_in
@@ -268,7 +268,7 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     assert_equal 3, clusters.size
 
     (0...clusters_b.size).each do |i|
-      rg_assert_equal clusters_b[i].vertices, clusters[i].vertices
+      assert_equal clusters_b[i].vertices, clusters[i].vertices
     end
   end
 
@@ -282,7 +282,7 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
       [ {:id => 15}, {:id => 7}, {:id => 2}, {:id => 3}, {:id => 12} ],
     ]
     (0...expected.size).each do |i|
-      rg_assert_equal expected[i], clusters_c[i].vertices
+      assert_equal expected[i], clusters_c[i].vertices
     end
 
     # sum_sigma_in
@@ -300,14 +300,11 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
       [ {:id => 15}, {:id => 12} ],
     ]
     (0...expected.size).each do |i|
-      rg_assert_equal expected[i], clusters_d[i].vertices
+      assert_equal expected[i], clusters_d[i].vertices
     end
   end
 
   def test_path_graph
-    @graph.vertices.each { |vertex|
-      vertex.label == (vertex.label = vertex.id.to_s) # FIXME Why == is here?
-    }
     meme_tracker = Rgraphum::Analyzer::MemeTracker.new
 
     # please see under test of fint_path
@@ -317,27 +314,27 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     assert_equal 4, graphes.size
 
     expected = [
-      {id: 13, label: "13"},
-      {id: 8,  label: "8"},
-      {id: 4,  label: "4"},
-      {id: 9,  label: "9"},
-      {id: 14, label: "14"},
-      {id: 10, label: "10"},
-      {id: 5,  label: "5"},
-      {id: 1,  label: "1"},
+      {id: 13},
+      {id: 8},
+      {id: 4},
+      {id: 9},
+      {id: 14},
+      {id: 10},
+      {id: 5},
+      {id: 1},
     ]
-    rg_assert_equal expected, graphes[0].vertices
+    assert_equal expected, graphes[0].vertices
 
     expected = [
-      {id: 0,  source: {id: 1,  label: "1"}, target: {id: 4,  label: "4"},  weight: 1},
-      {id: 1,  source: {id: 1,  label: "1"}, target: {id: 5,  label: "5"},  weight: 1},
-      {id: 7,  source: {id: 4,  label: "4"}, target: {id: 8,  label: "8"},  weight: 1},
-      {id: 9,  source: {id: 5,  label: "5"}, target: {id: 9,  label: "9"},  weight: 1},
-      {id: 10, source: {id: 5,  label: "5"}, target: {id: 10, label: "10"}, weight: 1},
-      {id: 15, source: {id: 8,  label: "8"}, target: {id: 13, label: "13"}, weight: 1},
-      {id: 17, source: {id: 10, label: "10"},target: {id: 14, label: "14"}, weight: 1},
+      {id: 0,  source: {id: 1}, target: {id: 4},  weight: 1},
+      {id: 1,  source: {id: 1}, target: {id: 5},  weight: 1},
+      {id: 7,  source: {id: 4}, target: {id: 8},  weight: 1},
+      {id: 9,  source: {id: 5}, target: {id: 9},  weight: 1},
+      {id: 10, source: {id: 5}, target: {id: 10}, weight: 1},
+      {id: 15, source: {id: 8}, target: {id: 13}, weight: 1},
+      {id: 17, source: {id: 10},target: {id: 14}, weight: 1},
     ]
-    rg_assert_equal expected, graphes[0].edges.sort_by(){|edge| edge.id}
+    assert_equal expected, graphes[0].edges.sort_by(){|edge| edge.id}
   end
 
   # 1 -> 2 -> 3 -> 4
@@ -437,6 +434,7 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
       {source: 12, target: 15},
     ]
     graph.edges.each { |edge| edge.weight = 1 }
+
     graph
   end
 end

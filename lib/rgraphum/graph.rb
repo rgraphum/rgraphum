@@ -37,7 +37,6 @@ class Rgraphum::Graph
           next if col_index == row_index and !options[:loop]
           
           if weight and weight >= options[:limit]
-p row_index
             graph.edges.build( {source:graph.vertices[row_index], target:graph.vertices[col_index],weight:weight} )
           end
         end
@@ -185,32 +184,32 @@ p row_index
     new_graph
   end
 
-  def compact_with_label(options={})
-    compact_with(:label, self, options)
-  end
+#  def compact_with_label(options={})
+#    compact_with(:label, self, options)
+#  end
 
-  def marge_with_label(target)
-    new_graph = self + target
-    new_graph.compact_with_label
-  end
+#  def marge_with_label(target)
+#    new_graph = self + target
+#    new_graph.compact_with_label
+#  end
 
-  def divide_by_time(interval=20)
-    @vertices.divide_by_time(interval)
-    @edges.divide_by_time(interval)
-
-    new_edges = Rgraphum::Edges.new
-    new_edges.graph = self
-    @edges.each do |edge|
-      conditions = { source: edge.source, target: edge.target, start: edge.start }
-      same_edge = new_edges.where(conditions).first
-      if same_edge
-        same_edge.weight += edge.weight
-      else
-        new_edges << edge
-      end
-    end
-    self.edges = new_edges
-  end
+#  def divide_by_time(interval=20)
+#    @vertices.divide_by_time(interval)
+#    @edges.divide_by_time(interval)
+#
+#    new_edges = Rgraphum::Edges.new
+#    new_edges.graph = self
+#    @edges.each do |edge|
+#      conditions = { source: edge.source, target: edge.target, start: edge.start }
+#      same_edge = new_edges.where(conditions).first
+#      if same_edge
+#        same_edge.weight += edge.weight
+#      else
+#        new_edges << edge
+#      end
+#    end
+#    self.edges = new_edges
+#  end
 
   def compact_with(method_name, graph=self, options ={})
     new_vertices = Rgraphum::Vertices.new

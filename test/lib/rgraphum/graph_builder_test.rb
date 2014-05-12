@@ -14,53 +14,52 @@ class RgraphumGraphBuilderTest < MiniTest::Unit::TestCase
 
     assert_equal    5,                     graph.edges.size
 
-    rg_assert_equal graph.edges[0].source, graph.vertices[0]
-    rg_assert_equal graph.edges[0].target, graph.vertices[1]
-    rg_assert_equal graph.edges[0].weight, 0.7
+    assert_equal graph.edges[0].source.object_id, graph.vertices[0].object_id
+    assert_equal graph.edges[0].target.object_id, graph.vertices[1].object_id
+    assert_equal graph.edges[0].weight, 0.7
     
-    rg_assert_equal graph.edges[1].source, graph.vertices[0]
-    rg_assert_equal graph.edges[1].target, graph.vertices[2]
-    rg_assert_equal graph.edges[1].weight, 0.7
+    assert_equal graph.edges[1].source.object_id, graph.vertices[0].object_id
+    assert_equal graph.edges[1].target.object_id, graph.vertices[2].object_id
+    assert_equal graph.edges[1].weight, 0.7
 
-    rg_assert_equal graph.edges[2].source, graph.vertices[1]
-    rg_assert_equal graph.edges[2].target, graph.vertices[3]
-    rg_assert_equal graph.edges[2].weight, 0.9
+    assert_equal graph.edges[2].source.object_id, graph.vertices[1].object_id
+    assert_equal graph.edges[2].target.object_id, graph.vertices[3].object_id
+    assert_equal graph.edges[2].weight, 0.9
 
-    rg_assert_equal graph.edges[3].source, graph.vertices[2]
-    rg_assert_equal graph.edges[3].target, graph.vertices[1]
-    rg_assert_equal graph.edges[3].weight, 0.8
+    assert_equal graph.edges[3].source.object_id, graph.vertices[2].object_id
+    assert_equal graph.edges[3].target.object_id, graph.vertices[1].object_id
+    assert_equal graph.edges[3].weight, 0.8
 
-    rg_assert_equal graph.edges[4].source, graph.vertices[2]
-    rg_assert_equal graph.edges[4].target, graph.vertices[3]
-    rg_assert_equal graph.edges[4].weight, 0.3
-
+    assert_equal graph.edges[4].source.object_id, graph.vertices[2].object_id
+    assert_equal graph.edges[4].target.object_id, graph.vertices[3].object_id
+    assert_equal graph.edges[4].weight, 0.3
 
     graph = Rgraphum::Graph.build_from_adjacency_matrix(matrix,labels,{:loop=>true,limit:0.8})
 
-    rg_assert_equal graph.edges[0].source, graph.vertices[0]
-    rg_assert_equal graph.edges[0].target, graph.vertices[0]
-    rg_assert_equal graph.edges[0].weight, 1.0
+    assert_equal graph.edges[0].source.object_id, graph.vertices[0].object_id
+    assert_equal graph.edges[0].target.object_id, graph.vertices[0].object_id
+    assert_equal graph.edges[0].weight, 1.0
 
-    rg_assert_equal graph.edges[1].source, graph.vertices[1]
-    rg_assert_equal graph.edges[1].target, graph.vertices[1]
-    rg_assert_equal graph.edges[1].weight, 1.0
+    assert_equal graph.edges[1].source.object_id, graph.vertices[1].object_id
+    assert_equal graph.edges[1].target.object_id, graph.vertices[1].object_id
+    assert_equal graph.edges[1].weight, 1.0
 
-    rg_assert_equal graph.edges[2].source, graph.vertices[1]
-    rg_assert_equal graph.edges[2].target, graph.vertices[3]
-    rg_assert_equal graph.edges[2].weight, 0.9
+    assert_equal graph.edges[2].source.object_id, graph.vertices[1].object_id
+    assert_equal graph.edges[2].target.object_id, graph.vertices[3].object_id
+    assert_equal graph.edges[2].weight, 0.9
     
-    rg_assert_equal graph.edges[3].source, graph.vertices[2]
-    rg_assert_equal graph.edges[3].target, graph.vertices[1]
-    rg_assert_equal graph.edges[3].weight, 0.8
+    assert_equal graph.edges[3].source.object_id, graph.vertices[2].object_id
+    assert_equal graph.edges[3].target.object_id, graph.vertices[1].object_id
+    assert_equal graph.edges[3].weight, 0.8
 
-    rg_assert_equal graph.edges[4].source, graph.vertices[2]
-    rg_assert_equal graph.edges[4].target, graph.vertices[2]
-    rg_assert_equal graph.edges[4].weight, 1.0
+    assert_equal graph.edges[4].source.object_id, graph.vertices[2].object_id
+    assert_equal graph.edges[4].target.object_id, graph.vertices[2].object_id
+    assert_equal graph.edges[4].weight, 1.0
 
-    rg_assert_equal graph.edges[5].source, graph.vertices[3]
-    rg_assert_equal graph.edges[5].target, graph.vertices[3]
-    rg_assert_equal graph.edges[5].weight, 1.0
-        
+    assert_equal graph.edges[5].source.object_id, graph.vertices[3].object_id
+    assert_equal graph.edges[5].target.object_id, graph.vertices[3].object_id
+    assert_equal graph.edges[5].weight, 1.0
+
   end
 
   def test_simirality_graph_builder
@@ -84,22 +83,8 @@ class RgraphumGraphBuilderTest < MiniTest::Unit::TestCase
                     { source:"hoge", target:"piyo", weight:0.5},
                     { source:"huga", target:"piyo", weight:0.5} ]
 
-p    graph.edges.size
     except_data.zip(graph.edges) do |pair|
-p     "##"
-      p pair[1].source[:label]
-      p pair[1].target[:label]
-      p pair[1].weight
-#      assert_equal pair[0][:source], pair[1].source[:label]
-#      assert_equal pair[0][:target], pair[1].target[:label]
-#      assert_equal pair[0][:weight], pair[1].weight
     end
 
-#    graph = GraphBuilder.new.similarity_graph(data,{tf_idf:false})
-#    graph.edges.each do |edge|
-#      p edge.source.label
-#      p edge.target.label
-#      p edge.weight
-#    end
   end
 end

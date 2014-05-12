@@ -255,6 +255,7 @@ class Rgraphum::Analyzer::MemeTracker
     options = { :vertices=>Rgraphum::Vertices.new, :cut => true }.merge(options)
 
     vertices = options[:vertices]
+
     source_vertex = options[:source_vertex]
 
     return vertices if vertices.include?(source_vertex)
