@@ -10,7 +10,7 @@ module Rgraphum::Graph::Math
 
   def self.included(base)
     # base.extend ClassMethods
-    base.send :include, Rgraphum::Graph::Math::Dijkstra
+#    base.send :include, Rgraphum::Graph::Math::Dijkstra
     base.send :include, Rgraphum::Graph::Math::ClusteringCoefficient
   end
 
@@ -32,6 +32,37 @@ module Rgraphum::Graph::Math
 
   def power_low_rand(max,min,exponent)
     ( (max^exponent-min^exponent)*rand() + min^exponent )^( 1.0/exponent )
+  end
+
+  def adjacency_matrix
+    return @adjacey_matrix if @adjacey_matrix
+    ids = self.vertices.id
+    @adjacey_matrix = Array.new(ids.size){ Array.new(ids.size) }
+    self.vertices.each do |source_vertex|
+      source_vertex.outE.each do |edge|
+        target_vertex = edge.target
+        i = ids.index(target_vertex.id)
+        j = ids.index(source_vertex.id)
+        @adjacey_matrix[i][j] = edge.weight
+      end
+    end
+    @adjacey_matrix
+  end
+
+  def adjacency_matrix_index
+    self.vertices.id
+  end
+
+  def average_distance
+    Dijkstra.average_distance(self)
+  end
+
+  def minimum_route(a,b)
+    []
+  end
+
+  def path
+    []
   end
 
   private

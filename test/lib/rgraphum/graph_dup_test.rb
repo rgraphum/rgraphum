@@ -21,15 +21,16 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
   def test_edge_dup
     edge_dup = @vertex_0.edges[0].dup
 
-    refute_same @vertex_0.edges[0], edge_dup
+    assert       @vertex_0.edges[0].object_id != edge_dup.object_id, "#{@vertex_0.edges[0].object_id} is equal #{edge_dup.object_id} "
+    assert_equal @vertex_0.edges[0],           edge_dup
   end
 
   def test_vertex_edges_dup
     edges_dup = @vertex_0.edges.dup
 
-    refute_same @vertex_0.edges, edges_dup
-    assert_nil edges_dup.graph
-    assert_nil edges_dup.vertex
+    assert_equal @vertex_0.edges, edges_dup
+    assert_nil   edges_dup.graph
+    assert_nil   edges_dup.vertex
 
     edges_dup.each_with_index do |edge,i|
       assert_equal edge, @vertex_0.edges[i]

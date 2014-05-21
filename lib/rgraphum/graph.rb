@@ -75,6 +75,7 @@ class Rgraphum::Graph
   def clear_cache
     @m = nil
     @m_with_weight = nil
+    @adjacency_matrix = nil
   end
 
   # m is size of edges

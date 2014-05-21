@@ -1,162 +1,63 @@
-# -*- coding: utf-8 -*-
-
-# A --(1)-- B --(4)-- G
-# | ＼      |       ／
-#(2)  (4)  (2)  (1)
-# |      ＼ | ／
-# C --(3)-- D
-#
-# A -> B -> D -> G
-#
-#
-# \ A B C D G
-# A - 1 2 4 -
-# B 1 - - 2 4
-# C 2 - - 3 -
-# D 4 2 3 - 1 
-# G - 4 - 1 -
-#
-# \ A B C D G
-# A - 1 2 4 -
-# B - - - 2 4
-# C - - - 3 -
-# D - - - - 1 
-# G - - - - -
-#
-# \ A B C D G
-# A - 1 2 4 -
-# B - - - 2 4
-# C - - - 3 -
-# D - - - - 1 
-# G - - - - -
-#
-# A-B 1
-# A-C 2
-# A-D 4
-#
-# A-B-D 1+2=3
-# A-B-G 1+4=5
-# A-C       1
-# A-D       4
-#
-# A-B-D 1+2=3
-# A-B-G 1+4=5
-# A-C-D 1+3=4
-# A-D       4
-#
-# A-B-D 1+2=3
-# A-B-G 1+4=5
-# A-C-D 1+3=4 x
-# A-D       4
-#
-# A-B-D-G 1+2+1=4
-# A-B-G   1+4  =5 x
-# A-C-D   1+3  =4 x
-# A-D           4 x
-#
-module Rgraphum::Graph::Math::Dijkstra
+module Rgraphum::Graph::Math::Hoge
   def self.included(base)
     base.extend ClassMethods
-  end
-
-  # Find shortest route from start to end
-  #
-  # Returns array of vertices
-  #
-  def dijkstra(start_vertex, end_vertex)
-    self.class.dijkstra(self, start_vertex, end_vertex)
   end
 
   def adjacency_matrix
     self.class.adjacency_matrix(self)
   end
 
-  def average_distance
-    self.class.average_distance(self)
+end
+
+class Dijkstra
+ 
+  # Find shortest route from start to end
+  #
+  # Returns array of vertices
+  #
+  def dijkstra(graph, start_vertex, end_vertex)
+    details = dijkstra_details(graph, start_vertex, end_vertex)
+    routes = details[:routes]
+
+    return [] if routes.nil? || routes.empty?
+    routes[0][:vertices]
   end
 
-  def quick_average_distance
-    self.class.quick_average_distance(self)
-  end
+  # Find shortest routes from start to end
+  #
+  # Returns routes
+  #
+  def dijkstra_details(graph, start_vertex, end_vertex)
+    return {} if start_vertex.id == end_vertex.id
 
-  def minimum_distance_matrix
-    self.class.minimum_distance_matrix(self)
-  end
+    end_id = end_vertex.id
+    size = graph.vertices.size
 
-  module ClassMethods
-    # class Route
-    #   attr_reader :id
-    #   attr_accessor :vertices, :total_weight, :ended
-    #
-    #   def initialize(vertex, options={})
-    #     weight = options[:weight] || 1
-    #     end_vertex = options[:end_vertex]
-    #     end_id = end_vertex ? end_vertex.id : options[:end_id]
-    #     if options.key?(:start_vertex)
-    #       start_vertex = options[:start_vertex]
-    #       @id = vertex.id
-    #       @vertices = [start_vertex, vertex]
-    #       @total_weight = weight
-    #       @ended = (id == end_id)
-    #     elsif options.key?(:route)
-    #       route = options[:route]
-    #       @id = vertex.id
-    #       @vertices = route[:vertices] + [vertex]
-    #       @total_weight = route[:total_weight] + weight
-    #       @ended = (id == end_id)
-    #     else
-    #       raise ArgumentError
-    #     end
-    #   end
-    # end
+    shortest_map = Array.new(size, Float::INFINITY)
+    adjacency_matrix = adjacency_matrix(graph)
 
-    # Find shortest route from start to end
-    #
-    # Returns array of vertices
-    #
-    def dijkstra(graph, start_vertex, end_vertex)
-      details = dijkstra_details(graph, start_vertex, end_vertex)
-      routes = details[:routes]
+    routes = []
 
-      return [] if routes.nil? || routes.empty?
-      routes[0][:vertices]
+    start_index = graph.vertices.index(start_vertex)
+    weights = adjacency_matrix[start_index]
+    weights.each_with_index do |weight, i|
+      next unless weight
+      shortest_map[i] = weight
+
+      vertex = graph.vertices[i]
+      routes << {
+        id: vertex.id,
+        index: i,
+        vertices: [start_vertex, vertex],
+        weights: [weight],
+        total_weight: weight,
+        ended: vertex.id == end_id,
+      }
     end
 
-    # Find shortest routes from start to end
-    #
-    # Returns routes
-    #
-    def dijkstra_details(graph, start_vertex, end_vertex)
-      return {} if start_vertex.id == end_vertex.id
-
-      end_id = end_vertex.id
-      size = graph.vertices.size
-
-      shortest_map = Array.new(size, Float::INFINITY)
-      adjacency_matrix = adjacency_matrix(graph)
-
-      routes = []
-
-      start_index = graph.vertices.index(start_vertex)
-      weights = adjacency_matrix[start_index]
-      weights.each_with_index do |weight, i|
-        next unless weight
-        shortest_map[i] = weight
-
-        vertex = graph.vertices[i]
-        routes << {
-          id: vertex.id,
-          index: i,
-          vertices: [start_vertex, vertex],
-          weights: [weight],
-          total_weight: weight,
-          ended: vertex.id == end_id,
-        }
-      end
-
-      loop do
-        shortest_route = routes.min_by { |route|
-          route[:ended] ? Float::INFINITY : route[:total_weight]
+    loop do
+      shortest_route = routes.min_by { |route|
+        route[:ended] ? Float::INFINITY : route[:total_weight]
         }
         break if !shortest_route || shortest_route[:ended]
 
@@ -196,6 +97,7 @@ module Rgraphum::Graph::Math::Dijkstra
 
     # 隣接行列 Adjacency matrix
     def adjacency_matrix(graph)
+      return @adjacency_matrix if @adjacency_matrix
       ids = graph.vertices.map(&:id)
       id_index_map = Hash[*ids.map.with_index { |id, i| [id, i] }.flatten]
       size = graph.vertices.size
@@ -208,7 +110,7 @@ module Rgraphum::Graph::Math::Dijkstra
         adjacency_matrix[j][i] = e.weight # FIXME
       end
 
-      adjacency_matrix
+      @adjacency_matrix = adjacency_matrix
     end
 
     def average_distance_with_minimum_distance_matrix(graph, &block)
@@ -262,7 +164,6 @@ module Rgraphum::Graph::Math::Dijkstra
           distance_matrix[j][i] = distance_matrix[i][j]
         end
       end
-
       distance_matrix
     end
 
@@ -325,7 +226,6 @@ module Rgraphum::Graph::Math::Dijkstra
         end
       end
     end    
-  end
 
   private
 end
