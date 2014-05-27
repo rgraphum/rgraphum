@@ -32,6 +32,7 @@ require_relative 'rgraphum/path'
 #require_relative 'rgraphum/cluster'
 
 require_relative 'rgraphum/analyzer'
+require_relative 'rgraphum/graph/converter'
 
 require_relative 'rgraphum/t'
 

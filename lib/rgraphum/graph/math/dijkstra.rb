@@ -1,13 +1,13 @@
-module Rgraphum::Graph::Math::Hoge
-  def self.included(base)
-    base.extend ClassMethods
-  end
-
-  def adjacency_matrix
-    self.class.adjacency_matrix(self)
-  end
-
-end
+#module Rgraphum::Graph::Math::Hoge
+#  def self.included(base)
+#    base.extend ClassMethods
+#  end
+#
+#  def adjacency_matrix
+#    self.class.adjacency_matrix(self)
+#  end
+#
+#end
 
 class Dijkstra
  
@@ -95,23 +95,23 @@ class Dijkstra
       }
     end
 
-    # 隣接行列 Adjacency matrix
-    def adjacency_matrix(graph)
-      return @adjacency_matrix if @adjacency_matrix
-      ids = graph.vertices.map(&:id)
-      id_index_map = Hash[*ids.map.with_index { |id, i| [id, i] }.flatten]
-      size = graph.vertices.size
-      adjacency_matrix = (0...size).map { Array.new(size) }
-
-      graph.edges.each do |e|
-        i = id_index_map[e.source.id]
-        j = id_index_map[e.target.id]
-        adjacency_matrix[i][j] = e.weight
-        adjacency_matrix[j][i] = e.weight # FIXME
-      end
-
-      @adjacency_matrix = adjacency_matrix
-    end
+#    # 隣接行列 Adjacency matrix
+#    def adjacency_matrix(graph)
+#      return @adjacency_matrix if @adjacency_matrix
+#      ids = graph.vertices.map(&:id)
+#      id_index_map = Hash[*ids.map.with_index { |id, i| [id, i] }.flatten]
+#      size = graph.vertices.size
+#      adjacency_matrix = (0...size).map { Array.new(size) }
+#
+#      graph.edges.each do |e|
+#        i = id_index_map[e.source.id]
+#        j = id_index_map[e.target.id]
+#        adjacency_matrix[i][j] = e.weight
+#        adjacency_matrix[j][i] = e.weight # FIXME
+#      end
+#
+#      @adjacency_matrix = adjacency_matrix
+#    end
 
     def average_distance_with_minimum_distance_matrix(graph, &block)
       minimum_distance_matrix = yield
