@@ -37,3 +37,4 @@ require_relative 'rgraphum/graph/converter'
 require_relative 'rgraphum/t'
 
 require_relative 'rgraphum/graph_builder'
+

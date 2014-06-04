@@ -16,7 +16,7 @@ class Rgraphum::Path
   end
 
   def edges
-#    # FIXME
+    # FIXME
     last_vertex = vertices.first
     graph = last_vertex.graph
     new_edges = []

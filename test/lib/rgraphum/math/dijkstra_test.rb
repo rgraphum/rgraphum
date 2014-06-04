@@ -36,14 +36,17 @@ class RgraphumMathDijkstraTest < MiniTest::Unit::TestCase
     @graph.edges.build(source: @b, target: @g, weight: 4) # B->G
     @graph.edges.build(source: @d, target: @g, weight: 1) # D->G
 
-    vertices = @graph.dijkstra(@a, @g)
-    # p vertices.map(&:label)
+    d = Dijkstra.new
+    vertices = d.path(@a, @g)
 
     assert_equal 4, vertices.size
     assert_equal vertices[0], @a
     assert_equal vertices[1], @b
     assert_equal vertices[2], @d
     assert_equal vertices[3], @g
+
+    distance = d.distance(@a, @g)
+    assert_equal 4, distance
   end
 
   # A --(5)-- B --(1)-- G
@@ -62,13 +65,16 @@ class RgraphumMathDijkstraTest < MiniTest::Unit::TestCase
     @graph.edges.build(source: @b, target: @g, weight: 1) # B->G
     @graph.edges.build(source: @d, target: @g, weight: 4) # D->G
 
-    vertices = @graph.dijkstra(@a, @g)
-    # p vertices.map(&:label)
+    d = Dijkstra.new
+    vertices = d.path(@a, @g)
 
     assert_equal 3, vertices.size
     assert_equal vertices[0], @a
     assert_equal vertices[1], @b
     assert_equal vertices[2], @g
+
+    distance = d.distance(@a, @g)
+    assert_equal 6, distance
   end
 
   # A --(5)-- B --(1)-- G
@@ -87,10 +93,15 @@ class RgraphumMathDijkstraTest < MiniTest::Unit::TestCase
     @graph.edges.build(source: @b, target: @g, weight: 1) # B->G
     @graph.edges.build(source: @d, target: @g, weight: 4) # D->G
 
-    vertices = @graph.dijkstra(@a, @b)
+    d = Dijkstra.new
+    vertices = d.path(@a, @b)
+
     assert_equal 2, vertices.size
     assert_equal vertices[0], @a
     assert_equal vertices[1], @b
+
+    distance = d.distance(@a, @b)
+    assert_equal 5, distance
   end
 
   # A --(5)-- B --(1)-- G
@@ -109,9 +120,14 @@ class RgraphumMathDijkstraTest < MiniTest::Unit::TestCase
     @graph.edges.build(source: @b, target: @g, weight: 1) # B->G
     @graph.edges.build(source: @d, target: @g, weight: 4) # D->G
 
-    vertices = @graph.dijkstra(@a, @c)
+    d = Dijkstra.new
+    vertices = d.path(@a, @c)
+
     assert_equal 2, vertices.size
     assert_equal vertices[0], @a
     assert_equal vertices[1], @c
+
+    distance = d.distance(@a, @c)
+    assert_equal 1, distance
   end
 end

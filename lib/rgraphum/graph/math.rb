@@ -7,6 +7,7 @@ module Rgraphum::Graph::Math
   require_relative 'math/clustering_coefficient'
   require_relative 'math/degree_distribution'
   require_relative 'math/community_detection'
+  require_relative 'math/dijkstra'
 
   def self.included(base)
     # base.extend ClassMethods
