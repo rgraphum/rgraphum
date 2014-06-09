@@ -281,8 +281,10 @@ class Rgraphum::Analyzer::MemeTracker
     graph_start_root_vertices = start_root_vertices(graph)
 
     p "find path and to_graph" if Rgraphum.verbose?
+    d = Dijkstra.new 
     graphes = graph_start_root_vertices.map do |vertex|
       path = find_path(source_vertex:vertex)
+#      path = d.path_one_to_n(vertex)
       Rgraphum::Vertices.new(path).to_graph
     end
   end

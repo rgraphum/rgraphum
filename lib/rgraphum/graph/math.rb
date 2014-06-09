@@ -41,7 +41,7 @@ module Rgraphum::Graph::Math
 
   def average_distance
     distance_array = self.minimum_distance_matrix.flatten.compact
-    ( distance_array.inject(&:+) / distance_array.size.to_f )
+    ( distance_array.inject(&:+) / (distance_array.size.to_f - minimum_distance_matrix.size ) )
   end
 
   def adjacency_matrix

@@ -41,11 +41,11 @@ class RgraphumMathAverageDistanceMatrixTest < MiniTest::Unit::TestCase
     n = graph.vertices.size
     minimum_distance_matrix = [
       #   A      B      C      D      G
-      [ nil,     5,     1,     4,     6 ], # A
-      [   5,   nil,     6,     2,     1 ], # B
-      [   1,     6,   nil,     5,     7 ], # C
-      [   4,     2,     5,   nil,     3 ], # D
-      [   6,     1,     7,     3,   nil ], # G
+      [   0,     5,     1,     4,     6 ], # A
+      [   5,     0,     6,     2,     1 ], # B
+      [   1,     6,     0,     5,     7 ], # C
+      [   4,     2,     5,     0,     3 ], # D
+      [   6,     1,     7,     3,     0 ], # G
     ]
     expected = Rational(minimum_distance_matrix.flatten.compact.inject(&:+), n * (n - 1))
 
@@ -73,11 +73,11 @@ class RgraphumMathAverageDistanceMatrixTest < MiniTest::Unit::TestCase
     n = graph.vertices.size
     minimum_distance_matrix = [
       #    A      B      C      D      G
-      [  nil,     1,     2,     3,     4 ], # A
-      [    1,   nil,     3,     2,     3 ], # B
-      [    2,     3,   nil,     3,     4 ], # C
-      [    3,     2,     3,   nil,     1 ], # D
-      [    4,     3,     4,     1,   nil ], # G
+      [    0,     1,     2,     3,     4 ], # A
+      [    1,     0,     3,     2,     3 ], # B
+      [    2,     3,     0,     3,     4 ], # C
+      [    3,     2,     3,     0,     1 ], # D
+      [    4,     3,     4,     1,     0 ], # G
     ]
     expected = Rational(minimum_distance_matrix.flatten.compact.inject(&:+), n * (n - 1))
 
@@ -104,11 +104,11 @@ class RgraphumMathAverageDistanceMatrixTest < MiniTest::Unit::TestCase
 
     expected = [
       #    A      B      C      D      G
-      [  nil,     5,     1,     4,     6 ], # A
-      [    5,   nil,     6,     2,     1 ], # B
-      [    1,     6,   nil,     5,     7 ], # C
-      [    4,     2,     5,   nil,     3 ], # D
-      [    6,     1,     7,     3,   nil ], # G
+      [    0,     5,     1,     4,     6 ], # A
+      [    5,     0,     6,     2,     1 ], # B
+      [    1,     6,     0,     5,     7 ], # C
+      [    4,     2,     5,     0,     3 ], # D
+      [    6,     1,     7,     3,     0 ], # G
     ]
 
     assert_equal expected, matrix
@@ -135,11 +135,11 @@ class RgraphumMathAverageDistanceMatrixTest < MiniTest::Unit::TestCase
 
     expected = [
       #    A      B      C      D      G
-      [  nil,     1,     2,     3,     4 ], # A
-      [    1,   nil,     3,     2,     3 ], # B
-      [    2,     3,   nil,     3,     4 ], # C
-      [    3,     2,     3,   nil,     1 ], # D
-      [    4,     3,     4,     1,   nil ], # G
+      [    0,     1,     2,     3,     4 ], # A
+      [    1,     0,     3,     2,     3 ], # B
+      [    2,     3,     0,     3,     4 ], # C
+      [    3,     2,     3,     0,     1 ], # D
+      [    4,     3,     4,     1,     0 ], # G
     ]
 
     assert_equal expected, matrix

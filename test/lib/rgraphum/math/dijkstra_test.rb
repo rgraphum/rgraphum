@@ -130,4 +130,25 @@ class RgraphumMathDijkstraTest < MiniTest::Unit::TestCase
     distance = d.distance(@a, @c)
     assert_equal 1, distance
   end
+
+  # A --(5)-- B         G
+  # | ＼      |       
+  #(1)  (4)  (2)
+  # |      ＼ | 
+  # C --(5)-- D
+  def test_dijkstra_5
+    @graph.edges.build(source: @a, target: @b, weight: 5) # A->B
+    @graph.edges.build(source: @a, target: @c, weight: 1) # A->C
+    @graph.edges.build(source: @a, target: @d, weight: 4) # A->D
+    @graph.edges.build(source: @b, target: @d, weight: 2) # B->D
+    @graph.edges.build(source: @c, target: @d, weight: 5) # C->D
+
+    d = Dijkstra.new
+    distances = d.distance_one_to_n(@g)
+
+    assert_equal 1, distances.size
+    assert_equal distances[@g], 0
+
+    distance = d.distance(@a, @g)
+  end 
 end

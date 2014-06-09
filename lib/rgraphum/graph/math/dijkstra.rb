@@ -4,53 +4,121 @@ class Dijkstra
 
   def initialize
     @target_source_min_distance_path_hash = {}
+    @analized_vertices = []
   end
 
-  def target_source_min_distance_path_hash( vertex )
-
-    @target_source_min_distance_path_hash[vertex] ||= {}
-    @target_source_min_distance_path_hash[vertex][vertex] ||= {}
-    @target_source_min_distance_path_hash[vertex][vertex][:distance] = 0
-    @target_source_min_distance_path_hash[vertex][vertex][:path]     = [vertex]
-
-    out_edges = vertex.out_edges.sort{ |a,b| a.weight <=> b.weight }
-
-    out_edges.each do |out_edge|
-      target = out_edge.target
-      airo = true
-      @target_source_min_distance_path_hash[target] ||={}
-      @target_source_min_distance_path_hash[vertex].each do |source,distance_path|
-        next_distance = distance_path[:distance] + out_edge.weight
-        @target_source_min_distance_path_hash[target][source] ||= {}
-        if !@target_source_min_distance_path_hash[target][source][:distance] or @target_source_min_distance_path_hash[target][source][:distance] > next_distance
-          airo = false
-          @target_source_min_distance_path_hash[target][source][:distance]   = next_distance
-          @target_source_min_distance_path_hash[target][source][:path]     ||=[]
-          @target_source_min_distance_path_hash[target][source][:path]       = distance_path[:path] + [target]
-        end
-      end
-
-      next if airo 
-      self.target_source_min_distance_path_hash( target ) # self call
-    end
-
-    @target_source_min_distance_path_hash
+  def analized?(vertex)
+    @analized_vertices.include?(vertex)
   end
 
   def distance(a,b)
-    if @target_source_min_distance_path_hash[b] and @target_source_min_distance_path_hash[b][a]
+    if analized?(a)
       @target_source_min_distance_path_hash[b][a][:distance]
     else
-      target_source_min_distance_path_hash( a )[b][a][:distance]
+      hash_tmp = target_source_min_distance_path_hash( a )
+      return false unless hash_tmp[b][a]
+      hash_tmp[b][a][:distance]
+    end
+  end
+
+  def distance_one_to_n(one)
+    if analized?(one)
+      target_min_distance_hash(one)
+    else
+      target_source_min_distance_path_hash( one )
+      target_min_distance_hash(one)
     end
   end
 
   def path(a,b)
-    if @target_source_min_distance_path_hash[b] and @target_source_min_distance_path_hash[b][a]
+    if analized?(a)
       @target_source_min_distance_path_hash[b][a][:path]
     else
-      target_source_min_distance_path_hash( a )[b][a][:path]
+      hash_tmp = target_source_min_distance_path_hash( a )
+      return false unless hash_tmp[b][a]
+      hash_tmp[b][a][:path]
     end
   end
 
+  def path_one_to_n(one)
+    if analized?(one)
+      target_min_path_hash(one)
+    else
+      target_source_min_distance_path_hash( one )
+      target_min_path_hash(one)
+    end
+  end
+
+#####################
+  def target_source_min_distance_path_hash( vertex )
+    # make start point
+    target_source_min_distance_path_hash_init(vertex)
+
+    out_edges = vertex.out_edges.sort{ |a,b| a.weight <=> b.weight }
+
+    out_edges.each_with_index do |out_edge,index|
+      target = out_edge.target
+      unless airo_check_and_update(out_edge) 
+        next if analized?(target)
+
+        target_source_min_distance_path_hash_init(target)
+
+        target_out_edges = target.out_edges.sort{ |a,b| a.weight <=> b.weight }
+        out_edges.concat(target_out_edges)
+        
+      end
+    end 
+    @target_source_min_distance_path_hash
+  end
+
+  def target_source_min_distance_path_hash_init(vertex)
+    @analized_vertices << vertex
+    @target_source_min_distance_path_hash[vertex] ||= {}
+    @target_source_min_distance_path_hash[vertex][vertex] ||= {}
+    @target_source_min_distance_path_hash[vertex][vertex][:distance] = 0
+    @target_source_min_distance_path_hash[vertex][vertex][:path]     = [vertex]
+  end
+
+  def airo_check_and_update(edge)
+    airo = true
+    pre_vertex = edge.source
+    interchange = edge.target
+
+    @target_source_min_distance_path_hash[interchange] ||={}
+    @target_source_min_distance_path_hash[pre_vertex].each do |source,distance_path|
+      next_distance = distance_path[:distance] + edge.weight
+      @target_source_min_distance_path_hash[interchange][source] ||= {}
+      if !@target_source_min_distance_path_hash[interchange][source][:distance] or @target_source_min_distance_path_hash[interchange][source][:distance] > next_distance
+        airo = false
+        @target_source_min_distance_path_hash[interchange][source][:distance]   = next_distance
+        @target_source_min_distance_path_hash[interchange][source][:path]     ||= []
+        @target_source_min_distance_path_hash[interchange][source][:path]       = distance_path[:path] + [interchange]
+
+        target_min_distance_hash(interchange).each do |target,distance|
+          @target_source_min_distance_path_hash[target][source] ||= {}
+          if !@target_source_min_distance_path_hash[target][source][:distance] or @target_source_min_distance_path_hash[target][source][:distance] > distance + next_distance
+            @target_source_min_distance_path_hash[target][source][:distance] = distance + next_distance
+            @target_source_min_distance_path_hash[target][source][:path] =  distance_path[:path] + @target_source_min_distance_path_hash[target][interchange][:path]
+          end
+        end
+      end
+    end
+    airo
+  end
+
+  def target_min_distance_hash(source)
+    target_min_distance_hash = {}
+    @target_source_min_distance_path_hash.each do |target,source_distance_path|
+      target_min_distance_hash[target] = source_distance_path[source][:distance] if source_distance_path[source]
+    end
+    target_min_distance_hash
+  end
+
+  def target_min_path_hash(source)
+    target_min_distance_hash = {}
+    @target_source_min_distance_path_hash.each do |target,source_distance_path|
+      target_min_distance_hash[target] = source_distance_path[source][:path] if source_distance_path[source]
+    end
+    target_min_distance_hash
+  end
 end
