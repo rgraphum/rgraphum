@@ -35,18 +35,19 @@ class RgraphumMathAverageDistanceMatrixTest < MiniTest::Unit::TestCase
     @graph.edges.build(source: @b, target: @g, weight: 1) # B->G
     @graph.edges.build(source: @d, target: @g, weight: 4) # D->G
 
-    average_distance = @graph.average_distance
+    graph = Rgraphum::Graph::Converter.to_undirected(@graph)
+    average_distance = graph.average_distance
 
-    n = @graph.vertices.size
+    n = graph.vertices.size
     minimum_distance_matrix = [
-      #  A    B    C    D    G
-      [  0,   5,   1,   4,   6 ], # A
-      [  5,   0,   6,   2,   1 ], # B
-      [  1,   6,   0,   5,   7 ], # C
-      [  4,   2,   5,   0,   3 ], # D
-      [  6,   1,   7,   3,   0 ], # G
+      #   A      B      C      D      G
+      [   0,     5,     1,     4,     6 ], # A
+      [   5,     0,     6,     2,     1 ], # B
+      [   1,     6,     0,     5,     7 ], # C
+      [   4,     2,     5,     0,     3 ], # D
+      [   6,     1,     7,     3,     0 ], # G
     ]
-    expected = Rational(minimum_distance_matrix.flatten.inject(&:+), n * (n - 1))
+    expected = Rational(minimum_distance_matrix.flatten.compact.inject(&:+), n * (n - 1))
 
     assert_equal expected, average_distance
   end
@@ -66,18 +67,19 @@ class RgraphumMathAverageDistanceMatrixTest < MiniTest::Unit::TestCase
     @graph.edges.build(source: @b, target: @g, weight: 4) # B->G
     @graph.edges.build(source: @d, target: @g, weight: 1) # D->G
 
-    average_distance = @graph.average_distance
+    graph = Rgraphum::Graph::Converter.to_undirected(@graph)
+    average_distance = graph.average_distance
 
-    n = @graph.vertices.size
+    n = graph.vertices.size
     minimum_distance_matrix = [
-      #  A    B    C    D    G
-      [  0,   1,   2,   3,   4 ], # A
-      [  1,   0,   3,   2,   3 ], # B
-      [  2,   3,   0,   3,   4 ], # C
-      [  3,   2,   3,   0,   1 ], # D
-      [  4,   3,   4,   1,   0 ], # G
+      #    A      B      C      D      G
+      [    0,     1,     2,     3,     4 ], # A
+      [    1,     0,     3,     2,     3 ], # B
+      [    2,     3,     0,     3,     4 ], # C
+      [    3,     2,     3,     0,     1 ], # D
+      [    4,     3,     4,     1,     0 ], # G
     ]
-    expected = Rational(minimum_distance_matrix.flatten.inject(&:+), n * (n - 1))
+    expected = Rational(minimum_distance_matrix.flatten.compact.inject(&:+), n * (n - 1))
 
     assert_equal expected, average_distance
   end
@@ -97,15 +99,16 @@ class RgraphumMathAverageDistanceMatrixTest < MiniTest::Unit::TestCase
     @graph.edges.build(source: @b, target: @g, weight: 1) # B->G
     @graph.edges.build(source: @d, target: @g, weight: 4) # D->G
 
-    matrix = @graph.minimum_distance_matrix
+    graph = Rgraphum::Graph::Converter.to_undirected(@graph)
+    matrix = graph.minimum_distance_matrix
 
     expected = [
-      #  A    B    C    D    G
-      [  0,   5,   1,   4,   6 ], # A
-      [  5,   0,   6,   2,   1 ], # B
-      [  1,   6,   0,   5,   7 ], # C
-      [  4,   2,   5,   0,   3 ], # D
-      [  6,   1,   7,   3,   0 ], # G
+      #    A      B      C      D      G
+      [    0,     5,     1,     4,     6 ], # A
+      [    5,     0,     6,     2,     1 ], # B
+      [    1,     6,     0,     5,     7 ], # C
+      [    4,     2,     5,     0,     3 ], # D
+      [    6,     1,     7,     3,     0 ], # G
     ]
 
     assert_equal expected, matrix
@@ -126,15 +129,17 @@ class RgraphumMathAverageDistanceMatrixTest < MiniTest::Unit::TestCase
     @graph.edges.build(source: @b, target: @g, weight: 4) # B->G
     @graph.edges.build(source: @d, target: @g, weight: 1) # D->G
 
-    matrix = @graph.minimum_distance_matrix
+    @graph.clear_cache
+    graph = Rgraphum::Graph::Converter.to_undirected(@graph)
+    matrix = graph.minimum_distance_matrix
 
     expected = [
-      #  A    B    C    D    G
-      [  0,   1,   2,   3,   4 ], # A
-      [  1,   0,   3,   2,   3 ], # B
-      [  2,   3,   0,   3,   4 ], # C
-      [  3,   2,   3,   0,   1 ], # D
-      [  4,   3,   4,   1,   0 ], # G
+      #    A      B      C      D      G
+      [    0,     1,     2,     3,     4 ], # A
+      [    1,     0,     3,     2,     3 ], # B
+      [    2,     3,     0,     3,     4 ], # C
+      [    3,     2,     3,     0,     1 ], # D
+      [    4,     3,     4,     1,     0 ], # G
     ]
 
     assert_equal expected, matrix
