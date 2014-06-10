@@ -8,7 +8,7 @@ class Rgraphum::Path
   #
   def initialize(end_vertex=nil, vertices=[])
     @end_vertex = end_vertex
-    @vertices   = vertices
+   @vertices   = vertices
   end
 
   def include?(vertex)
@@ -32,6 +32,6 @@ class Rgraphum::Path
   end
 
   def total_weight
-    edges.inject(0) { |sum, edge| sum + edge.weight }
+   edges.inject(0) { |sum, edge| sum + edge.weight }
   end
 end
