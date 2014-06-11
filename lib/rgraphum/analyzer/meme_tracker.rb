@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require_relative 'phrase_cluster'
-
 class Rgraphum::Graph
   # pickup start vertices
   # it mean pick vertices having no in degree
