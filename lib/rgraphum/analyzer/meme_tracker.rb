@@ -63,7 +63,39 @@ class Rgraphum::Analyzer::MemeTracker
     end
   end
 
-  ###############################################################
+  def sum_sigma_in(communities)
+    communities.inject(0) { |size, community|
+      size + community.sigma_in
+    }
+  end
+
+  def make_communities(graph_start_root_vertices, graph_end_root_vertices)
+    hashed_cluster = {}
+    used_vertices = []
+
+    pair = [graph_start_root_vertices, graph_end_root_vertices].transpose
+
+    @d ||= Dijkstra.new
+    pair.each do |start_vertex, end_vertex|
+
+      cluster = @d.cluster(start_vertex,end_vertex,used_vertices)
+      used_vertices.concat( cluster )
+      
+      if cluster
+        if hashed_cluster[end_vertex.id]
+          hashed_cluster[end_vertex.id] = (hashed_cluster[end_vertex.id] | cluster)
+        else
+          hashed_cluster[end_vertex.id] = cluster
+        end
+      end
+    end
+
+    communities = hashed_cluster.map do |end_vertex_id, vertices|
+      Rgraphum::Community.new(vertices: vertices)
+    end
+
+    Rgraphum::Communities(communities)
+  end
 
   def phrase_clusters
     new_graph = @graph.dup
@@ -74,7 +106,7 @@ class Rgraphum::Analyzer::MemeTracker
     graph_start_root_vertices.each do |graph_start_root_vertex|
       end_root_vertex_path_hash = build_end_root_vertex_path_hash(graph_start_root_vertex)
       end_root_vertex_path_hashs << end_root_vertex_path_hash
-      end_root_vertex_path_hash_keys_array << end_root_vertex_path_hash.paths.map { |path| path.end_vertex }
+      end_root_vertex_path_hash_keys_array << end_root_vertex_path_hash.keys
     end
 
     end_root_vertex_path_hash_kyes_array = vertex_id_map(end_root_vertex_path_hash_keys_array)
@@ -83,7 +115,7 @@ class Rgraphum::Analyzer::MemeTracker
     sets = {}
     end_root_vertex_path_hashs.each_with_index do |end_root_vertex_path_hash, i|
       end_root_vertex_path_hash_keys_array.each do |end_path_keys|
-        unless (end_root_vertex_path_hash.paths.map { |path| path.end_vertex } & end_path_keys).empty?
+        unless (end_root_vertex_path_hash.keys & end_path_keys).empty?
           sets[end_path_keys] ||= []
           sets[end_path_keys] << graph_start_root_vertices[i]
           break
@@ -94,7 +126,6 @@ class Rgraphum::Analyzer::MemeTracker
     sets = sets.map{ |end_path_keys, end_path_start_root_vertices|
       [end_path_start_root_vertices, end_path_keys]
     }
-
     clusters = []
     sets.each do |end_path_start_root_vertices, end_path_keys|
       end_path_start_root_vertices_pt = end_path_start_root_vertices.permutation
@@ -135,110 +166,16 @@ class Rgraphum::Analyzer::MemeTracker
     end
   end
 
-  def sum_sigma_in(communities)
-    communities.inject(0) { |size, community|
-      size + community.sigma_in
-    }
-  end
-
-  def make_communities(graph_start_root_vertices, graph_end_root_vertices)
-    hashed_cluster = {}
-    used_vertices = {}
-
-    pair = [graph_start_root_vertices, graph_end_root_vertices].transpose
-
-    pair.each do |start_vertex, end_vertex|
-      cluster, used_vertices = find_cluster_with_used_vertices(start_vertex, end_vertex, used_vertices)
-
-      if cluster
-        if hashed_cluster[end_vertex.id]
-          hashed_cluster[end_vertex.id] = (hashed_cluster[end_vertex.id] | cluster)
-        else
-          hashed_cluster[end_vertex.id] = cluster
-        end
-      end
-    end
-
-    communities = hashed_cluster.map do |end_vertex_id, vertices|
-      Rgraphum::Community.new(vertices: vertices)
-    end
-
-    Rgraphum::Communities(communities)
-  end
-
   # NOTE cluster を探しているっぽい
   def find_cluster(start_vertex, end_vertex)
-    cluster, used_vertices = find_cluster_with_used_vertices(start_vertex, end_vertex, {})
-    cluster
-  end
-
-  def find_cluster_with_used_vertices(start_vertex, end_vertex, used_vertices)
-    # FIXME rename cluster
-    # used_vertices = { start_vertex => }
-    if used_vertex = used_vertices[start_vertex]
-      if used_vertex == end_vertex
-        return [[], used_vertices]
-      else
-        return [nil, used_vertices]
-      end
-    end
-
-    if start_vertex == end_vertex
-      used_vertices[start_vertex] = end_vertex
-      return [[start_vertex], used_vertices]
-    else
-      if start_vertex.out.empty?
-        return nil, used_vertices
-      end
-    end
-
-    cluster = nil
-    start_vertex.out.each do |vertex|
-      deep_cluster, used_vertices = find_cluster_with_used_vertices(vertex, end_vertex, used_vertices)
-
-      if deep_cluster
-        cluster ||= []
-        cluster += deep_cluster
-      end
-    end
-
-    if cluster
-      cluster << start_vertex
-      used_vertices[start_vertex] = end_vertex
-    end
-
-    [cluster, used_vertices]
+    @d ||= Dijkstra.new
+    @d.cluster(start_vertex,end_vertex)
   end
 
   # {end_root_vertex => [vertex,vertex],end_root_vertex => [vertex,vertex]}
   def build_end_root_vertex_path_hash(start_vertex, cluster=nil)
-    cluster ||= Rgraphum::PhraseCluster.new
-    start_vertex.out.each do |vertex|
-      next if cluster.have_vertex_in_path?(vertex, start_vertex)
-
-      if !vertex.out.empty? # not reach end_root_vertex, vertex != end_root_vertex
-       # remove loop edge
-       found = cluster.have_vertex?(vertex) && cluster.have_vertex?(start_vertex)
-       next if found
-
-        cluster = build_end_root_vertex_path_hash(vertex, cluster) # recursive call
-        cluster.each_path do |path|
-          if path.include?(vertex) and !path.include?(start_vertex)
-            cluster.append_vertex path, start_vertex
-          end
-        end
-
-      else
-        if cluster.have_end_vertex?(vertex)
-          path = cluster.find_path(vertex.id)
-          cluster.append_vertex path, start_vertex
-        else
-          cluster.add_path Rgraphum::Path.new(vertex, [vertex, start_vertex])
-        end
-      end
-
-    end
-    cluster
+     @d ||= Dijkstra.new
+     @d.cluster_one_to_n(start_vertex)
   end
 
   def start_root_vertices(target_graph=@graph)
@@ -273,26 +210,10 @@ class Rgraphum::Analyzer::MemeTracker
     path_vertices << source_vertex
   end
 
-  def make_path_graph(graph=@graph)
-    p "in make path graph" if Rgraphum.verbose?
-    graph = graph.dup
-
-    p "find srn" if Rgraphum.verbose?
-    graph_start_root_vertices = start_root_vertices(graph)
-
-    p "find path and to_graph" if Rgraphum.verbose?
-    d = Dijkstra.new 
-    graphes = graph_start_root_vertices.map do |vertex|
-      path = find_path(source_vertex:vertex)
-#      path = d.path_one_to_n(vertex)
-      Rgraphum::Vertices.new(path).to_graph
-    end
-  end
-
   def cut_edges_with_srn(graph=@graph)
     new_graph = Rgraphum::Graph.new
 
-    graphes = make_path_graph(graph)
+    graphes = Rgraphum::Analyzer::PathGraph.build(graph)
 
     new_graph.vertices = graphes.map { |g| g.vertices }.flatten
     new_graph.edges = graphes.map { |g| g.edges }.flatten
