@@ -159,45 +159,36 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     # test for find path from start vertices
     start_vertex = @graph.vertices.where(id: 8).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
-    path = cluster.find_path(13)
-    assert_equal({id: 13}, path.end_vertex)
-    assert_equal([{id: 13}, {id: 8}], path.vertices)
+    path = cluster[{id: 13}]
+    assert_equal([{id: 8}, {id: 13}], path)
 
     start_vertex = @graph.vertices.where(id: 9).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
-    path = cluster.find_path(13)
-    assert_equal({id: 13}, path.end_vertex)
-    assert_equal([{id: 13}, {id: 9}], path.vertices)
+    path = cluster[{id: 13}]
+    assert_equal([{id: 9}, {id: 13}],path)
 
     start_vertex = @graph.vertices.where(id: 4).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
-    path = cluster.find_path(13)
-    assert_equal({id: 13}, path.end_vertex)
-    assert_equal([{id: 13}, {id: 8}, {id: 4}], path.vertices)
+    path = cluster[{id: 13}]
+    assert_equal([{id: 4}, {id: 8}, {id: 13}], path)
 
     start_vertex = @graph.vertices.where(id: 5).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     expected = {
-      13 => [{id: 13}, {id: 8}, {id: 5}, {id: 9}],
-      14 => [{id: 14}, {id: 10}, {id: 5}],
+      13 => [{id:  5}, {id: 8},  {id: 13}, {id: 9}],
+      14 => [{id:  5}, {id: 10}, {id: 14}],
     }
-    assert_equal expected[13], cluster.find_path(13).vertices
-    assert_equal expected[14], cluster.find_path(14).vertices
+    assert_equal expected[13], cluster[{id: 13}]
+    assert_equal expected[14], cluster[{id: 14}]
 
     start_vertex = @graph.vertices.where(id: 1).first
     cluster = @meme_tracker.build_end_root_vertex_path_hash(start_vertex)
     expected = {
-      13 => [{id: 13}, {id: 8},  {id: 4}, {id: 1}, {id: 5}, {id: 9} ],
-      14 => [{id: 14}, {id: 10}, {id: 5}, {id: 1}],
+      13 => [{id: 1}, {id: 4}, {id:  8}, {id: 13}, {id: 5}, {id: 9} ],
+      14 => [{id: 1}, {id: 5}, {id: 10}, {id: 14}],
     }
-    assert_equal expected[13], cluster.find_path(13).vertices
-    assert_equal expected[14], cluster.find_path(14).vertices
-  end
-
-  def test_phrase_clusters_3
-    # fail test
-    start_vertex = Rgraphum::Vertex.new
-    assert @meme_tracker.build_end_root_vertex_path_hash(start_vertex).empty?
+    assert_equal expected[13], cluster[{id: 13}]
+    assert_equal expected[14], cluster[{id: 14}]
   end
 
   def test_phrase_clusters_4
@@ -208,19 +199,19 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     end_vertex = end_root_vertices[0] # (13)
     start_vertex = @graph.vertices.where(id: 8).first
     cluster = @meme_tracker.find_cluster(start_vertex, end_vertex)
-    assert_equal [{id: 13}, {id: 8}], cluster
+    assert_equal [{id: 8}, {id: 13}], cluster
 
     start_vertex = @graph.vertices.where(id: 9).first
     cluster = @meme_tracker.find_cluster(start_vertex, end_vertex)
-    assert_equal [{id: 13}, {id: 9}], cluster
+    assert_equal [{id: 9}, {id: 13}], cluster
 
     start_vertex = @graph.vertices.where(id: 4).first
     cluster = @meme_tracker.find_cluster(start_vertex, end_vertex)
-    assert_equal [{id: 13}, {id: 8}, {id: 4}], cluster
+    assert_equal [{id: 4}, {id: 8}, {id: 13}], cluster
 
     start_vertex = @graph.vertices.where(id: 1).first
     cluster = @meme_tracker.find_cluster(start_vertex, end_vertex)
-    assert_equal [{id: 13}, {id: 8}, {id: 4}, {id: 9}, {id: 5}, {id: 1}], cluster
+    assert_equal [{id: 1}, {id: 4}, {id: 8}, {id: 13}, {id: 5}, {id: 9}], cluster
   end
 
   def test_phrase_clusters_5
@@ -232,9 +223,9 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     end_root_vertices   = [ @vertices.where(id: 13).first, @vertices.where(id: 13).first, @vertices.where(id: 14).first, @vertices.where(id: 15).first ]
     clusters_a = @meme_tracker.make_communities(start_root_vertices,end_root_vertices)
     expected = [
-      [ {:id => 13}, {:id => 8},  {:id => 4},  {:id => 9}, {:id => 5}, {:id => 1}, {:id => 2} ],
-      [ {:id => 14}, {:id => 10}, {:id => 11}, {:id => 6}, {:id => 7}, {:id => 3} ],
-      [ {:id => 15}, {:id => 12} ],
+      [ {:id =>  1}, {:id =>  4}, {:id =>  8}, {:id => 13}, {:id => 5}, {:id =>  9}, {:id => 2} ],
+      [ {:id =>  3}, {:id =>  6}, {:id => 10}, {:id => 14}, {:id => 7}, {:id => 11} ],
+      [ {:id => 12}, {:id => 15} ],
     ]
     # rg_assert_equal expected, clusters_a
     (0...expected.size).each do |i|
@@ -252,9 +243,9 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     end_root_vertices   = [ @vertices.where(id: 13).first, @vertices.where(id: 14).first, @vertices.where(id: 14).first, @vertices.where(id: 15).first ]
     clusters_b = @meme_tracker.make_communities(start_root_vertices, end_root_vertices)
     expected = [
-      [ {:id => 13}, {:id => 8},  {:id => 4},  {:id => 9}, {:id => 5}, {:id => 1} ],
-      [ {:id => 14}, {:id => 10}, {:id => 11}, {:id => 6}, {:id => 7}, {:id => 2}, {:id => 3} ],
-      [ {:id => 15}, {:id => 12} ],
+      [ {:id =>  1}, {:id =>  4}, {:id => 8},  {:id => 13}, {:id => 5}, {:id =>  9} ],
+      [ {:id =>  2}, {:id => 10}, {:id => 14}, {:id =>  6}, {:id => 7}, {:id => 11}, {:id => 3} ],
+      [ {:id => 12}, {:id => 15} ],
     ]
     (0...expected.size).each do |i|
       assert_equal expected[i], clusters_b[i].vertices
@@ -278,8 +269,8 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     end_root_vertices   = [ @vertices.where(id: 13).first, @vertices.where(id: 15).first, @vertices.where(id: 15).first, @vertices.where(id: 15).first ]
     clusters_c = @meme_tracker.make_communities(start_root_vertices, end_root_vertices)
     expected = [
-      [ {:id => 13}, {:id => 8}, {:id => 4}, {:id => 9}, {:id => 5}, {:id => 1} ],
-      [ {:id => 15}, {:id => 7}, {:id => 2}, {:id => 3}, {:id => 12} ],
+      [ {:id => 1}, {:id => 4}, {:id =>  8}, {:id => 13}, {:id =>  5}, {:id => 9} ],
+      [ {:id => 2}, {:id => 7}, {:id => 15}, {:id =>  3}, {:id => 12} ],
     ]
     (0...expected.size).each do |i|
       assert_equal expected[i], clusters_c[i].vertices
@@ -295,46 +286,13 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     end_root_vertices   = [ @vertices.where(id: 13).first, @vertices.where(id: 14).first, @vertices.where(id: 14).first, @vertices.where(id: 15).first ]
     clusters_d = @meme_tracker.make_communities(start_root_vertices, end_root_vertices)
     expected = [
-      [ {:id => 13}, {:id => 8},  {:id => 4},  {:id => 9}, {:id => 5}, {:id => 1} ],
-      [ {:id => 14}, {:id => 10}, {:id => 11}, {:id => 6}, {:id => 7}, {:id => 2}, {:id  => 3} ],
-      [ {:id => 15}, {:id => 12} ],
+      [ {:id =>  1}, {:id =>  4}, {:id => 8},  {:id => 13}, {:id => 5}, {:id =>  9} ],
+      [ {:id =>  2}, {:id => 10}, {:id => 14}, {:id =>  6}, {:id => 7}, {:id => 11}, {:id  => 3} ],
+      [ {:id => 12}, {:id => 15} ],
     ]
     (0...expected.size).each do |i|
       assert_equal expected[i], clusters_d[i].vertices
     end
-  end
-
-  def test_path_graph
-    meme_tracker = Rgraphum::Analyzer::MemeTracker.new
-
-    # please see under test of fint_path
-
-    graphes = meme_tracker.make_path_graph(@graph)
-
-    assert_equal 4, graphes.size
-
-    expected = [
-      {id: 13},
-      {id: 8},
-      {id: 4},
-      {id: 9},
-      {id: 14},
-      {id: 10},
-      {id: 5},
-      {id: 1},
-    ]
-    assert_equal expected, graphes[0].vertices
-
-    expected = [
-      {id: 0,  source: {id: 1}, target: {id: 4},  weight: 1},
-      {id: 1,  source: {id: 1}, target: {id: 5},  weight: 1},
-      {id: 7,  source: {id: 4}, target: {id: 8},  weight: 1},
-      {id: 9,  source: {id: 5}, target: {id: 9},  weight: 1},
-      {id: 10, source: {id: 5}, target: {id: 10}, weight: 1},
-      {id: 15, source: {id: 8}, target: {id: 13}, weight: 1},
-      {id: 17, source: {id: 10},target: {id: 14}, weight: 1},
-    ]
-    assert_equal expected, graphes[0].edges.sort_by(){|edge| edge.id}
   end
 
   # 1 -> 2 -> 3 -> 4

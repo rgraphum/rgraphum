@@ -49,6 +49,28 @@ class Dijkstra
     end
   end
 
+  def cluster(a,b,used_vertices=[])
+    vertices = []
+    n_path = path_one_to_n(a)
+    return [] unless @target_source_min_distance_path_hash[b]
+    interchange_vertices = n_path.values.flatten.uniq
+    interchange_vertices.each do |vertex|
+      path = @target_source_min_distance_path_hash[b][vertex][:path] if @target_source_min_distance_path_hash[b][vertex]
+      next unless path
+      vertices.concat(path) 
+    end
+
+    vertices.uniq - used_vertices
+  end
+
+  def cluster_one_to_n(a)
+    tmp = {}
+    path_one_to_n(a).keys.each do |b|
+      tmp[b] = cluster(a,b)
+    end
+    tmp
+  end
+
 #####################
   def target_source_min_distance_path_hash( vertex )
     # make start point
