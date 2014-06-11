@@ -152,19 +152,7 @@ class Rgraphum::Graph
 
 
   def dup
-    new_graph = Rgraphum::Graph.new
-
-    @vertices.each do |vertex|
-      new_vertex = vertex.dup
-      new_vertex.edges = Rgraphum::Edges.new
-      new_graph.vertices << new_vertex
-    end
-
-    @edges.each do |edge|
-      new_graph.edges << edge.dup
-    end
-
-    new_graph
+    Marshal.load(Marshal.dump(self))
   end
 
   def +(other)
