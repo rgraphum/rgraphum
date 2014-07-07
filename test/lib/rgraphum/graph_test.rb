@@ -292,7 +292,6 @@ class RgraphumTest < MiniTest::Unit::TestCase
   def test_add_edge_with_id_aspect
     @graph = Rgraphum::Graph.new
     @graph.vertices = [{ :label => "hoge" },{:label => "huga"}]
-p   "test"
     assert_equal ([{ :id => 0, :label => "hoge"}, {:id => 1, :label => "huga"}]), @graph.vertices
 
     @graph.edges << { :source => 1, :target =>0 }

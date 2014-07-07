@@ -163,7 +163,7 @@ class Rgraphum::Graph
     start_edge_id = @edges.id.max
 
     other_dup = other.dup
-    other_dup.vertices.each_with_index do | vertex,i |
+    other_dup.vertices.each do | vertex |
       vertex.id = vertex.id + start_vertex_id
     end
     other_dup.edges.each do |edge|
