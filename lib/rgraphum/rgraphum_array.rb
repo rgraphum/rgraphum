@@ -4,9 +4,12 @@ require_relative 'query'
 
 class Rgraphum::RgraphumArray < Array
   attr_accessor :graph
+  attr_accessor :redis_id
 
-#  def ids
-#    map { |obj| obj.id }
+#  def initialize(tmp)
+#    super(tmp)
+#    redis = Redis.current
+#    @redis_id = redis.incr( "global:nextObjectId" )    
 #  end
 
   # FIXME use initialize_copy instead
@@ -31,7 +34,6 @@ class Rgraphum::RgraphumArray < Array
   def new_id(id=nil)
     @new_id ||= -1
     if id
-#      @new_id = id if @new_id < id
       @new_id = id
     else
       @new_id += 1

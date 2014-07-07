@@ -22,7 +22,7 @@ class Rgraphum::Analyzer::RTAtMark
     twits.each do |twit|
       vertex = graph.vertices.where(label: twit[7]).first
       vertex.twits ||= []
-      vertex.twits << twit.compact
+      vertex.twits = vertex.twits +  [ twit.compact ]
     end
   end
 

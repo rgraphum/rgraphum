@@ -20,10 +20,11 @@ Gem::Specification.new do |spec|
   spec.has_rdoc      = 'yard'
 
   spec.add_runtime_dependency "builder"
+  spec.add_runtime_dependency "redis"
+  spec.add_runtime_dependency "hiredis"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
-  # spec.add_development_dependency "minitest"
 
   spec.add_development_dependency 'yard'
 end

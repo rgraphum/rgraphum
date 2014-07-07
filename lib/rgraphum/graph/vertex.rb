@@ -10,14 +10,22 @@ end
 
 class Rgraphum::Vertex < Hash
   attr_accessor :graph
+  attr_accessor :redis_id
 
   def initialize(fields={})
+    redis = Redis.current
+    @redis_id = redis.incr( "global:RgraphumObjectId" )
+
     tmp = super(nil)
     tmp.object_init
     fields.each do |key,value|
       tmp.store(key,value)
     end
-    tmp
+
+    redis.set( @redis_id, tmp.to_json)
+
+    self.edges.redis_id
+
   end
 
   def object_init
@@ -27,6 +35,89 @@ class Rgraphum::Vertex < Hash
 
     @edges.vertex = self
   end
+
+  def redis_dup
+    redis = Redis.current
+    tmp = JSON.load( redis.get( @redis_id ) )
+    tmp ||= {}
+
+    @redis_id = redis.incr( "global:RgraphumObjectId" )
+
+    tmp.each do |key,value|
+      tmp.store(key,value)
+    end
+    redis.set( @redis_id, tmp.to_json)
+  end
+
+  def [](key)
+    redis = Redis.current
+    tmp = JSON.load( redis.get( @redis_id ) )
+    if tmp
+      tmp[key.to_s] 
+    else
+      nil
+    end
+  end
+
+  alias :original_store :store
+  def store(key, value)
+    redis = Redis.current
+    tmp = JSON.load( redis.get( @redis_id ) )
+    tmp ||= {}
+
+
+    tmp[key.to_s] = value
+    redis.set( @redis_id, tmp.to_json)
+
+    value = self.original_store(key, value)
+
+    return value
+  end
+  alias :[]= :store
+
+  def dup
+
+    other = Rgraphum::Vertex.new(self)
+
+    other.graph = nil
+    other.edges = @edges.dup
+    other.edges.vertex = other
+    other.edges.each do |edge|
+      if edge.source.equal?(self)
+        edge.source = other
+      end
+      if edge.target.equal?(self)
+        edge.target = other
+      end
+    end
+    other
+  end
+
+  # Gremlin: inE
+  #
+  # Gets the incoming edges of the vertex.
+  #
+  #     gremlin> v = g.v(4)
+  #     ==>v[4]
+  #     gremlin> v.inE.outV
+  #     ==>v[1]
+  #     gremlin> v.in
+  #     ==>v[1]
+  #     gremlin> v = g.v(3)
+  #     ==>v[3]
+  #     gremlin> v.in("created")
+  #     ==>v[1]
+  #     ==>v[4]
+  #     ==>v[6]
+  #     gremlin> v.inE("created").outV
+  #     ==>v[1]
+  #     ==>v[4]
+  #     ==>v[6]
+  #
+  def inE(*key)
+    find_edges(key, :in)
+  end
+
 
   # Gremlin: inE
   #
@@ -174,26 +265,6 @@ class Rgraphum::Vertex < Hash
     inE(*key).outV + outE(*key).inV
   end
 
-
-  # Non-Gremlin methods
-
-  def dup
-    super.tap { |vertex|
-      vertex.graph = nil
-      vertex.edges = @edges.dup
-      vertex.edges.vertex = vertex
-
-      vertex.edges.each do |edge|
-        if edge.source.equal?(self)
-          edge.source = vertex
-        end
-        if edge.target.equal?(self)
-          edge.target = vertex
-        end
-      end
-    }
-  end
-
   def edges
     @edges
   end
@@ -237,9 +308,6 @@ class Rgraphum::Vertex < Hash
     end
     @edges
 
-#    @edges = Rgraphum::Edges(array)
-#   @edges.vertex = self
-#   @edges
   end
 
   def inter_edges
@@ -283,16 +351,6 @@ class Rgraphum::Vertex < Hash
     return true if self.out.empty?
     false 
   end
-  
-#  def ==(other)
-#    if other.is_a?(Rgraphum::Vertex)
-#      return false unless id == other.id
-#    else
-#      return id == other
-#    end
-#    return false unless edges == other.edges
-#    true
-#  end
 
   def to_hash
     hash = {}
@@ -317,21 +375,21 @@ class Rgraphum::Vertex < Hash
     self.[](:id)
   end
   def id=(tmp)
-    self.store(:id,tmp)
+   self.[]=(:id,tmp)
   end
 
   def label
     self.[](:label)
   end
   def label=(tmp)
-    self.store(:label,tmp)
+    self.[]=(:label,tmp)
   end
 
   def community_id
     self.[](:community_id)
   end
   def community_id=(tmp) 
-    self.store(:community_id,tmp)
+    self.[]=(:community_id,tmp)
   end
 
   def name
@@ -345,35 +403,37 @@ class Rgraphum::Vertex < Hash
     self.[](:twits)
   end
   def twits=(tmp) 
-    self.store(:twits,tmp)
+    self.[]=(:twits,tmp)
   end
 
   def words
     self.[](:words)
   end
   def words=(tmp) 
-    self.store(:words,tmp)
+    self.[]=(:words,tmp)
   end
 
   def start
-    self.[](:start)
+    return Time.now unless self.[](:start)
+    Time.parse(time_string = self.[](:start))
   end
   def start=(tmp) 
-    self.store(:start,tmp)
+    self.[]=(:start,tmp)
   end
 
   def end
-    self.[](:end)
+    return Time.now unless self.[](:end)
+    Time.parse(time_string = self.[](:end))
   end
   def end=(tmp) 
-    self.store(:end,tmp)
+    self.[]=(:end,tmp)
   end
 
   def count
     self.[](:count)
   end
   def count=(tmp)
-    self.store(:count,tmp)
+    self.[]=(:count,tmp)
   end
 
 end

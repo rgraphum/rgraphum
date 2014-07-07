@@ -152,7 +152,9 @@ class Rgraphum::Graph
 
 
   def dup
-    Marshal.load(Marshal.dump(self))
+    other = Marshal.load(Marshal.dump(self))
+    other.vertices.each {|vertex| vertex.redis_dup }
+    other
   end
 
   def +(other)
@@ -161,7 +163,7 @@ class Rgraphum::Graph
     start_edge_id = @edges.id.max
 
     other_dup = other.dup
-    other_dup.vertices.each do | vertex |
+    other_dup.vertices.each_with_index do | vertex,i |
       vertex.id = vertex.id + start_vertex_id
     end
     other_dup.edges.each do |edge|
@@ -173,33 +175,6 @@ class Rgraphum::Graph
 
     new_graph
   end
-
-#  def compact_with_label(options={})
-#    compact_with(:label, self, options)
-#  end
-
-#  def marge_with_label(target)
-#    new_graph = self + target
-#    new_graph.compact_with_label
-#  end
-
-#  def divide_by_time(interval=20)
-#    @vertices.divide_by_time(interval)
-#    @edges.divide_by_time(interval)
-#
-#    new_edges = Rgraphum::Edges.new
-#    new_edges.graph = self
-#    @edges.each do |edge|
-#      conditions = { source: edge.source, target: edge.target, start: edge.start }
-#      same_edge = new_edges.where(conditions).first
-#      if same_edge
-#        same_edge.weight += edge.weight
-#      else
-#        new_edges << edge
-#      end
-#    end
-#    self.edges = new_edges
-#  end
 
   def compact_with(method_name, graph=self, options ={})
     new_vertices = Rgraphum::Vertices.new

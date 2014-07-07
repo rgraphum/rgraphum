@@ -25,6 +25,12 @@ class RgraphumVertexTest < MiniTest::Unit::TestCase
     vertex_b.start = t + 1
     vertex_b.end   = t + 3
 
+p   "hogehoge"
+p   vertex_a.start
+p   vertex_a.end
+p   vertex_b.start
+p   vertex_b.end
+
     assert_equal true,  vertex_a.within_term(vertex_b)
     assert_equal false, vertex_b.within_term(vertex_a)
   end

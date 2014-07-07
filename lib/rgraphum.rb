@@ -12,7 +12,6 @@ require_relative 'rgraphum/parsers'
 require_relative 'rgraphum/marshal'
 require_relative 'rgraphum/simulator'
 
-
 require_relative 'rgraphum/rgraphum_random'
 
 require_relative 'rgraphum/rgraphum_array'
@@ -35,3 +34,7 @@ require_relative 'rgraphum/t'
 
 require_relative 'rgraphum/graph_builder'
 
+require 'redis'
+require 'hiredis'
+
+Redis.current = Redis.new(:driver => :hiredis, :db => 10 )

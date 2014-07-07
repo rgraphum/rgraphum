@@ -55,6 +55,7 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
 
     assert_instance_of Rgraphum::Vertex, vertex
     refute_same   vertex,  @vertex_0
+    refute_same   vertex.redis_id, @vertex_0.redis_id
 
     refute_empty  vertex.edges
     assert_equal  vertex.edges.vertex.object_id, vertex.object_id
@@ -74,19 +75,6 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
       assert_same vertex, edge.target unless edge.source.object_id == vertex.object_id
     end
 
-    # vertex.edges.each do |edge|
-    #   p "vertex"
-    #   p edge.object_id
-    #   p edge
-    # end
-
-    # @graph.vertices.each do |vertex|
-    #   vertex.edges.each do |edge|
-    #     p "graph"
-    #     p edge.object_id
-    #     p edge
-    #   end
-    # end
   end
 
   def test_vertices_dup
@@ -100,6 +88,7 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
       assert_instance_of Rgraphum::Vertex, a
       assert_equal b, a
       refute_same b, a
+      refute_same b.redis_id, a.redis_id
 
       refute_empty a.edges
       assert_same  a.edges.vertex, a
@@ -172,6 +161,7 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
 
       assert_equal duped_vertex, vertex
       refute_same  duped_vertex, vertex
+      refute_same  duped_vertex.redis_id, vertex.redis_id
 
       vertex.edges.each_with_index do |edge,edge_index|
         duped_edge = duped_vertex.edges[edge_index]

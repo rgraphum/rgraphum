@@ -38,8 +38,8 @@ class RgraphumPlusTest < MiniTest::Unit::TestCase
     @graph_a.vertices.each_with_index do |vertex, vertex_index|
       added_vertex = added_graph.vertices[vertex_index]
 
-#      assert_equal vertex.object_id, added_vertex.object_id
-      refute_same  vertex, added_vertex
+      refute_same vertex, added_vertex
+      refute_same vertex.redis_id,  added_vertex.redis_id
 
       vertex.edges.each_with_index do |edge, edge_index|
         added_edge = added_vertex.edges[edge_index]
@@ -64,7 +64,6 @@ class RgraphumPlusTest < MiniTest::Unit::TestCase
       vertex.edges.each_with_index do |edge, edge_index|
         added_edge = added_vertex.edges[edge_index]
 
-        refute_same edge, added_edge
 
         assert_equal edge.id + 2,        added_edge.id
 
