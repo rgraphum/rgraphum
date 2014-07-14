@@ -8,7 +8,7 @@ def Rgraphum::Communities(array)
   end
 end
 
-class Rgraphum::Communities < Rgraphum::RgraphumArray
+class Rgraphum::Communities < Rgraphum::Elements
 
   # Non-Gremlin methods
 

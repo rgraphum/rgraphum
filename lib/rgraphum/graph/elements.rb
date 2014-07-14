@@ -2,15 +2,11 @@
 
 require_relative 'query'
 
-class Rgraphum::RgraphumArray < Array
+class Rgraphum::Elements < Array
   attr_accessor :graph
-  attr_accessor :redis_id
+  attr_reader   :rgraphum_id
 
-#  def initialize(tmp)
-#    super(tmp)
-#    redis = Redis.current
-#    @redis_id = redis.incr( "global:nextObjectId" )    
-#  end
+  include IDs
 
   # FIXME use initialize_copy instead
   def dup
@@ -23,21 +19,6 @@ class Rgraphum::RgraphumArray < Array
 
   def self.reset_id
     remove_instance_variable :@new_id if defined? @new_id
-  end
-
-  # FIXME maybe better id to start from 1
-  # def self.new_id
-  #   @new_id ||= -1
-  #   @new_id += 1
-  # end
-
-  def new_id(id=nil)
-    @new_id ||= -1
-    if id
-      @new_id = id
-    else
-      @new_id += 1
-    end
   end
 
   def substitute(array, &block)

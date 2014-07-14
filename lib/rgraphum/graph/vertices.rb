@@ -8,17 +8,15 @@ def Rgraphum::Vertices(array)
   end
 end
 
-class Rgraphum::Vertices < Rgraphum::RgraphumArray
+class Rgraphum::Vertices < Rgraphum::Elements
   include Rgraphum::RgraphumArrayDividers
 
   # Non-Gremlin methods
 
   def initialize(vertex_hashes=[])
-    super()
+    ids = vertex_hashes.each { |vertex| vertex.id }
+    super(ids)
     @id_vertex_map = {}
-    vertex_hashes.each do |vertex_hash|
-      self << vertex_hash
-    end
   end
 
   def find_by_id(vertex_or_id)
@@ -52,6 +50,7 @@ class Rgraphum::Vertices < Rgraphum::RgraphumArray
     vertex = Rgraphum::Vertex(vertex_hash)
     vertex.graph = @graph
     vertex[:id] = new_id(vertex[:id])
+#    vertex[:id] = new_id(vertex[:id])
     original_push_1(vertex)
     @id_vertex_map[vertex.id] = vertex
     vertex

@@ -39,7 +39,7 @@ class RgraphumPlusTest < MiniTest::Unit::TestCase
       added_vertex = added_graph.vertices[vertex_index]
 
       refute_same vertex, added_vertex
-      refute_same vertex.redis_id,  added_vertex.redis_id
+      refute_same vertex.rgraphum_id,  added_vertex.rgraphum_id
 
       vertex.edges.each_with_index do |edge, edge_index|
         added_edge = added_vertex.edges[edge_index]

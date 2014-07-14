@@ -25,19 +25,19 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     meme_tracker.make_edges(graph)
 
     edge = graph.edges[0]
-    assert_equal 0,        edge.id
+    assert_equal 1,        edge.id
     assert_equal phrase_a, edge.source
     assert_equal phrase_b, edge.target
     assert_equal 1.0/3.0,  edge.weight
 
     edge = graph.edges[1]
-    assert_equal 1,        edge.id
+    assert_equal 2,        edge.id
     assert_equal phrase_a, edge.source
     assert_equal phrase_c, edge.target
     assert_equal 1.0/4.0,  edge.weight
 
     edge = graph.edges[2]
-    assert_equal 2,        edge.id
+    assert_equal 3,        edge.id
     assert_equal phrase_b, edge.source
     assert_equal phrase_c, edge.target
     assert_equal 1.0/5.0,  edge.weight

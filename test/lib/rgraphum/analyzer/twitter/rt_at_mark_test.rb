@@ -15,42 +15,34 @@ class RTAtMarkTest < MiniTest::Unit::TestCase
 
     assert_equal 4, graph.vertices.size
 
-    vertex = graph.vertices.detect { |vertex| vertex.id == 0 }
+    vertex = graph.vertices.detect { |vertex| vertex.id == 1 }
     assert vertex
-    assert_equal({id: 0, label: "piyo",
+    assert_equal({id: 1, label: "piyo",
                          twits: [["221257277779353600", "piyo", "I remember it",    "2013-04-04 15:30:00", "ja"],
                                  ["221257277779353602", "piyo", "I like it",        "2013-04-04 15:30:00", "ja"],
                                  ["221257277779353605", "piyo", "I forget it",      "2013-04-04 15:30:00", "ja"],
                                  ["221257277779353605", "piyo", "@hura I forget it","2013-04-04 15:30:00", "ja"]]}, vertex )
-    vertex = graph.vertices.detect { |vertex| vertex.id == 1 }
+    vertex = graph.vertices.detect { |vertex| vertex.id == 2 }
     assert vertex
-    assert_equal({id: 1, label: "hoge",
+    assert_equal({id: 2, label: "hoge",
                          twits: [["221257277779353601","hoge","@hoge remember me!","2013-01-01 12:00:00","ja"],
                                  ["221257277779353604","hoge","Jast me @huga Do you mean @Hoge remember me!","2013-03-03 14:20:00","ja"]]}, vertex)
 
-    vertex = graph.vertices.detect { |vertex| vertex.id == 2 }
+    vertex = graph.vertices.detect { |vertex| vertex.id == 3 }
     assert vertex
-    assert_equal({id: 2, label: "huga",
+    assert_equal({id: 3, label: "huga",
                          twits: [["221257277779353603","huga","Do you mean @hoge remember me!","2013-02-02 13:10:00","ja"],
                                  ["221257277779353604","huga","Do you mean @Hoge remember me!","2013-03-03 14:20:00","ja"]]}, vertex)
 
-    vertex = graph.vertices.detect { |vertex| vertex.id == 3 }
+    vertex = graph.vertices.detect { |vertex| vertex.id == 4 }
     assert vertex
-    assert_equal({id: 3, label: "hura"}, vertex)
+    assert_equal({id: 4, label: "hura"}, vertex)
   
     assert_equal 5, graph.edges.size
 
-    edge = graph.edges.detect { |edge| edge.id == 0 }
-    assert edge
-    expected_edge = {id: 0, source: graph.vertices[1], target: graph.vertices[1], label: "@hoge remember me!", weight: 1}
-    assert_equal(expected_edge[:source].id, edge.source.id)
-    assert_equal(expected_edge[:target].id, edge.target.id)
-    assert_equal(expected_edge[:label],     edge.label)
-    assert_equal(expected_edge[:weight],    edge.weight)
-
     edge = graph.edges.detect { |edge| edge.id == 1 }
     assert edge
-    expected_edge = {id: 1, source: graph.vertices[1], target: graph.vertices[2], label: "Do you mean @hoge remember me!", weight: 1}
+    expected_edge = {id: 1, source: graph.vertices[1], target: graph.vertices[1], label: "@hoge remember me!", weight: 1}
     assert_equal(expected_edge[:source].id, edge.source.id)
     assert_equal(expected_edge[:target].id, edge.target.id)
     assert_equal(expected_edge[:label],     edge.label)
@@ -58,7 +50,7 @@ class RTAtMarkTest < MiniTest::Unit::TestCase
 
     edge = graph.edges.detect { |edge| edge.id == 2 }
     assert edge
-    expected_edge = {id: 2, source: graph.vertices[1], target: graph.vertices[2], label: "Do you mean @Hoge remember me!", weight: 1}
+    expected_edge = {id: 2, source: graph.vertices[1], target: graph.vertices[2], label: "Do you mean @hoge remember me!", weight: 1}
     assert_equal(expected_edge[:source].id, edge.source.id)
     assert_equal(expected_edge[:target].id, edge.target.id)
     assert_equal(expected_edge[:label],     edge.label)
@@ -66,7 +58,7 @@ class RTAtMarkTest < MiniTest::Unit::TestCase
 
     edge = graph.edges.detect { |edge| edge.id == 3 }
     assert edge
-    expected_edge = {id: 3, source: graph.vertices[2], target: graph.vertices[1], label: "Jast me @huga Do you mean @Hoge remember me!", weight: 1}
+    expected_edge = {id: 3, source: graph.vertices[1], target: graph.vertices[2], label: "Do you mean @Hoge remember me!", weight: 1}
     assert_equal(expected_edge[:source].id, edge.source.id)
     assert_equal(expected_edge[:target].id, edge.target.id)
     assert_equal(expected_edge[:label],     edge.label)
@@ -74,7 +66,15 @@ class RTAtMarkTest < MiniTest::Unit::TestCase
 
     edge = graph.edges.detect { |edge| edge.id == 4 }
     assert edge
-    expected_edge = {id: 4, source: graph.vertices[3], target: graph.vertices[0], label: "@hura I forget it", weight: 1}
+    expected_edge = {id: 4, source: graph.vertices[2], target: graph.vertices[1], label: "Jast me @huga Do you mean @Hoge remember me!", weight: 1}
+    assert_equal(expected_edge[:source].id, edge.source.id)
+    assert_equal(expected_edge[:target].id, edge.target.id)
+    assert_equal(expected_edge[:label],     edge.label)
+    assert_equal(expected_edge[:weight],    edge.weight)
+
+    edge = graph.edges.detect { |edge| edge.id == 5 }
+    assert edge
+    expected_edge = {id: 5, source: graph.vertices[3], target: graph.vertices[0], label: "@hura I forget it", weight: 1}
     assert_equal(expected_edge[:source].id, edge.source.id)
     assert_equal(expected_edge[:target].id, edge.target.id)
     assert_equal(expected_edge[:label],     edge.label)

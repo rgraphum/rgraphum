@@ -27,10 +27,10 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
 
   def test_addVertex
     g = Rgraphum::Graph.new
-    assert_equal({id:0}, g.addVertex())
+    assert_equal({id:1}, g.addVertex())
     assert_equal({id:100}, g.addVertex(100))
 
-    assert_equal({id:101,name:"stephen"}, g.addVertex(nil,{name:"stephen"}))
+    assert_equal({id:2,name:"stephen"}, g.addVertex(nil,{name:"stephen"}))
   end
 
   def test_addEdge
@@ -46,7 +46,7 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
     assert_equal({:id=>1000, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>1}, e)
 
     e = g.addEdge(nil,v1,v2,'friend',{weight:0.75})
-    assert_equal({:id=>1001, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>0.75}, e)
+    assert_equal({:id=>2, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>0.75}, e)
     
   end
 

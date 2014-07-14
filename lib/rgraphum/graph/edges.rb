@@ -8,7 +8,7 @@ def Rgraphum::Edges(array)
   end
 end
 
-class Rgraphum::Edges < Rgraphum::RgraphumArray
+class Rgraphum::Edges < Rgraphum::Elements
   include Rgraphum::RgraphumArrayDividers
 
   attr_accessor :vertex

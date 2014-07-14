@@ -19,25 +19,18 @@ class RgraphumVerticesTest < MiniTest::Unit::TestCase
 
     @vertex0.edges << { source: @vertex0, target: @vertex1 }
 
-    # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @vertex0.edges
-    # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @vertex1.edges
-    # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @graph.edges
-
-    # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @vertex0.edges
     assert_equal 1, @vertex0.edges.size
-    assert_equal 0, @vertex0.edges[0].id
+    assert_equal 1, @vertex0.edges[0].id
     assert_equal @vertex0.object_id, @vertex0.edges[0].source.object_id
     assert_equal @vertex1.object_id, @vertex0.edges[0].target.object_id
 
-    # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @vertex1.edges
     assert_equal 1, @vertex1.edges.size
-    assert_equal 0, @vertex1.edges[0].id
+    assert_equal 1, @vertex1.edges[0].id
     assert_equal @vertex0.object_id, @vertex1.edges[0].source.object_id
     assert_equal @vertex1.object_id, @vertex1.edges[0].target.object_id
 
-    # rg_assert_equal [ { id: 0, source: @vertex0, target: @vertex1 } ], @graph.edges
     assert_equal 1, @graph.edges.size
-    assert_equal 0, @graph.edges[0].id
+    assert_equal 1, @graph.edges[0].id
     assert_equal @vertex0.object_id, @graph.edges[0].source.object_id
     assert_equal @vertex1.object_id, @graph.edges[0].target.object_id
   end
@@ -56,6 +49,7 @@ class RgraphumVerticesTest < MiniTest::Unit::TestCase
   end
 
   def test_finders_with_where
+
     10.times do |i|
       @graph.vertices << { label: "aaa" }
     end

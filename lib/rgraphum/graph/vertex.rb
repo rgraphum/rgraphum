@@ -10,11 +10,11 @@ end
 
 class Rgraphum::Vertex < Hash
   attr_accessor :graph
-  attr_accessor :redis_id
+  attr_accessor :rgraphum_id
 
   def initialize(fields={})
     redis = Redis.current
-    @redis_id = redis.incr( "global:RgraphumObjectId" )
+    @rgraphum_id = new_rgraphum_id
 
     tmp = super(nil)
     tmp.object_init
@@ -22,9 +22,7 @@ class Rgraphum::Vertex < Hash
       tmp.store(key,value)
     end
 
-    redis.set( @redis_id, tmp.to_json)
-
-    self.edges.redis_id
+    ElementManager.save(@rgraphum_id,tmp)
 
   end
 
@@ -37,41 +35,17 @@ class Rgraphum::Vertex < Hash
   end
 
   def redis_dup
-    redis = Redis.current
-    tmp = JSON.load( redis.get( @redis_id ) )
-    tmp ||= {}
-
-    @redis_id = redis.incr( "global:RgraphumObjectId" )
-
-    tmp.each do |key,value|
-      tmp.store(key,value)
-    end
-    redis.set( @redis_id, tmp.to_json)
+    @rgraphum_id = ElementManager.redis_dup(@rgraphum_id)
   end
 
   def [](key)
-    redis = Redis.current
-    tmp = JSON.load( redis.get( @redis_id ) )
-    if tmp
-      tmp[key.to_s] 
-    else
-      nil
-    end
+    ElementManager.fetch(@rgraphum_id,key)
   end
 
   alias :original_store :store
   def store(key, value)
-    redis = Redis.current
-    tmp = JSON.load( redis.get( @redis_id ) )
-    tmp ||= {}
-
-
-    tmp[key.to_s] = value
-    redis.set( @redis_id, tmp.to_json)
-
-    value = self.original_store(key, value)
-
-    return value
+    ElementManager.store(@rgraphum_id,key,value)
+    self.original_store(key, value)
   end
   alias :[]= :store
 
