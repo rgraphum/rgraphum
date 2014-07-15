@@ -13,7 +13,6 @@ class Rgraphum::Vertex < Hash
   attr_accessor :rgraphum_id
 
   def initialize(fields={})
-    redis = Redis.current
     @rgraphum_id = new_rgraphum_id
 
     tmp = super(nil)

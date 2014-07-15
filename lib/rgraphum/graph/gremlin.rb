@@ -1,8 +1,108 @@
-# -*- coding: utf-8 -*-
-class Rgraphum::Graph
+
+class Rgraphum::Edge
+
+  # Gremlin: outV
+  #
+  # Get both outgoing tail vertex of the edge.
+  #
+  #     gremlin> e = g.e(12)
+  #     ==>e[12][6-created->3]
+  #     gremlin> e.outV
+  #     ==>v[6]
+  #     gremlin> e.inV
+  #     ==>v[3]
+  #     gremlin> e.bothV
+  #     ==>v[6]
+  #     ==>v[3]
+  #
+  def outV
+    self.source
+  end
+  alias :out_v :outV
+
+  # Gremlin: inV
+  #
+  # Get both incoming head vertex of the edge.
+  #
+  #     gremlin> e = g.e(12)
+  #     ==>e[12][6-created->3]
+  #     gremlin> e.outV
+  #     ==>v[6]
+  #     gremlin> e.inV
+  #     ==>v[3]
+  #     gremlin> e.bothV
+  #     ==>v[6]
+  #     ==>v[3]
+  #
+  def inV
+    self.target
+  end
+  alias :in_v :inV
+
+  # Gremlin: bothV
+  #
+  # Get both incoming and outgoing vertices of the edge.
+  #
+  #     gremlin> e = g.e(12)
+  #     ==>e[12][6-created->3]
+  #     gremlin> e.outV
+  #     ==>v[6]
+  #     gremlin> e.inV
+  #     ==>v[3]
+  #     gremlin> e.bothV
+  #     ==>v[6]
+  #     ==>v[3]
+  #
+  def bothV
+    [outV, inV]
+  end
+  alias :both_v :bothV
+
 end
 
-module Rgraphum::Graph::Gremlin
+class Rgraphum::Edges
+
+  # Gremlin: outV
+  #
+  # Get both outgoing tail vertex of the edge.
+  #
+  #     gremlin> e = g.e(12)
+  #     ==>e[12][6-created->3]
+  #     gremlin> e.outV
+  #     ==>v[6]
+  #     gremlin> e.inV
+  #     ==>v[3]
+  #     gremlin> e.bothV
+  #     ==>v[6]
+  #     ==>v[3]
+  #
+  def outV
+    self.map{ |edge| edge.source }
+  end
+  alias :out_v :outV
+
+  # Gremlin: inV
+  #
+  # Get both incoming head vertex of the edge.
+  #
+  #     gremlin> e = g.e(12)
+  #     ==>e[12][6-created->3]
+  #     gremlin> e.outV
+  #     ==>v[6]
+  #     gremlin> e.inV
+  #     ==>v[3]
+  #     gremlin> e.bothV
+  #     ==>v[6]
+  #     ==>v[3]
+  #
+  def inV
+    self.map{ |edge| edge.target }
+  end
+  alias :in_v :inV
+
+end
+
+class Rgraphum::Graph
 
   # Gremlin: Graph.v
   #
@@ -191,3 +291,4 @@ module Rgraphum::Graph::Gremlin
   alias :add_edge :addEdge
 
 end
+

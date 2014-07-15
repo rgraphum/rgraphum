@@ -19,79 +19,28 @@ class Rgraphum::Edge < Hash
       raise ArgumentError, "Edge.new: :source and :target options are required"
     end
 
+    @rgraphum_id = new_rgraphum_id
+
+    tmp[:weight] ||= 1
     fields.each do |key,value|
       tmp.store(key,value)
     end
 
-    tmp[:weight] ||= 1
-
-    tmp
+    ElementManager.save(@rgraphum_id,tmp)
   end
 
-  # Gremlin: outV
-  #
-  # Get both outgoing tail vertex of the edge.
-  #
-  #     gremlin> e = g.e(12)
-  #     ==>e[12][6-created->3]
-  #     gremlin> e.outV
-  #     ==>v[6]
-  #     gremlin> e.inV
-  #     ==>v[3]
-  #     gremlin> e.bothV
-  #     ==>v[6]
-  #     ==>v[3]
-  #
-  def outV
-    self.source
-  end
-  alias :out_v :outV
+#  def [](key)
+#    ElementManager.fetch(@rgraphum_id,key)
+#  end
 
-  # Gremlin: inV
-  #
-  # Get both incoming head vertex of the edge.
-  #
-  #     gremlin> e = g.e(12)
-  #     ==>e[12][6-created->3]
-  #     gremlin> e.outV
-  #     ==>v[6]
-  #     gremlin> e.inV
-  #     ==>v[3]
-  #     gremlin> e.bothV
-  #     ==>v[6]
-  #     ==>v[3]
-  #
-  def inV
-    self.target
+  alias :original_store :store
+  def store(key, value)
+    ElementManager.store(@rgraphum_id,key,value)
+    self.original_store(key, value)
   end
-  alias :in_v :inV
-
-  # Gremlin: bothV
-  #
-  # Get both incoming and outgoing vertices of the edge.
-  #
-  #     gremlin> e = g.e(12)
-  #     ==>e[12][6-created->3]
-  #     gremlin> e.outV
-  #     ==>v[6]
-  #     gremlin> e.inV
-  #     ==>v[3]
-  #     gremlin> e.bothV
-  #     ==>v[6]
-  #     ==>v[3]
-  #
-  def bothV
-    [outV, inV]
-  end
-  alias :both_v :bothV
-
+  alias :[]= :store
 
   # Non-Gremlin methods
-
-
-  # def id
-  #   self[:id]
-  # end
 
   def update_vertices(vertices)
     self.source = find_vertex(:source, vertices)
@@ -112,8 +61,6 @@ class Rgraphum::Edge < Hash
     vertex
   end
 
-#
-#
 #  field :attvalues
 
   def id

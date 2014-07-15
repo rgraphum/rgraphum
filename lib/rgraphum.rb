@@ -25,8 +25,6 @@ require_relative 'rgraphum/community'
 require_relative 'rgraphum/communities'
 require_relative 'rgraphum/graph/element_manager'
 
-
-
 require_relative 'rgraphum/graph/math'
 require_relative 'rgraphum/graph/gremlin'
 require_relative 'rgraphum/importer'

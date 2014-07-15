@@ -7,7 +7,6 @@ class Rgraphum::Graph
   RGRAPHUM = Rgraphum
 
   include Rgraphum::Graph::Math
-  include Rgraphum::Graph::Gremlin
   include Rgraphum::Marshal
   include Rgraphum::Simulator
   include Rgraphum::Importer

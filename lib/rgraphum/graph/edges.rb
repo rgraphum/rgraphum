@@ -13,48 +13,6 @@ class Rgraphum::Edges < Rgraphum::Elements
 
   attr_accessor :vertex
 
-  # Gremlin: outV
-  #
-  # Get both outgoing tail vertex of the edge.
-  #
-  #     gremlin> e = g.e(12)
-  #     ==>e[12][6-created->3]
-  #     gremlin> e.outV
-  #     ==>v[6]
-  #     gremlin> e.inV
-  #     ==>v[3]
-  #     gremlin> e.bothV
-  #     ==>v[6]
-  #     ==>v[3]
-  #
-  def outV
-    self.map{ |edge| edge.source }
-  end
-  alias :out_v :outV
-
-  # Gremlin: inV
-  #
-  # Get both incoming head vertex of the edge.
-  #
-  #     gremlin> e = g.e(12)
-  #     ==>e[12][6-created->3]
-  #     gremlin> e.outV
-  #     ==>v[6]
-  #     gremlin> e.inV
-  #     ==>v[3]
-  #     gremlin> e.bothV
-  #     ==>v[6]
-  #     ==>v[3]
-  #
-  def inV
-    self.map{ |edge| edge.target }
-  end
-  alias :in_v :inV
-
-
-  # Non-Gremlin methods
-
-
   def initialize(edge_hashes=[])
     super()
     @id_edge_map = {}
