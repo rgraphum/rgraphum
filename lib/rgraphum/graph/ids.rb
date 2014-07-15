@@ -1,7 +1,7 @@
 module IDs
 
   def new_id(id=nil)
-    ids_manager.new_id(id)
+    ids_manager.new_id(id,@rgraphum_id)
   end
 
   def current_id
@@ -9,7 +9,7 @@ module IDs
   end
 
   def ids
-    ids_manager.load.freeze
+    ids_manager.load_keys.freeze
   end
 
   def ids=(source=[])
@@ -22,6 +22,14 @@ module IDs
 
   def del_ids
     ids_manager.del_ids(id)
+  end
+
+  def id_elements_hash
+    
+  end
+
+  def id_rgraphum_id_hash
+    @ids_manager.load_hash 
   end
 
   def ids_manager
@@ -39,30 +47,34 @@ module IDs
       Redis.current
     end
     
-    def new_id(id=nil)
-      id = add_id(id) if id
-      id = add_id( redis.incr(@counter_id) ) unless id
+    def new_id(id=nil, rgraphum_id )
+      id = add_id( id, rgraphum_id ) if id
+      id = add_id( redis.incr(@counter_id), rgraphum_id ) unless id
       unless id
-        redis.set( @counter_id, self.load.max )
-        id = add_id( redis.incr(@counter_id) ) 
+        redis.set( @counter_id, self.load_keys.max )
+        id = add_id( redis.incr(@counter_id), rgraphum_id ) 
       end
       id
     end
 
-    def load
-      redis.smembers(@rgraphum_id)
+    def load_keys
+      redis.hkeys(@rgraphum_id)
     end
 
-    def replace(ids)
+    def load
+      "hoge"
+    end
+
+    def replace(id_rgraphum_id_hash)
       redis.multi
       redis.del(@rgraphum_id)
-      ids.each { |id| redis.sadd(@rgraphum_id,id) }
+      id_rgraphum_id_hash.each { |id,rgraphum_id| redis.sadd(@rgraphum_id,id,rgraphum_id) }
       redis.exec
-      ids
+      id_rgraphum_id.keys
     end
 
-    def add_id(id)
-      flg = redis.sadd(@rgraphum_id,id)
+    def add_id(id,rgraphum_id)
+      flg = redis.hsetnx(@rgraphum_id,id,rgraphum_id)
       id if flg
     end
 
