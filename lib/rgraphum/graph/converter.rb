@@ -14,8 +14,8 @@ class Rgraphum::Graph::Converter
 
       pre_graph.edges.each do |pre_edge|
         edge   = pre_edge.dup
-        edge[:source] = pre_edge[:target]
-        edge[:target] = pre_edge[:source]
+        edge.source = pre_edge.target
+        edge.target = pre_edge.source
         graph.edges.build(edge)
       end
 
@@ -23,9 +23,6 @@ class Rgraphum::Graph::Converter
       graph
     end
 
-#    def directed(graph)
-#      graph
-#    end
   end
 
 end

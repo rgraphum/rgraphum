@@ -31,13 +31,11 @@ class Rgraphum::Edges < Rgraphum::Elements
   end
 
   def find_vertex(vertex)
-    vertices = @graph.vertices
-
     if vertex.is_a?(Rgraphum::Vertex) and vertex.graph.equal?(@graph)
       vertex
     else
-      vertices.find_by_id(vertex)
-    end
+      @graph.vertices.find_by_id(vertex)
+    end    
   end
 
   def build(edge_or_hash, recursive=true)

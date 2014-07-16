@@ -10,7 +10,6 @@ end
 
 class Rgraphum::Edge < Hash
   attr_accessor :graph
-  # attr_accessor :vertex
 
   def initialize(fields={})
     tmp = super(nil)
@@ -20,8 +19,14 @@ class Rgraphum::Edge < Hash
     end
 
     @rgraphum_id = new_rgraphum_id
+    @source = fields[:source]
+    @target = fields[:target]
 
-    tmp[:weight] ||= 1
+    if fields[:start].class == Fixnum
+      fields[:start] = Time.at(fields[:start])
+    end
+
+    fields[:weight] ||= 1
     fields.each do |key,value|
       tmp.store(key,value)
     end
@@ -29,9 +34,13 @@ class Rgraphum::Edge < Hash
     ElementManager.save(@rgraphum_id,tmp)
   end
 
-#  def [](key)
-#    ElementManager.fetch(@rgraphum_id,key)
-#  end
+  def redis_dup
+    @rgraphum_id = ElementManager.redis_dup(@rgraphum_id)
+  end
+
+  def [](key)
+    ElementManager.fetch(@rgraphum_id,key)
+  end
 
   alias :original_store :store
   def store(key, value)
@@ -39,13 +48,6 @@ class Rgraphum::Edge < Hash
     self.original_store(key, value)
   end
   alias :[]= :store
-
-  # Non-Gremlin methods
-
-  def update_vertices(vertices)
-    self.source = find_vertex(:source, vertices)
-    self.target = find_vertex(:target, vertices)
-  end
   
   def find_vertex(syn, vertices)
     vertex =  self[syn]
@@ -61,8 +63,6 @@ class Rgraphum::Edge < Hash
     vertex
   end
 
-#  field :attvalues
-
   def id
     self.[](:id)
   end
@@ -71,16 +71,18 @@ class Rgraphum::Edge < Hash
   end
 
   def source
-    self.[](:source)
+    @source
   end
   def source=(tmp)
+    @source=tmp
     self.store(:source,tmp)
   end
 
   def target
-    self.[](:target)
+    @target
   end
   def target=(tmp)
+    @target=tmp
     self.store(:target,tmp)
   end
 
@@ -98,13 +100,6 @@ class Rgraphum::Edge < Hash
     self.store(:weight,tmp)
   end
 
-  def start
-    self.[](:start)
-  end
-  def start=(tmp)
-    self.store(:start,tmp)
-  end
-
   def attvalues
     self.[](:attvalues)
   end
@@ -113,10 +108,19 @@ class Rgraphum::Edge < Hash
   end
 
   def created_at
-    self.[](:created_at)
+    return Time.now unless self.[](:created_at)
+    Time.parse(time_string = self.[](:created_at))
   end
   def created_at=(tmp)
     self.store(:created_at,tmp)
+  end
+
+  def start
+    return Time.now unless self.[](:start)
+    Time.parse(time_string = self.[](:start))
+  end
+  def start=(tmp)
+    self.[]=(:start,tmp)
   end
 
 end

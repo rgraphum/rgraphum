@@ -24,8 +24,12 @@ module IDs
     ids_manager.del_ids(id)
   end
 
-  def id_elements_hash
-    
+  def id_element_hash
+    hash = {}
+    id_rgraphum_hash.each do |id,rgraphum_id|
+      hash[id.to_i] = ElemetManager.load(rgraphum_id)
+    end
+    hash
   end
 
   def id_rgraphum_id_hash
@@ -59,10 +63,6 @@ module IDs
 
     def load_keys
       redis.hkeys(@rgraphum_id)
-    end
-
-    def load
-      "hoge"
     end
 
     def replace(id_rgraphum_id_hash)

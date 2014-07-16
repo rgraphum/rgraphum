@@ -149,10 +149,10 @@ class Rgraphum::Graph
     self
   end
 
-
   def dup
     other = Marshal.load(Marshal.dump(self))
     other.vertices.each {|vertex| vertex.redis_dup }
+    other.edges.each    {|edge|   edge.redis_dup   }
     other
   end
 

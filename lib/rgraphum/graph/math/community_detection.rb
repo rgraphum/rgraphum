@@ -67,8 +67,8 @@ class Rgraphum::Graph::Math::CommunityDetection
   #   value: delta_q_seed # Float
   def initial_delta_q_hash( limit=0 )
     @graph.edges.each do |edge|
-      s_c_id = edge[:source].community_id
-      t_c_id = edge[:target].community_id
+      s_c_id = edge.source.community_id
+      t_c_id = edge.target.community_id
 
       # don't use loop
       next if s_c_id == t_c_id

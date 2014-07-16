@@ -22,6 +22,8 @@ class Rgraphum::Vertices < Rgraphum::Elements
   def find_by_id(vertex_or_id)
     if vertex_or_id.is_a?(Rgraphum::Vertex)
       id = vertex_or_id.id
+    elsif vertex_or_id.is_a?(Hash)
+      id = vertex_or_id[:id] || vertex_or_id["id"]
     else
       id = vertex_or_id
     end
@@ -50,7 +52,6 @@ class Rgraphum::Vertices < Rgraphum::Elements
     vertex = Rgraphum::Vertex(vertex_hash)
     vertex.graph = @graph
     vertex[:id] = new_id(vertex[:id])
-#    vertex[:id] = new_id(vertex[:id])
     original_push_1(vertex)
     @id_vertex_map[vertex.id] = vertex
     vertex

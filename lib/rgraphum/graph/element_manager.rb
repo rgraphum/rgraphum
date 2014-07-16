@@ -6,34 +6,34 @@ class ElementManager
     end
 
     def load(rgraphum_id)
-      JSON.load( redis.get( rgraphum_id ) ) || {}
+      JSON.load( redis.hget( rgraphum_id,"params" ) ) || {}
     end
 
     def save(rgraphum_id,hash={})
-      redis.set( rgraphum_id, hash.to_json)
+      redis.hset( rgraphum_id, "params", hash.to_json)
     end
 
     def store(rgraphum_id,key,value) 
-      hash = JSON.load( redis.get( rgraphum_id ) )
+      hash = JSON.load( redis.hget( rgraphum_id,"params" ) )
       hash ||= {}
 
       hash[key.to_s] = value
-      redis.set( rgraphum_id, hash.to_json)
+      redis.hset( rgraphum_id, "params", hash.to_json)
       return value
     end
 
     def fetch(rgraphum_id,key) 
-      tmp = JSON.load( redis.get( rgraphum_id ) ) || {}
-      tmp[key.to_s] 
+      tmp = JSON.load( redis.hget( rgraphum_id, "params" ) ) || {}
+      tmp[key.to_s]
     end
 
     def redis_dup(rgraphum_id)
-      hash = JSON.load( redis.get( rgraphum_id ) )
+      hash = JSON.load( redis.hget( rgraphum_id,"params" ) )
       hash ||= {}
 
       new_rgraphum_id = redis.incr( "global:RgraphumId" )
 
-      redis.set( new_rgraphum_id, hash.to_json)
+      redis.hset( new_rgraphum_id, "params", hash.to_json)
       new_rgraphum_id
     end
 

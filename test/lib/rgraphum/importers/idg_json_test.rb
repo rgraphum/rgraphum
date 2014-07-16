@@ -166,10 +166,6 @@ class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
 }
     EOT
 
-#    Rgraphum::Edge.instance_eval {
-#      field :created_at # FIXME
-#    }
-
     graph = Rgraphum::Graph.build(format: :idg_json, vertices: vertices_json_str, edges: edges_json_str)
     assert_equal 3, graph.vertices.size
     assert_equal 2, graph.edges.size
@@ -180,6 +176,7 @@ class RgraphumImporterIdgJsonTest < MiniTest::Unit::TestCase
 
     assert_equal "person_a", graph.edges[0].source.label
     assert_equal "person_b", graph.edges[0].target.label
+
     assert_equal "2013-07-11 23:48:41 JST", graph.edges[0].created_at.strftime("%Y-%m-%d %H:%M:%S %Z")
 
     assert_equal "person_c", graph.edges[1].source.label
