@@ -19,7 +19,14 @@ class Rgraphum::Edge < Hash
     end
 
     @rgraphum_id = new_rgraphum_id
+    if fields[:source].is_a?(Rgraphum::Vertex)
+      fields[:source] = fields[:source].id
+    end
     @source = fields[:source]
+    
+    if fields[:target].is_a?(Rgraphum::Vertex)
+      fields[:target] = fields[:target].id
+    end
     @target = fields[:target]
 
     if fields[:start].class == Fixnum
@@ -48,20 +55,6 @@ class Rgraphum::Edge < Hash
     self.original_store(key, value)
   end
   alias :[]= :store
-  
-  def find_vertex(syn, vertices)
-    vertex =  self[syn]
-    if vertex.instance_of?(Rgraphum::Vertex) and vertex.graph.equal?(@graph)
-      vertex
-    else
-      vertex = vertices.find_by_id(vertex)
-    end
-
-    unless vertex
-      p "edge has no #{syn}" if Rgraphum.verbose?
-    end
-    vertex
-  end
 
   def id
     self.[](:id)

@@ -9,6 +9,11 @@ class ElementManager
       JSON.load( redis.hget( rgraphum_id,"params" ) ) || {}
     end
 
+    def vertex_from_rgraphum_id(rgraphum_id)
+      hash = self.load(rgraphum_id)
+      vertex = Rgraphum::Vertex(hash)
+    end
+
     def save(rgraphum_id,hash={})
       redis.hset( rgraphum_id, "params", hash.to_json)
     end

@@ -21,21 +21,12 @@ class Rgraphum::Edges < Rgraphum::Elements
     end
   end
 
-  def find_by_id(edge_id)
-    if edge_id.is_a?(Rgraphum::Edge)
-      id = edge_id.id
-    else
-      id = edge_id
-    end
+  def find_by_id(id)
     @id_edge_map[id]
   end
 
   def find_vertex(vertex)
-    if vertex.is_a?(Rgraphum::Vertex) and vertex.graph.equal?(@graph)
-      vertex
-    else
-      @graph.vertices.find_by_id(vertex)
-    end    
+    @graph.vertices.find_by_id(vertex)
   end
 
   def build(edge_or_hash, recursive=true)
@@ -49,10 +40,14 @@ class Rgraphum::Edges < Rgraphum::Elements
     else
       edge = Rgraphum::Edge(edge_or_hash)
       if @graph
+        edge.source = edge.source.id if edge.source.is_a?(Rgraphum::Vertex)
+        edge.target = edge.target.id if edge.target.is_a?(Rgraphum::Vertex)
+
         source_vertex = find_vertex(edge.source)
         target_vertex = find_vertex(edge.target)
         raise ArgumentError, "Source vertex is required" unless source_vertex
         raise ArgumentError, "Target vertex is required" unless target_vertex
+
         edge.source = source_vertex
         edge.target = target_vertex
 
@@ -112,10 +107,6 @@ class Rgraphum::Edges < Rgraphum::Elements
 
     deleted_edge
   end
-
-#  def weights
-#    self.map{ |edge| edge.weight }
-#  end
 
   protected :original_push_1
   protected :original_push_m

@@ -11,22 +11,13 @@ end
 class Rgraphum::Vertices < Rgraphum::Elements
   include Rgraphum::RgraphumArrayDividers
 
-  # Non-Gremlin methods
-
   def initialize(vertex_hashes=[])
     ids = vertex_hashes.each { |vertex| vertex.id }
     super(ids)
     @id_vertex_map = {}
   end
 
-  def find_by_id(vertex_or_id)
-    if vertex_or_id.is_a?(Rgraphum::Vertex)
-      id = vertex_or_id.id
-    elsif vertex_or_id.is_a?(Hash)
-      id = vertex_or_id[:id] || vertex_or_id["id"]
-    else
-      id = vertex_or_id
-    end
+  def find_by_id(id)
     @id_vertex_map[id]
   end
 

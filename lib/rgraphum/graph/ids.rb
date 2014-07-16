@@ -1,5 +1,7 @@
 module IDs
 
+
+
   def new_id(id=nil)
     ids_manager.new_id(id,@rgraphum_id)
   end
@@ -33,7 +35,7 @@ module IDs
   end
 
   def id_rgraphum_id_hash
-    @ids_manager.load_hash 
+    @ids_manager.load
   end
 
   def ids_manager
@@ -59,6 +61,10 @@ module IDs
         id = add_id( redis.incr(@counter_id), rgraphum_id ) 
       end
       id
+    end
+
+    def load
+      redis.hgetall(@rgraphum_id)
     end
 
     def load_keys

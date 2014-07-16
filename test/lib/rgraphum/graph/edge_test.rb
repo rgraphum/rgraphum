@@ -16,11 +16,6 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
     @edge0 = @graph.edges[0]
   end
 
-  def test_find_vertices_for_source_and_target
-    source_vertex = @edge0.find_vertex(:source, @graph.vertices)
-    p source_vertex if Rgraphum.verbose?
-  end
-
   def test_vertex_within_term
     t = Time.now
     vertex_a = Rgraphum::Vertex.new
@@ -47,19 +42,6 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
     assert_equal edge.source, edge_dash.source
     assert_equal edge.target, edge_dash.target
   end
-
-#  def test_invalid_field
-#    v1 = Rgraphum::Vertex.new(label: "1")
-#    v2 = Rgraphum::Vertex.new(label: "2")
-#
-#    assert_raises(ArgumentError) do
-#      Rgraphum::Edge.new(source: v1, target: v2, labeeeeeeeeeeeeeeeeeeeel: "label")
-#    end
-#
-#    assert_raises(ArgumentError) do
-#      Rgraphum::Edge.new(source: v1, target: v2, label: "label", labeeeeeeeeeeeeeeeeeeeel: "label")
-#    end
-#  end
 
   def test_invalid_source
     v1 = Rgraphum::Vertex.new(label: "1")

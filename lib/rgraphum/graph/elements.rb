@@ -3,6 +3,7 @@
 require_relative 'query'
 
 class Rgraphum::Elements < Array
+
   attr_accessor :graph
   attr_reader   :rgraphum_id
 

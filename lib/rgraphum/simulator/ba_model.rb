@@ -64,9 +64,9 @@ class Rgraphum::Simulator::BAModel
 
     edge_index = rand( graph.edges.size )
     if rand(2) == 0
-      source_vertex = graph.edges[edge_index][:source]
+      source_vertex = graph.edges[edge_index].source
     else
-      source_vertex = graph.edges[edge_index][:target]
+      source_vertex = graph.edges[edge_index].target
     end
   end
 
