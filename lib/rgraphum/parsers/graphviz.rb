@@ -17,8 +17,8 @@ module Rgraphum::Parsers
         dot += "  graph [ layout = \"#{layout}\", overlap = false ] \n\n"
 
         graph.edges.each do |edge|
-          s = edge[:source][:label] || edge[:source][:id]
-          t = edge[:target][:label] || edge[:target][:id]
+          s = edge.source.label || edge.source.id
+          t = edge.target.label || edge.target.id
           label = "[label = \"#{edge[:label]}\"]" if edge[:label]
           dot += "  \"#{s}\" -> \"#{t}\" #{label}; \n"
         end

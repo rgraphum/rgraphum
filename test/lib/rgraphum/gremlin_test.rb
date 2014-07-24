@@ -43,10 +43,10 @@ class RgraphumGremlinTest < MiniTest::Unit::TestCase
     assert_equal v2.object_id, e.inV.object_id
 
     e = g.addEdge(1000,v1,v2,'friend')
-    assert_equal({:id=>1000, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>1}, e)
+    assert_equal({:id=>1000, :source=>100, :target=>200, :label=>"friend", :weight=>1}, e)
 
     e = g.addEdge(nil,v1,v2,'friend',{weight:0.75})
-    assert_equal({:id=>2, :source=>{:id=>100}, :target=>{:id=>200}, :label=>"friend", :weight=>0.75}, e)
+    assert_equal({:id=>2, :source=>100, :target=>200, :label=>"friend", :weight=>0.75}, e)
     
   end
 

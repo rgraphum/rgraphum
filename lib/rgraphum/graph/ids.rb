@@ -54,6 +54,7 @@ module IDs
     end
     
     def new_id(id=nil, rgraphum_id )
+      id = id.to_i if id
       id = add_id( id, rgraphum_id ) if id
       id = add_id( redis.incr(@counter_id), rgraphum_id ) unless id
       unless id

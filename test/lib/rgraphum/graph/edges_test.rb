@@ -107,7 +107,7 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
       assert_equal 1, vertex.out_edges.size
     end
 
-    graph.edges.delete_if { |edge| edge.weight.odd? }
+    graph.edges.delete_if { |edge| edge.weight.to_i.odd? }
     # graph.edges.reject! { |edge| edge.weight.odd? }
 
     # v0 -> v1    v2 -> v3    v4 -> v5    v6 -> v7    v8 -> v9
@@ -144,7 +144,7 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
     #  +-----------------------------------------------------+
     assert_equal 10, graph.edges.size
 
-    rejected_edges = graph.edges.reject { |edge| edge.weight.odd? }
+    rejected_edges = graph.edges.reject { |edge| edge.weight.to_i.odd? }
 
     assert_equal 10, graph.vertices.size, "Should not change size"
     assert_equal 10, graph.edges.size,    "Should not change size"

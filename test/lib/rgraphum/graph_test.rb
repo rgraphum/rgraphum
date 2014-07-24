@@ -136,7 +136,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
   end
 
   def test_id_aspect!
-    id_aspect_vertices =  @graph_a.id_aspect!.vertices
+    id_aspect_vertices =  @graph_a.vertices
     assert_equal [ {:id=>1, :label=>"hoge" }, {:id=>2, :label=>"huga"} ], id_aspect_vertices
     expected = [
       {:id=>1, :source=>1, :target=>2, :weight=>1 },
@@ -151,7 +151,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
   end
 
   def test_real_aspect!
-    real_aspect_vertices = @graph_a.real_aspect!.vertices
+    real_aspect_vertices = @graph_a.vertices
 
     assert_equal 2, real_aspect_vertices.size
     assert_equal real_aspect_vertices[0].object_id, real_aspect_vertices[0].edges[0].source.object_id
@@ -198,7 +198,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
       {source:3,target:4,weight:1},
     ]
 
-    @graph.id_aspect!
+#    @graph.id_aspect!
     assert_equal ( {id:1,source:0,target:1,weight:1} ), @graph.edges[0].to_h
     assert_equal ( {id:2,source:0,target:2,weight:1} ), @graph.edges[1].to_h
     assert_equal ( {id:3,source:1,target:2,weight:1} ), @graph.edges[2].to_h
@@ -222,7 +222,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
     @graph.vertices[2].edges << {source:2,target:4,weight:1}
     @graph.vertices[3].edges << {source:3,target:4,weight:1}
 
-    @graph.id_aspect!
+#    @graph.id_aspect!
     assert_equal({id:1,source:0,target:1,weight:1}, @graph.edges[0])
     assert_equal({id:2,source:0,target:2,weight:1}, @graph.edges[1])
     assert_equal({id:3,source:1,target:2,weight:1}, @graph.edges[2])
@@ -240,12 +240,12 @@ class RgraphumTest < MiniTest::Unit::TestCase
 
     @graph.edges << { :source => 2, :target => 1 }
 
-    @graph.id_aspect!
+#    @graph.id_aspect!
     assert_equal [ { :id => 1, :source => 2, :target => 1, :weight => 1}], @graph.edges.map { |edge| edge.to_h }.to_a
 
-    @graph.real_aspect!
+#    @graph.real_aspect!
     @graph.edges << { :source => 1, :target => 2 }
-    @graph.id_aspect!
+#    @graph.id_aspect!
     assert_equal ( { :id => 1, :source => 2, :target => 1, :weight => 1 } ), @graph.edges[0]
     assert_equal ( { :id => 2, :source => 1, :target => 2, :weight => 1 } ) , @graph.edges[1]
   end
@@ -260,7 +260,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
       {:source => 1, :target => 2, :weight => 1},
       {:source => 2, :target => 1, :weight => 1},
     ]
-    @graph.id_aspect!
+#    @graph.id_aspect!
     assert_equal [ {:id => 1, :source => 1, :target => 2, :weight => 1},{ :id => 2, :source => 2, :target => 1, :weight => 1}], @graph.edges.map{ |edge| edge.to_h }
   end
 

@@ -10,6 +10,7 @@ end
 
 class Rgraphum::Edge < Hash
   attr_accessor :graph
+  attr_accessor :rgraphum_id
 
   def initialize(fields={})
     tmp = super(nil)
@@ -19,12 +20,12 @@ class Rgraphum::Edge < Hash
     end
 
     @rgraphum_id = new_rgraphum_id
-    if fields[:source].is_a?(Rgraphum::Vertex)
+    if fields[:source].is_a?(Hash)
       fields[:source] = fields[:source].id
     end
     @source = fields[:source]
     
-    if fields[:target].is_a?(Rgraphum::Vertex)
+    if fields[:target].is_a?(Hash)
       fields[:target] = fields[:target].id
     end
     @target = fields[:target]
@@ -34,10 +35,10 @@ class Rgraphum::Edge < Hash
     end
 
     fields[:weight] ||= 1
+
     fields.each do |key,value|
       tmp.store(key,value)
     end
-
     ElementManager.save(@rgraphum_id,tmp)
   end
 
@@ -56,27 +57,43 @@ class Rgraphum::Edge < Hash
   end
   alias :[]= :store
 
+  def reload
+    hash = ElementManager.load(@rgraphum_id)
+    hash.each do |key,value|
+      self.original_store(key, value)
+    end
+    self
+  end
+
+  def dup
+    tmp = super
+    tmp.redis_dup
+    tmp
+  end
+
   def id
-    self.[](:id)
+    self.[](:id).to_i if self.[](:id)
   end
   def id=(tmp)
     self.store(:id,tmp)
   end
 
   def source
-    @source
+    @graph.vertices.find_by_id( self.[](:source).to_i )
   end
   def source=(tmp)
-    @source=tmp
-    self.store(:source,tmp)
+    tmp = tmp.id if tmp.is_a?(Hash)
+    @source = tmp
+    self.store(:source,@source)
   end
 
   def target
-    @target
+    @graph.vertices.find_by_id(self.[](:target).to_i)
   end
   def target=(tmp)
-    @target=tmp
-    self.store(:target,tmp)
+    tmp = tmp.id if tmp.is_a?(Hash)
+    @target = tmp
+    self.store(:target,@target)
   end
 
   def label
@@ -87,7 +104,7 @@ class Rgraphum::Edge < Hash
   end
 
   def weight
-    self.[](:weight)
+    self.[](:weight).to_f
   end
   def weight=(tmp)
     self.store(:weight,tmp)

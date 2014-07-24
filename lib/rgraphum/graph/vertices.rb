@@ -25,16 +25,19 @@ class Rgraphum::Vertices < Rgraphum::Elements
   def dup
     edges = map{ |vertex| vertex.edges }.flatten.uniq
     vertices = super
+    vertices.graph = nil
     vertices.each {|vertex| vertex.edges = Rgraphum::Edges.new }
 
-    edges.each do |edge_source|
-      edge = edge_source.dup
-      edge.source = vertices.find_by_id(edge.source.id)
-      edge.target = vertices.find_by_id(edge.target.id)
-
-      edge.source.edges << edge
-      edge.target.edges << edge
-    end
+#    edges.each do |edge_source|
+#      edge = edge_source.dup
+#
+#      edge.source = vertices.find_by_id(edge.source.id)
+#      edge.target = vertices.find_by_id(edge.target.id)
+#
+#      edge.source.edges << edge
+#      edge.target.edges << edge
+#      edge.graph = nil
+#    end
 
     vertices
   end
@@ -42,7 +45,7 @@ class Rgraphum::Vertices < Rgraphum::Elements
   def build(vertex_hash)
     vertex = Rgraphum::Vertex(vertex_hash)
     vertex.graph = @graph
-    vertex[:id] = new_id(vertex[:id])
+    vertex.id = new_id(vertex[:id])
     original_push_1(vertex)
     @id_vertex_map[vertex.id] = vertex
     vertex

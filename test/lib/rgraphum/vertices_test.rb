@@ -19,7 +19,7 @@ class RgraphumVerticesTest < MiniTest::Unit::TestCase
 
     @vertex0.edges << { source: @vertex0, target: @vertex1 }
 
-    assert_equal 1, @vertex0.edges.size
+    assert_equal 1,  @vertex0.edges.size
     assert_equal 1, @vertex0.edges[0].id
     assert_equal @vertex0.object_id, @vertex0.edges[0].source.object_id
     assert_equal @vertex1.object_id, @vertex0.edges[0].target.object_id

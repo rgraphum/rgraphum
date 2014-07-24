@@ -31,7 +31,8 @@ class Rgraphum::Analyzer::MemeTracker
   def edit_distance(words_a, words_b, limit=@distance_max_limit)
     a = words_a.dup
     b = words_b.dup
-
+p   a
+p   b
     return nil if (a - b | b - a).size  > (limit * 2)
     d = find_shift_distance(a, b)
   end
@@ -232,6 +233,9 @@ class Rgraphum::Analyzer::MemeTracker
       if pair[1].start and pair[0].end
         next unless  pair[0].within_term(pair[1])
       end
+p "meme make_edge"
+p pair[0].words
+p pair[1].words
 
       distance = edit_distance(pair[0].words, pair[1].words)
       next unless distance

@@ -14,14 +14,13 @@ class Rgraphum::Vertex < Hash
 
   def initialize(fields={})
     @rgraphum_id = new_rgraphum_id
-
     tmp = super(nil)
     tmp.object_init
+
+    fields[:words] = fields[:words].to_json if fields[:words]
     fields.each do |key,value|
       tmp.store(key,value)
     end
-
-    ElementManager.save(@rgraphum_id,tmp)
 
   end
 
@@ -47,6 +46,14 @@ class Rgraphum::Vertex < Hash
     self.original_store(key, value)
   end
   alias :[]= :store
+
+  def reload
+    hash = ElementManager.load(@rgraohum_id)
+    hash.each do |key,value|
+      self.original_store(key, value)
+    end
+    self
+  end
 
   def dup
 
@@ -325,27 +332,27 @@ class Rgraphum::Vertex < Hash
     false 
   end
 
-  def to_hash
-    hash = {}
-    @@field_names.each do |name|
-      value = instance_variable_get("@#{name}")
-      if value
-        if value.respond_to?(:to_hash)
-          hash[name] = value.to_hash
-        else
-          hash[name] = value
-        end
-      end
-    end
-    hash
-  end
+#  def to_hash
+#    hash = {}
+#    @@field_names.each do |name|
+#      value = instance_variable_get("@#{name}")
+#      if value
+#        if value.respond_to?(:to_hash)
+#          hash[name] = value.to_hash
+#        else
+#          hash[name] = value
+#        end
+#      end
+#    end
+#    hash
+#  end
 
   def to_s
     to_hash.to_s
   end
 
   def id
-    self.[](:id)
+    self.[](:id).to_i if self.[](:id)
   end
   def id=(tmp)
    self.[]=(:id,tmp)
@@ -359,7 +366,7 @@ class Rgraphum::Vertex < Hash
   end
 
   def community_id
-    self.[](:community_id)
+    self.[](:community_id).to_i if self.[](:community_id)
   end
   def community_id=(tmp) 
     self.[]=(:community_id,tmp)
@@ -380,10 +387,10 @@ class Rgraphum::Vertex < Hash
   end
 
   def words
-    self.[](:words)
+p    JSON.load( self.[](:words) )
   end
   def words=(tmp) 
-    self.[]=(:words,tmp)
+    self.[]=(:words,tmp.to_json)
   end
 
   def start
@@ -403,7 +410,7 @@ class Rgraphum::Vertex < Hash
   end
 
   def count
-    self.[](:count)
+    self.[](:count).to_i 
   end
   def count=(tmp)
     self.[]=(:count,tmp)

@@ -247,6 +247,7 @@ class Rgraphum::Graph
   def addVertex(id=nil, vertex=nil)
     vertex ||= Rgraphum::Vertex.new(id: id)
     vertex = Rgraphum::Vertex.new(vertex) unless vertex.is_a?(Rgraphum::Vertex) # FIXME
+p   vertex.id
     @vertices << vertex
     @vertices[-1]
   end

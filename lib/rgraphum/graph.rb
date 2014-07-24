@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# FIXME some 'edge.source's are edge.source.id
-# FIXME some 'edge.target's are edge.target.id
-
 class Rgraphum::Graph
   RGRAPHUM = Rgraphum
 
@@ -12,7 +9,6 @@ class Rgraphum::Graph
   include Rgraphum::Importer
   include Rgraphum::Parsers
 
-  attr_accessor :aspect
   attr_accessor :label
 
   class << self
@@ -65,7 +61,6 @@ class Rgraphum::Graph
       @edges.graph = self
     end
 
-    @aspect = "real"
     self
   end
 
@@ -123,32 +118,6 @@ class Rgraphum::Graph
     end
   end
 
-  # to_real mean edge has vertex pointer
-  def real_aspect!
-    return self if @aspect == "real"
-
-    edges.each do |edge|
-      edge.source = @vertices.find_by_id(edge.source) # FIXME
-      edge.target = @vertices.find_by_id(edge.target) # FIXME
-    end
-
-    @aspect = "real"
-    self
-  end
-
-  # to_id mean edge has vertex id
-  def id_aspect!
-    return self if @aspect == "id"
-
-    edges.each do |edge|
-      edge.source = edge.source.id
-      edge.target = edge.target.id
-    end
-
-    @aspect = "id"
-    self
-  end
-
   def dup
     other = Marshal.load(Marshal.dump(self))
     other.vertices.each {|vertex| vertex.redis_dup }
@@ -157,7 +126,6 @@ class Rgraphum::Graph
   end
 
   def +(other)
-    new_graph = Rgraphum::Graph.new
     start_vertex_id = @vertices.id.max
     start_edge_id = @edges.id.max
 
@@ -165,10 +133,13 @@ class Rgraphum::Graph
     other_dup.vertices.each do | vertex |
       vertex.id = vertex.id + start_vertex_id
     end
+
     other_dup.edges.each do |edge|
       edge.id = edge.id + start_edge_id
+      edge.reload
     end
 
+    new_graph = Rgraphum::Graph.new
     new_graph.vertices = self.dup.vertices + other_dup.vertices
     new_graph.edges = self.dup.edges + other_dup.edges
 
@@ -208,7 +179,6 @@ class Rgraphum::Graph
   end
 
   def ==(other)
-    return false unless aspect   == other.aspect
     return false unless label    == other.label
     return false unless vertices == other.vertices
     return false unless edges    == other.edges

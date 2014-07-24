@@ -37,7 +37,7 @@ class RgraphumMathCommunityTest < MiniTest::Unit::TestCase
     #  4 - 5
     # (1-2) communityy
 
-    @graph.id_aspect!
+#    @graph.id_aspect!
     community = @graph.communities[0]
 
     assert community
@@ -70,7 +70,7 @@ class RgraphumMathCommunityTest < MiniTest::Unit::TestCase
 
     assert_equal 11, @graph.vertices.where(id: 3).first.sigma_tot
 
-    @graph.real_aspect!
+#    @graph.real_aspect!
     rmcd = Rgraphum::Graph::Math::CommunityDetection.new(@graph)
     delta_q = rmcd.delta_q(community,@graph.vertices.where(id: 3).first)
     assert_in_delta 0.00566893, delta_q, 0.00000001

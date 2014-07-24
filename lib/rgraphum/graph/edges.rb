@@ -31,6 +31,9 @@ class Rgraphum::Edges < Rgraphum::Elements
 
   def build(edge_or_hash, recursive=true)
     if @vertex and @vertex.graph
+      edge = Rgraphum::Edge(edge_or_hash)
+#      raise ArgumentError, "Already have same ID edge" if edge.id and self.find_by_id(edge.id)
+
       if recursive
         edge = @vertex.graph.edges.build(edge_or_hash, false)
       else
@@ -40,19 +43,13 @@ class Rgraphum::Edges < Rgraphum::Elements
     else
       edge = Rgraphum::Edge(edge_or_hash)
       if @graph
-        edge.source = edge.source.id if edge.source.is_a?(Rgraphum::Vertex)
-        edge.target = edge.target.id if edge.target.is_a?(Rgraphum::Vertex)
+        edge.graph = @graph
 
-        source_vertex = find_vertex(edge.source)
-        target_vertex = find_vertex(edge.target)
-        raise ArgumentError, "Source vertex is required" unless source_vertex
-        raise ArgumentError, "Target vertex is required" unless target_vertex
-
-        edge.source = source_vertex
-        edge.target = target_vertex
+#        raise ArgumentError, "Already have same ID edge" if edge.id and self.find_by_id(edge.id)
+        raise ArgumentError, "Source vertex is required" unless edge.source
+        raise ArgumentError, "Target vertex is required" unless edge.target
 
         edge.id = new_id(edge.id)
-        edge.graph = @graph
 
         edge.source.edges.build(edge, false)
         edge.source.out_edges.build(edge, false)
@@ -81,6 +78,7 @@ class Rgraphum::Edges < Rgraphum::Elements
     end
     self
   end
+
 
   # Called from delete_if, reject! and reject
   def delete(edge_or_id, recursive=true)

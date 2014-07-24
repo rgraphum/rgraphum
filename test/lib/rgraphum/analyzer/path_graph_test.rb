@@ -52,13 +52,13 @@ class PathGraphTest < MiniTest::Unit::TestCase
     assert_equal expected, path_graphs[0].vertices.sort_by(){|vertex| vertex.id}
 
     expected = [
-      {id: 1,  source: {id: 1}, target: {id: 4},  weight: 1},
-      {id: 2,  source: {id: 1}, target: {id: 5},  weight: 1},
-      {id: 8,  source: {id: 4}, target: {id: 8},  weight: 1},
-      {id: 10, source: {id: 5}, target: {id: 9},  weight: 1},
-      {id: 11, source: {id: 5}, target: {id: 10}, weight: 1},
-      {id: 16, source: {id: 8}, target: {id: 13}, weight: 1},
-      {id: 18, source: {id: 10},target: {id: 14}, weight: 1},
+      {id: 1,  source: 1, target: 4,  weight: 1},
+      {id: 2,  source: 1, target: 5,  weight: 1},
+      {id: 8,  source: 4, target: 8,  weight: 1},
+      {id: 10, source: 5, target: 9,  weight: 1},
+      {id: 11, source: 5, target: 10, weight: 1},
+      {id: 16, source: 8, target: 13, weight: 1},
+      {id: 18, source: 10,target: 14, weight: 1},
     ]
     assert_equal expected, path_graphs[0].edges.sort_by(){|edge| edge.id}
   end
