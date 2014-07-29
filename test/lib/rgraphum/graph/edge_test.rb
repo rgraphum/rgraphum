@@ -30,19 +30,6 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
     assert_equal false, vertex_b.within_term(vertex_a)
   end
 
-  def test_edge_dump_and_load
-    vertex1 = Rgraphum::Vertex.new(id: 1, label: "vertex 1")
-    vertex2 = Rgraphum::Vertex.new(id: 2, label: "vertex 2")
-    edge  = Rgraphum::Edge.new({source: vertex1, target: vertex2})
-
-    data = Marshal.dump(edge)
-    edge_dash = Marshal.load(data)
-
-    assert_equal edge, edge_dash
-    assert_equal edge.source, edge_dash.source
-    assert_equal edge.target, edge_dash.target
-  end
-
   def test_invalid_source
     v1 = Rgraphum::Vertex.new(label: "1")
     v2 = Rgraphum::Vertex.new(label: "2")

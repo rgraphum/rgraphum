@@ -29,11 +29,10 @@ class RgraphumPlusTest < MiniTest::Unit::TestCase
 
     assert_instance_of Rgraphum::Graph, added_graph
     assert_equal [1,2,3,4], added_graph.vertices.id
+    assert_equal [1,2,3,4], added_graph.edges.id
 
-    refute_same @graph_a,       added_graph
-    refute_same @graph_a.edges, added_graph.edges
-    refute_same @graph_b,       added_graph
-    refute_same @graph_b.edges, added_graph.edges
+    refute_same @graph_a.object_id,       added_graph.object_id
+    refute_same @graph_b.object_id,       added_graph.object_id
 
     @graph_a.vertices.each_with_index do |vertex, vertex_index|
       added_vertex = added_graph.vertices[vertex_index]

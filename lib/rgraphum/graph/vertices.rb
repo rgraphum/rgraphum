@@ -28,17 +28,6 @@ class Rgraphum::Vertices < Rgraphum::Elements
     vertices.graph = nil
     vertices.each {|vertex| vertex.edges = Rgraphum::Edges.new }
 
-#    edges.each do |edge_source|
-#      edge = edge_source.dup
-#
-#      edge.source = vertices.find_by_id(edge.source.id)
-#      edge.target = vertices.find_by_id(edge.target.id)
-#
-#      edge.source.edges << edge
-#      edge.target.edges << edge
-#      edge.graph = nil
-#    end
-
     vertices
   end
 

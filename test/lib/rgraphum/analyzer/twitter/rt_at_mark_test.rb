@@ -21,18 +21,18 @@ class RTAtMarkTest < MiniTest::Unit::TestCase
                          twits: [["221257277779353600", "piyo", "I remember it",    "2013-04-04 15:30:00", "ja"],
                                  ["221257277779353602", "piyo", "I like it",        "2013-04-04 15:30:00", "ja"],
                                  ["221257277779353605", "piyo", "I forget it",      "2013-04-04 15:30:00", "ja"],
-                                 ["221257277779353605", "piyo", "@hura I forget it","2013-04-04 15:30:00", "ja"]]}, vertex )
+                                 ["221257277779353605", "piyo", "@hura I forget it","2013-04-04 15:30:00", "ja"]].to_json }, vertex )
     vertex = graph.vertices.detect { |vertex| vertex.id == 2 }
     assert vertex
     assert_equal({id: 2, label: "hoge",
                          twits: [["221257277779353601","hoge","@hoge remember me!","2013-01-01 12:00:00","ja"],
-                                 ["221257277779353604","hoge","Jast me @huga Do you mean @Hoge remember me!","2013-03-03 14:20:00","ja"]]}, vertex)
+                                 ["221257277779353604","hoge","Jast me @huga Do you mean @Hoge remember me!","2013-03-03 14:20:00","ja"]].to_json }, vertex)
 
     vertex = graph.vertices.detect { |vertex| vertex.id == 3 }
     assert vertex
     assert_equal({id: 3, label: "huga",
                          twits: [["221257277779353603","huga","Do you mean @hoge remember me!","2013-02-02 13:10:00","ja"],
-                                 ["221257277779353604","huga","Do you mean @Hoge remember me!","2013-03-03 14:20:00","ja"]]}, vertex)
+                                 ["221257277779353604","huga","Do you mean @Hoge remember me!","2013-03-03 14:20:00","ja"]].to_json}, vertex)
 
     vertex = graph.vertices.detect { |vertex| vertex.id == 4 }
     assert vertex

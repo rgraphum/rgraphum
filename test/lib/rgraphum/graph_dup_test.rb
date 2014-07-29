@@ -57,74 +57,8 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
     refute_same   vertex,  @vertex_0
     refute_same   vertex.rgraphum_id, @vertex_0.rgraphum_id
 
-    refute_empty  vertex.edges
-    assert_equal  vertex.edges.vertex.object_id, vertex.object_id
+    assert_equal  [], vertex.edges
 
-    refute_same  vertex.edges, @vertex_0.edges
-    vertex.edges.each_with_index do |edge,i|
-      assert_equal edge, @vertex_0.edges[i]
-      refute_same  edge, @vertex_0.edges[i]
-
-      assert_equal vertex.object_id, edge.source.object_id    unless edge.target == vertex
-      assert_equal vertex.object_id, edge.target.object_id    unless edge.source == vertex
-      assert_equal @vertex_0.object_id, @vertex_0.edges[i].source.object_id unless @vertex_0.edges[i].target == @vertex_0
-      assert_equal @vertex_0.object_id, @vertex_0.edges[i].target.object_id unless @vertex_0.edges[i].source == @vertex_0
-
-      assert       (edge.source.object_id == vertex.object_id or edge.target.object_id == vertex.object_id)
-      assert_same vertex, edge.source unless edge.target.object_id == vertex.object_id
-      assert_same vertex, edge.target unless edge.source.object_id == vertex.object_id
-    end
-
-  end
-
-  def test_vertices_dup
-    vertices = @graph.vertices.dup
-
-    assert_equal @graph.vertices, vertices
-    assert_nil   vertices.graph
-    refute_same  @graph.vertices, vertices
-
-    [vertices, @graph.vertices].transpose.each do |a, b|
-      assert_instance_of Rgraphum::Vertex, a
-      assert_equal b, a
-      refute_same b, a
-      refute_same b.rgraphum_id, a.rgraphum_id
-
-      refute_empty a.edges
-      assert_same  a.edges.vertex, a
-
-      refute_same b.edges, a.edges
-
-      a.edges.each do |edge|
-        # assert           i = b.edges.index(edge)
-        i = b.edges.index { |e| e.id == edge.id }
-
-        refute_same b.edges[i], edge
-
-        unless edge.target == a
-          assert_equal a, edge.source
-        end
-
-        unless edge.source == a
-          assert_equal a, edge.target
-        end
-
-        assert edge.source.object_id == a.object_id || edge.target.object_id == a.object_id
-        unless edge.target.object_id == a.object_id
-          assert_same a, edge.source
-        end
-        unless edge.source.object_id == a.object_id
-          assert_same a, edge.target
-        end
-
-        unless b.edges[i].target.object_id == b.object_id
-          assert_same b.edges[i].source, b
-        end
-        unless b.edges[i].source.object_id == b.object_id
-          assert_same b.edges[i].target, b
-        end
-      end
-    end
   end
 
   def test_graph_edges_dup

@@ -55,9 +55,9 @@ class MemeTrackerTest < MiniTest::Unit::TestCase
     meme_tracker = Rgraphum::Analyzer::MemeTracker.new
     meme_tracker.count_same_words_vertices(graph)
 
-    assert_equal 1,   graph.vertices[0].count
-    assert_nil graph.vertices[1].count
-    assert_nil graph.vertices[2].count
+    assert_equal 1, graph.vertices[0].count
+    assert_equal 0, graph.vertices[1].count
+    assert_equal 0, graph.vertices[2].count
   end
 
   def test_make_graph_some_of_functional

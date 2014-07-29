@@ -129,19 +129,23 @@ class Rgraphum::Graph
     start_vertex_id = @vertices.id.max
     start_edge_id = @edges.id.max
 
-    other_dup = other.dup
-    other_dup.vertices.each do | vertex |
-      vertex.id = vertex.id + start_vertex_id
-    end
-
-    other_dup.edges.each do |edge|
-      edge.id = edge.id + start_edge_id
-      edge.reload
-    end
-
     new_graph = Rgraphum::Graph.new
-    new_graph.vertices = self.dup.vertices + other_dup.vertices
-    new_graph.edges = self.dup.edges + other_dup.edges
+    (self.vertices + other.vertices).each do |vertex|
+      v = new_graph.vertices.build(vertex.dup)
+      v.edges = []
+    end
+
+    self.edges.each do |edge|
+      edge_tmp = edge.dup
+      new_graph.edges.build(edge_tmp)
+    end
+
+    other.edges.each do |edge|
+      edge_tmp = edge.dup
+      edge_tmp.source = edge.source.id + start_vertex_id
+      edge_tmp.target = edge.target.id + start_vertex_id
+      new_graph.edges.build(edge_tmp)
+    end
 
     new_graph
   end
@@ -150,6 +154,7 @@ class Rgraphum::Graph
     new_vertices = Rgraphum::Vertices.new
     new_vertices.graph = graph
     graph.vertices.each do |vertex|
+      vertex.send(:words)
       same_vertex = new_vertices.find{ |v| v.send(method_name) == vertex.send(method_name) }
       unless same_vertex
         new_vertex = vertex.dup

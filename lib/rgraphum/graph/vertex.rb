@@ -16,8 +16,8 @@ class Rgraphum::Vertex < Hash
     @rgraphum_id = new_rgraphum_id
     tmp = super(nil)
     tmp.object_init
-
-    fields[:words] = fields[:words].to_json if fields[:words]
+    fields[:words] = fields[:words].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:words]
+    fields[:twits] = fields[:twits].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:twits]
     fields.each do |key,value|
       tmp.store(key,value)
     end
@@ -58,18 +58,10 @@ class Rgraphum::Vertex < Hash
   def dup
 
     other = Rgraphum::Vertex.new(self)
+    other.redis_dup
 
     other.graph = nil
-    other.edges = @edges.dup
-    other.edges.vertex = other
-    other.edges.each do |edge|
-      if edge.source.equal?(self)
-        edge.source = other
-      end
-      if edge.target.equal?(self)
-        edge.target = other
-      end
-    end
+    other.edges = []
     other
   end
 
@@ -380,14 +372,14 @@ class Rgraphum::Vertex < Hash
   end
 
   def twits
-    self.[](:twits)
+    JSON.load( self.[](:twits) )
   end
   def twits=(tmp) 
-    self.[]=(:twits,tmp)
+    self.[]=(:twits,tmp.to_json)
   end
 
   def words
-p    JSON.load( self.[](:words) )
+    JSON.load( self.[](:words) )
   end
   def words=(tmp) 
     self.[]=(:words,tmp.to_json)

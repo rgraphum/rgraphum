@@ -245,9 +245,12 @@ class Rgraphum::Graph
   #     ==>v[1]
   #
   def addVertex(id=nil, vertex=nil)
-    vertex ||= Rgraphum::Vertex.new(id: id)
+    if id
+      vertex ||= Rgraphum::Vertex.new(id: id)
+    else
+      vertex ||= Rgraphum::Vertex.new()
+    end
     vertex = Rgraphum::Vertex.new(vertex) unless vertex.is_a?(Rgraphum::Vertex) # FIXME
-p   vertex.id
     @vertices << vertex
     @vertices[-1]
   end
@@ -277,14 +280,18 @@ p   vertex.id
       @edges << Rgraphum::Edge.new(source: source, target: target, label: label)
       @edges[-1]
     elsif params.size == 4
-      id = params[0]; source = params[1]; target = params[2]; label = params[3]
-      @edges.build(id: id, source: source, target: target, label: label)
+      params_tmp = {}
+      params_tmp[:id]     = params[0] if params[0]
+      params_tmp[:source] = params[1] if params[1]
+      params_tmp[:target] = params[2] if params[2]
+      params_tmp[:label]  = params[3] if params[3]
+      @edges.build( params_tmp )
     elsif params.size == 5
       edge_hash = {}
-      edge_hash[:id] = params[0];
-      edge_hash[:source] = params[1];
-      edge_hash[:target] = params[2];
-      edge_hash[:label]  = params[3];
+      edge_hash[:id] = params[0] if params[0];
+      edge_hash[:source] = params[1] if params[1];
+      edge_hash[:target] = params[2] if params[2];
+      edge_hash[:label]  = params[3] if params[3];
       edge_hash.merge!(params[4])
       @edges.build(edge_hash)
     end
