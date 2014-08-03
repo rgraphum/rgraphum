@@ -337,16 +337,16 @@ class RgraphumTest < MiniTest::Unit::TestCase
     # 1   4
     #  \ /
     #   3
-    vertex1 = Rgraphum::Vertex.new({id: 1, label: "vertex 1" })
-    vertex2 = Rgraphum::Vertex.new({id: 2, label: "vertex 2" })
-    vertex3 = Rgraphum::Vertex.new({id: 3, label: "vertex 3" })
-    vertex4 = Rgraphum::Vertex.new({id: 4, label: "vertex 4" })
+    vertex1 = Rgraphum::Vertex({id: 1, label: "vertex 1" })
+    vertex2 = Rgraphum::Vertex({id: 2, label: "vertex 2" })
+    vertex3 = Rgraphum::Vertex({id: 3, label: "vertex 3" })
+    vertex4 = Rgraphum::Vertex({id: 4, label: "vertex 4" })
     vertices = [vertex1, vertex2, vertex3, vertex4]
     edges = [
-      Rgraphum::Edge.new({source: vertex1, target: vertex2}),
-      Rgraphum::Edge.new({source: vertex2, target: vertex4}),
-      Rgraphum::Edge.new({source: vertex1, target: vertex3}),
-      Rgraphum::Edge.new({source: vertex3, target: vertex4}),
+      Rgraphum::Edge({source: vertex1, target: vertex2}),
+      Rgraphum::Edge({source: vertex2, target: vertex4}),
+      Rgraphum::Edge({source: vertex1, target: vertex3}),
+      Rgraphum::Edge({source: vertex3, target: vertex4}),
     ]
     graph = Rgraphum::Graph.new(vertices: vertices, edges: edges)
 
@@ -362,28 +362,28 @@ class RgraphumTest < MiniTest::Unit::TestCase
     # 1   4  1   /
     #  \ /    \ /
     #   3      6
-    vertex1 = Rgraphum::Vertex.new({id: 1, label: "vertex 1" })
-    vertex2 = Rgraphum::Vertex.new({id: 2, label: "vertex 2" })
-    vertex3 = Rgraphum::Vertex.new({id: 3, label: "vertex 3" })
-    vertex4 = Rgraphum::Vertex.new({id: 4, label: "vertex 4" })
-    vertex5 = Rgraphum::Vertex.new({id: 5, label: "vertex 5" })
-    vertex6 = Rgraphum::Vertex.new({id: 6, label: "vertex 6" })
+    vertex1 = Rgraphum::Vertex({id: 1, label: "vertex 1" })
+    vertex2 = Rgraphum::Vertex({id: 2, label: "vertex 2" })
+    vertex3 = Rgraphum::Vertex({id: 3, label: "vertex 3" })
+    vertex4 = Rgraphum::Vertex({id: 4, label: "vertex 4" })
+    vertex5 = Rgraphum::Vertex({id: 5, label: "vertex 5" })
+    vertex6 = Rgraphum::Vertex({id: 6, label: "vertex 6" })
 
     vertices1 = [vertex1, vertex2, vertex3, vertex4]
     edges1 = [
-      Rgraphum::Edge.new({source: vertex1, target: vertex2}),
-      Rgraphum::Edge.new({source: vertex2, target: vertex4}),
-      Rgraphum::Edge.new({source: vertex1, target: vertex3}),
-      Rgraphum::Edge.new({source: vertex3, target: vertex4}),
+      Rgraphum::Edge({source: vertex1, target: vertex2}),
+      Rgraphum::Edge({source: vertex2, target: vertex4}),
+      Rgraphum::Edge({source: vertex1, target: vertex3}),
+      Rgraphum::Edge({source: vertex3, target: vertex4}),
     ]
     graph1 = Rgraphum::Graph.new(vertices: vertices1, edges: edges1)
 
     vertices2 = [vertex1, vertex2, vertex5, vertex6]
     edges2 = [
-      Rgraphum::Edge.new({source: vertex1, target: vertex2}),
-      Rgraphum::Edge.new({source: vertex2, target: vertex5}),
-      Rgraphum::Edge.new({source: vertex1, target: vertex6}),
-      Rgraphum::Edge.new({source: vertex6, target: vertex5}),
+      Rgraphum::Edge({source: vertex1, target: vertex2}),
+      Rgraphum::Edge({source: vertex2, target: vertex5}),
+      Rgraphum::Edge({source: vertex1, target: vertex6}),
+      Rgraphum::Edge({source: vertex6, target: vertex5}),
     ]
     graph2 = Rgraphum::Graph.new(vertices: vertices2, edges: edges2)
 
@@ -403,11 +403,11 @@ class RgraphumTest < MiniTest::Unit::TestCase
   end
 
   def test_rgraphum_marshal
-    vertex1 = Rgraphum::Vertex.new({id: 1, label: "vertex 1" })
-    vertex2 = Rgraphum::Vertex.new({id: 2, label: "vertex 2" })
+    vertex1 = Rgraphum::Vertex({id: 1, label: "vertex 1" })
+    vertex2 = Rgraphum::Vertex({id: 2, label: "vertex 2" })
     vertices = [vertex1, vertex2]
     edges = [
-      Rgraphum::Edge.new({source: vertex1, target: vertex2}),
+      Rgraphum::Edge({source: vertex1, target: vertex2}),
     ]
     graph = Rgraphum::Graph.new(vertices: vertices, edges: edges)
 

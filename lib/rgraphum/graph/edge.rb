@@ -4,7 +4,7 @@ def Rgraphum::Edge(hash_or_edge)
   if hash_or_edge.instance_of?(Rgraphum::Edge)
     hash_or_edge
   else
-    Rgraphum::Edge.new(hash_or_edge)
+    Rgraphum::Edge.from_hash(hash_or_edge)
   end
 end
 
@@ -12,34 +12,38 @@ class Rgraphum::Edge < Hash
   attr_accessor :graph
   attr_accessor :rgraphum_id
 
-  def initialize(fields={})
-    tmp = super(nil)
+  class << self
+    def from_hash(fields)
+      tmp = new
 
-    unless fields[:source] && fields[:target]
-      raise ArgumentError, "Edge.new: :source and :target options are required"
-    end
+      unless fields[:source] && fields[:target]
+        raise ArgumentError, "Edge.new: :source and :target options are required"
+      end
 
-    @rgraphum_id = new_rgraphum_id
-    if fields[:source].is_a?(Hash)
-      fields[:source] = fields[:source].id
-    end
-    @source = fields[:source]
+      tmp.rgraphum_id = new_rgraphum_id
+      if fields[:source].is_a?(Hash)
+        fields[:source] = fields[:source].id
+      end
+      @source = fields[:source]
     
-    if fields[:target].is_a?(Hash)
-      fields[:target] = fields[:target].id
-    end
-    @target = fields[:target]
+      if fields[:target].is_a?(Hash)
+        fields[:target] = fields[:target].id
+      end
+      @target = fields[:target]
 
-    if fields[:start].class == Fixnum
-      fields[:start] = Time.at(fields[:start])
-    end
+      if fields[:start].class == Fixnum
+        fields[:start] = Time.at(fields[:start])
+      end
 
-    fields[:weight] ||= 1
+      fields[:weight] ||= 1
 
-    fields.each do |key,value|
-      tmp.store(key,value)
+      fields.each do |key,value|
+        tmp.store(key,value)
+      end
+      ElementManager.save(tmp.rgraphum_id,tmp)
+
+      tmp
     end
-    ElementManager.save(@rgraphum_id,tmp)
   end
 
   def redis_dup

@@ -17,20 +17,22 @@ class RgraphumVertexTest < MiniTest::Unit::TestCase
 
   def test_vertex_within_term
     t = Time.now
-    vertex_a = Rgraphum::Vertex.new
+    vertex_a = Rgraphum::Vertex()
     vertex_a.start = t
     vertex_a.end   = t + 2
 
-    vertex_b = Rgraphum::Vertex.new
+    vertex_b = Rgraphum::Vertex()
     vertex_b.start = t + 1
     vertex_b.end   = t + 3
+
+    vertex_b
 
     assert_equal true,  vertex_a.within_term(vertex_b)
     assert_equal false, vertex_b.within_term(vertex_a)
   end
 
   def test_vertex_dump_and_load
-    vertex = Rgraphum::Vertex.new(id: 1, label: "vertex 1")
+    vertex = Rgraphum::Vertex(id: 1, label: "vertex 1")
 
     data = Marshal.dump(vertex)
     vertex_dash = Marshal.load(data)

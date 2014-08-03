@@ -36,8 +36,8 @@ class RgraphumVerticesTest < MiniTest::Unit::TestCase
   end
 
   def test_vertices_dump_and_load
-    vertex1 = Rgraphum::Vertex.new(id: 1, label: "vertex 1")
-    vertex2 = Rgraphum::Vertex.new(id: 2, label: "vertex 2")
+    vertex1 = Rgraphum::Vertex(id: 1, label: "vertex 1")
+    vertex2 = Rgraphum::Vertex(id: 2, label: "vertex 2")
     vertices = [vertex1, vertex2, vertex1]
 
     data = Marshal.dump(vertices)

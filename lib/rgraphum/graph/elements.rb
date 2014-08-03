@@ -58,10 +58,10 @@ class Rgraphum::Elements < Array
   end
   alias :reject! :delete_if
 
-  alias :original_reject :reject
-  def reject(&block)
-    dup.reject! &block
-  end
+#  alias :original_reject :reject
+#  def reject(&block)
+#    dup.reject! &block
+#  end
 
   def where(*conditions)
     Rgraphum::Query.new(self, *conditions)

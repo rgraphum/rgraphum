@@ -246,11 +246,11 @@ class Rgraphum::Graph
   #
   def addVertex(id=nil, vertex=nil)
     if id
-      vertex ||= Rgraphum::Vertex.new(id: id)
+      vertex ||= Rgraphum::Vertex(id: id)
     else
-      vertex ||= Rgraphum::Vertex.new()
+      vertex ||= Rgraphum::Vertex()
     end
-    vertex = Rgraphum::Vertex.new(vertex) unless vertex.is_a?(Rgraphum::Vertex) # FIXME
+    vertex = Rgraphum::Vertex(vertex) unless vertex.is_a?(Rgraphum::Vertex) # FIXME
     @vertices << vertex
     @vertices[-1]
   end
@@ -277,7 +277,7 @@ class Rgraphum::Graph
   def addEdge( *params )
     if params.size == 3
       source = params[0]; target = params[1]; label = params[2]
-      @edges << Rgraphum::Edge.new(source: source, target: target, label: label)
+      @edges << Rgraphum::Edge(source: source, target: target, label: label)
       @edges[-1]
     elsif params.size == 4
       params_tmp = {}

@@ -18,11 +18,11 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
 
   def test_vertex_within_term
     t = Time.now
-    vertex_a = Rgraphum::Vertex.new
+    vertex_a = Rgraphum::Vertex()
     vertex_a.start = t
     vertex_a.end   = t + 2
 
-    vertex_b = Rgraphum::Vertex.new
+    vertex_b = Rgraphum::Vertex()
     vertex_b.start = t + 1
     vertex_b.end   = t + 3
 
@@ -35,11 +35,11 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
     v2 = Rgraphum::Vertex.new(label: "2")
 
     assert_raises(ArgumentError) do
-      Rgraphum::Edge.new(target: v2, label: "label")
+      Rgraphum::Edge(target: v2, label: "label")
     end
 
     assert_raises(ArgumentError) do
-      Rgraphum::Edge.new(source: nil, target: v2, label: "label")
+      Rgraphum::Edge(source: nil, target: v2, label: "label")
     end
   end
 
@@ -48,11 +48,11 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
     v2 = Rgraphum::Vertex.new(label: "2")
 
     assert_raises(ArgumentError) do
-      Rgraphum::Edge.new(source: v1, label: "label")
+      Rgraphum::Edge(source: v1, label: "label")
     end
 
     assert_raises(ArgumentError) do
-      Rgraphum::Edge.new(source: v1, target: nil, label: "label")
+      Rgraphum::Edge(source: v1, target: nil, label: "label")
     end
   end
 end

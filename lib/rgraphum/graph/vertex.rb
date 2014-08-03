@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-def Rgraphum::Vertex(hash_or_vertex)
+def Rgraphum::Vertex(hash_or_vertex={})
   if hash_or_vertex.instance_of?(Rgraphum::Vertex)
     hash_or_vertex
   else
-    Rgraphum::Vertex.new(hash_or_vertex)
+    Rgraphum::Vertex.from_hash(hash_or_vertex)
   end
 end
 
@@ -12,16 +12,19 @@ class Rgraphum::Vertex < Hash
   attr_accessor :graph
   attr_accessor :rgraphum_id
 
-  def initialize(fields={})
-    @rgraphum_id = new_rgraphum_id
-    tmp = super(nil)
-    tmp.object_init
-    fields[:words] = fields[:words].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:words]
-    fields[:twits] = fields[:twits].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:twits]
-    fields.each do |key,value|
-      tmp.store(key,value)
-    end
+  class << self
+    def from_hash(fields={})
+      tmp = new
+      tmp.rgraphum_id = new_rgraphum_id
 
+      tmp.object_init
+      fields[:words] = fields[:words].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:words]
+      fields[:twits] = fields[:twits].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:twits]
+      fields.each do |key,value|
+        tmp.store(key,value)
+      end
+      tmp
+    end
   end
 
   def object_init
@@ -57,7 +60,8 @@ class Rgraphum::Vertex < Hash
 
   def dup
 
-    other = Rgraphum::Vertex.new(self)
+#    other = Rgraphum::Vertex(self.to_h)
+    other = super
     other.redis_dup
 
     other.graph = nil
