@@ -33,18 +33,6 @@ class MiniTest::Unit::TestCase
 
 end
 
-module ClearVerticesAndEdgesIdHolder
-  def before_setup
-    super
-    Rgraphum::Vertices.reset_id
-    Rgraphum::Edges.reset_id
-  end
-end
-
-class MiniTest::Unit::TestCase
-  include ClearVerticesAndEdgesIdHolder
-end
-
 module Minitest
   class Assertion
     # def location

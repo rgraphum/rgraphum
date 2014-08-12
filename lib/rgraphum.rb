@@ -14,7 +14,8 @@ require_relative 'rgraphum/simulator'
 
 require_relative 'rgraphum/rgraphum_random'
 
-require_relative 'rgraphum/graph/ids'
+#require_relative 'rgraphum/graph/ids'
+require_relative 'rgraphum/graph/elements_manager'
 require_relative 'rgraphum/graph/elements'
 require_relative 'rgraphum/rgraphum_array_dividers'
 require_relative 'rgraphum/graph/vertex'

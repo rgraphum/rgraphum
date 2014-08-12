@@ -25,19 +25,6 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
     assert_equal @vertex_0.edges[0],           edge_dup
   end
 
-  def test_vertex_edges_dup
-    edges_dup = @vertex_0.edges.dup
-
-    assert_equal @vertex_0.edges, edges_dup
-    assert_nil   edges_dup.graph
-    assert_nil   edges_dup.vertex
-
-    edges_dup.each_with_index do |edge,i|
-      assert_equal edge, @vertex_0.edges[i]
-      refute_same edge, @vertex_0.edges[i]
-    end
-  end
-
   def test_vertex_dup
     #  1:hoge --- 2:huga
     #    \        /
@@ -59,22 +46,6 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
 
     assert_equal  [], vertex.edges
 
-  end
-
-  def test_graph_edges_dup
-    edges_dup = @graph.edges.dup
-
-    assert_equal @graph.edges, edges_dup
-    refute_same  @graph.edges, edges_dup
-    assert_nil edges_dup.graph
-    assert_nil edges_dup.vertex
-
-    @graph.vertices.each do |vertex|
-      edges_dup = vertex.edges.dup
-      refute_same vertex.edges, edges_dup
-      assert_nil edges_dup.graph
-      assert_nil edges_dup.vertex
-    end
   end
 
   def test_graph_dup

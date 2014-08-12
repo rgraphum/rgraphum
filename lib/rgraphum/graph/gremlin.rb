@@ -300,3 +300,74 @@ class Rgraphum::Graph
 
 end
 
+class Rgraphum::Elements
+
+  def where(*conditions)
+    Rgraphum::Query.new(self, *conditions)
+  end
+
+  # gremlin methods
+
+  # has
+  # Allows an element if it has a particular property. Utilizes several options for comparisons through T:
+  #   T.gt - greater than
+  #   T.gte - greater than or equal to
+  #   T.eq - equal to
+  #   T.neq - not equal to
+  #   T.lte - less than or equal to
+  #   T.lt - less than
+  # It is worth noting that the syntax of has is similar to g.V("name", "marko"), which has the difference of being a key index lookup and as such will perform faster. In contrast, this line, g.V.has("name", "marko"), will iterate over all vertices checking the name property of each vertex for a match and will be significantly slower than the key index approach.
+  #   gremlin> g.V.has("name", "marko").name
+  #   ==>marko
+  #   gremlin> g.v(1).outE.has("weight", T.gte, 0.5f).weight
+  #   ==>0.5
+  #   ==>1.0
+  #   gremlin> g.V.has("age", null).name
+  #   ==>lop
+  #   ==>ripple
+  def has(*conditions)
+    if conditions.size == 1
+      self.class.new( where( conditions[0], :!=, nil ) )
+    elsif conditions.size == 2
+      self.class.new( where( { conditions[0] => conditions[1] } ) )
+    elsif conditions.size == 3
+      self.class.new( where( *conditions ) )
+    end
+  end
+
+  # hasNot
+  # Allows an element if it does not have a particular property. Utilizes several options for comparisons on through T:
+  #   T.gt - greater than
+  #   T.gte - greater than or equal to
+  #   T.eq - equal to
+  #   T.neq - not equal to
+  #   T.lte - less than or equal to
+  #   T.lt - less than
+  #   gremlin> g.v(1).outE.hasNot("weight", T.eq, 0.5f).weight
+  #   ==>1.0
+  #   ==>0.4
+  #   gremlin> g.V.hasNot("age", null).name
+  #   ==>vadas
+  #   ==>marko
+  #   ==>peter
+  #   ==>josh
+  def hasNot(*conditions)
+    nor_hash = {
+      :== => :!=,
+      :!= => :==,
+      :<  => :>=,
+      :<= => :> ,
+      :>= => :<,
+      :>  => :<=,
+    }
+
+    if conditions.size == 1
+      self.class.new( where( conditions[0], :==, nil ) )
+    elsif conditions.size == 2
+      where( conditions[0], :!=, conditions[1] )
+    elsif conditions.size == 3
+      where( conditions[0], nor_hash[conditions[1]], conditions[2] )
+    end
+  end
+
+end

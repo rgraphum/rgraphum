@@ -5,10 +5,10 @@ require 'test_helper'
 
 class RgraphumIDsManagerTest < MiniTest::Unit::TestCase
 
-  include IDs
+  include ElementsManager
 
   def test_initialize
-    ids_manager = IDsManager.new
+    ids_manager = ElementsManager.new
   end
 
 end
