@@ -23,6 +23,8 @@ class RgraphumVerticesTest < MiniTest::Unit::TestCase
     assert_equal 1, @vertex0.edges[0].id
     assert_equal @vertex0.object_id, @vertex0.edges[0].source.object_id
     assert_equal @vertex1.object_id, @vertex0.edges[0].target.object_id
+    assert_equal @vertex0.rgraphum_id, @vertex0.edges[0].source.rgraphum_id
+    assert_equal @vertex1.rgraphum_id, @vertex0.edges[0].target.rgraphum_id
 
     assert_equal 1, @vertex1.edges.size
     assert_equal 1, @vertex1.edges[0].id
