@@ -58,7 +58,6 @@ class Rgraphum::Communities < Rgraphum::Elements
     if community_hash.is_a?(Hash)
       community_hash = community_hash.dup
       community_hash[:graph] = @graph
-      community_hash[:id] ||= new_id
     end
     Rgraphum::Community(community_hash)
   end
