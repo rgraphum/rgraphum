@@ -8,6 +8,8 @@ module Rgraphum
   end
 end
 
+require_relative 'rgraphum/redis_server'
+
 require_relative 'rgraphum/parsers'
 require_relative 'rgraphum/marshal'
 require_relative 'rgraphum/simulator'
@@ -41,7 +43,10 @@ require_relative 'rgraphum/graph_builder'
 require 'redis'
 require 'hiredis'
 
-Redis.current = Redis.new(:driver => :hiredis, :db => 10 )
+redis_server = Rgraphum::RedisServer.start
+#if redis_server.options
+Redis.current = Redis.new(:path => redis_server.options["unixsocket"] )
+#Redis.current = Redis.new(:driver => :hiredis, :db => 10 )
 
 def new_rgraphum_id
   redis = Redis.current
