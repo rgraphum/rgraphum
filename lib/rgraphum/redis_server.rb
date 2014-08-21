@@ -14,6 +14,8 @@ class Rgraphum::RedisServer
   end
 
   def start
+    return p "server already stand" if File.exists?( @options["pidfile"] )
+
     o, e, s = Open3.capture3("redis-server #{config_file.path}")
     p o
     p e

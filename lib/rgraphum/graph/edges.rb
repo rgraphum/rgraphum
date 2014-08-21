@@ -49,7 +49,7 @@ class Rgraphum::Edges < Rgraphum::Elements
         raise ArgumentError, "Source vertex is required" unless edge.source
         raise ArgumentError, "Target vertex is required" unless edge.target
 
-        edge.id = new_id(edge.id)
+        edge.id = new_id(edge.id,edge.rgraphum_id)
 
         edge.source.edges.build(edge, false)
         edge.source.out_edges.build(edge, false)

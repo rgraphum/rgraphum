@@ -34,7 +34,7 @@ class Rgraphum::Vertices < Rgraphum::Elements
   def build(vertex_hash)
     vertex = Rgraphum::Vertex(vertex_hash)
     vertex.graph = @graph
-    vertex.id = new_id(vertex[:id])
+    vertex.id = new_id(vertex[:id],vertex.rgraphum_id)
     original_push_1(vertex)
     @id_vertex_map[vertex.id] = vertex
     vertex

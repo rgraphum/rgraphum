@@ -9,8 +9,8 @@ class Rgraphum::Elements < Array
 
   include ElementsManager
 
-  def new_id(id=nil)
-    elements_manager.new_id(id,@rgraphum_id)
+  def new_id(id=nil,element_rgraphum_id = nil)
+    elements_manager.new_id(id,element_rgraphum_id)
   end
 
   def current_id
