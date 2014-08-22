@@ -9,7 +9,7 @@ class Rgraphum::Elements < Array
 
   include ElementsManager
 
-  def new_id(id=nil,element_rgraphum_id = nil)
+  def new_id(id=nil,element_rgraphum_id=nil)
     elements_manager.new_id(id,element_rgraphum_id)
   end
 
@@ -42,7 +42,7 @@ class Rgraphum::Elements < Array
   end
 
   def id_rgraphum_id_hash
-    @elements_manager.load
+    elements_manager.load
   end
 
   def elements_manager

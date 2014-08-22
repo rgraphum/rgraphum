@@ -18,6 +18,8 @@ class Rgraphum::Vertices < Rgraphum::Elements
   end
 
   def find_by_id(id)
+# p   tmp_id = id_rgraphum_id_hash[id.to_s]
+# p   ElementManager.load(tmp_id)   
     @id_vertex_map[id]
   end
 

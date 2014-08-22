@@ -22,8 +22,19 @@ class Rgraphum::Edges < Rgraphum::Elements
   end
 
   def find_by_id(id)
+    tmp_id = id_rgraphum_id_hash[id.to_s]
+    edge = Rgraphum::Edge.new
+    edge.rgraphum_id = tmp_id.to_i
+    edge.graph = @graph
+    edge
     @id_edge_map[id]
   end
+
+  def to_hash
+    ElementManager.load(rgraphum_id)
+  end
+  alias :to_h :to_hash  
+
 
   def find_vertex(vertex)
     @graph.vertices.find_by_id(vertex)
@@ -32,7 +43,6 @@ class Rgraphum::Edges < Rgraphum::Elements
   def build(edge_or_hash, recursive=true)
     if @vertex and @vertex.graph
       edge = Rgraphum::Edge(edge_or_hash)
-#      raise ArgumentError, "Already have same ID edge" if edge.id and self.find_by_id(edge.id)
 
       if recursive
         edge = @vertex.graph.edges.build(edge_or_hash, false)
@@ -45,7 +55,6 @@ class Rgraphum::Edges < Rgraphum::Elements
       if @graph
         edge.graph = @graph
 
-#        raise ArgumentError, "Already have same ID edge" if edge.id and self.find_by_id(edge.id)
         raise ArgumentError, "Source vertex is required" unless edge.source
         raise ArgumentError, "Target vertex is required" unless edge.target
 
@@ -86,7 +95,14 @@ class Rgraphum::Edges < Rgraphum::Elements
     target_edge = find_by_id(id)
 
     return edge_or_id unless target_edge
+
+#    source_vertex = target_edge.source
+
+
+
     deleted_edge = super(target_edge)
+#    ElementManager.delete(target_edge.rgraphum_id)
+    @id_edge_map.delete id
 
     if @vertex and @vertex.graph
       if recursive
@@ -94,6 +110,7 @@ class Rgraphum::Edges < Rgraphum::Elements
       end
     else
       if @graph
+
         target_edge.source.edges.delete(target_edge, false)
         target_edge.source.out_edges.delete(target_edge, false)
 
@@ -101,7 +118,6 @@ class Rgraphum::Edges < Rgraphum::Elements
         target_edge.target.in_edges.delete(target_edge, false)
       end
     end
-    @id_edge_map.delete id
 
     deleted_edge
   end

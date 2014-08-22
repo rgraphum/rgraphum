@@ -22,11 +22,6 @@ class ElementManager
       vertex = Rgraphum::Vertex(hash)
     end
 
-    def save(rgraphum_id,hash={label:""})
-      redis.mapped_hmset( rgraphum_id, hash )
-      hash
-    end
-
     def store(rgraphum_id,key,value) 
       begin
         redis.hset( rgraphum_id, key, value)
@@ -42,13 +37,15 @@ class ElementManager
     end
 
     def redis_dup(rgraphum_id)
-      hash = redis.hgetall( rgraphum_id) 
+      hash = redis.hgetall( rgraphum_id ) 
       hash ||= {}
 
-      new_rgraphum_id = redis.incr( "global:RgraphumId" )
+      redis.mapped_hmset( rgraphum_id = new_rgraphum_id, hash)
+      rgraphum_id
+    end
 
-      redis.mapped_hmset( new_rgraphum_id, hash)
-      new_rgraphum_id
+    def delete(rgraphum_id)
+      redis.del(rgraphum_id)
     end
 
   end

@@ -40,7 +40,6 @@ class Rgraphum::Edge < Hash
       fields.each do |key,value|
         tmp.store(key,value)
       end
-      ElementManager.save(tmp.rgraphum_id,tmp)
 
       tmp
     end
