@@ -90,36 +90,24 @@ class Rgraphum::Edges < Rgraphum::Elements
 
 
   # Called from delete_if, reject! and reject
-  def delete(edge_or_id, recursive=true)
+  alias :original_delete :delete
+  def delete(edge_or_id)
     id = edge_or_id.id rescue edge_or_id
-    target_edge = find_by_id(id)
+    edge = find_by_id(id)
 
-    return edge_or_id unless target_edge
+    return edge_or_id unless edge
 
-#    source_vertex = target_edge.source
+    edge.source.edges.original_delete(edge)
+    edge.source.out_edges.original_delete(edge)
 
+    edge.target.edges.original_delete(edge)
+    edge.target.in_edges.original_delete(edge)
 
+    edge.graph.edges.original_delete(edge)   
+    
+    ElementManager.delete(edge.rgraphum_id)
 
-    deleted_edge = super(target_edge)
-#    ElementManager.delete(target_edge.rgraphum_id)
-    @id_edge_map.delete id
-
-    if @vertex and @vertex.graph
-      if recursive
-        @vertex.graph.edges.delete(target_edge, false)
-      end
-    else
-      if @graph
-
-        target_edge.source.edges.delete(target_edge, false)
-        target_edge.source.out_edges.delete(target_edge, false)
-
-        target_edge.target.edges.delete(target_edge, false)
-        target_edge.target.in_edges.delete(target_edge, false)
-      end
-    end
-
-    deleted_edge
+    edge
   end
 
   protected :original_push_1
