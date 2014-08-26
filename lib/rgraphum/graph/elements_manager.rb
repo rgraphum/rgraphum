@@ -2,6 +2,8 @@ module ElementsManager
 
   class ElementsManager
 
+    attr_accessor :rgraphum_id
+
     def initialize
       @rgraphum_id = new_rgraphum_id
       @counter_id  = new_rgraphum_id

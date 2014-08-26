@@ -200,7 +200,7 @@ class Rgraphum::Analyzer::MemeTracker
       vertices = find_path( {source_vertex:vertex,vertices:vertices} ) #
       if vertices.size == size and options[:cut] == true
         edge_to_delete = source_vertex.edges.where(target: vertex).first
-        source_vertex.edges.delete(edge_to_delete)
+        source_vertex.edges.original_delete(edge_to_delete)
       end
       vertices
     end

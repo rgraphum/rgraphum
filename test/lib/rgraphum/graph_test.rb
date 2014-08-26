@@ -95,26 +95,33 @@ class RgraphumTest < MiniTest::Unit::TestCase
     remain_edge = @graph_a.edges.where(id: 2).first
 
     @graph_a.edges.delete(delete_edge)
-    assert_equal ([remain_edge]), @graph_a.edges
-    assert_equal ([remain_edge]), @graph_a.vertices[0].edges
+    assert_equal 1, @graph_a.edges.size
+    assert_equal remain_edge.rgraphum_id, @graph_a.edges[0].rgraphum_id
+    assert_equal 1, @graph_a.vertices[0].edges.size
 
     delete_edge = @graph_b.edges.where(id: 1).first
     remain_edge = @graph_b.vertices[0].edges.where(id: 2).first
     @graph_b.vertices[0].edges.delete(delete_edge)
-    assert_equal ([remain_edge]), @graph_b.edges
-    assert_equal ([remain_edge]), @graph_b.vertices[0].edges
+    assert_equal 1, @graph_b.edges.size
+    assert_equal remain_edge.rgraphum_id, @graph_b.edges[0].rgraphum_id
+    assert_equal 1,@graph_b.vertices[0].edges.size
+    assert_equal remain_edge.rgraphum_id, @graph_b.vertices[0].edges[0].rgraphum_id
   end
 
   def test_delete_edge_with_id
     remain_edge = @graph_a.edges.where(id: 2).first
     @graph_a.edges.delete(1)
-    assert_equal ([remain_edge]), @graph_a.edges
-    assert_equal ([remain_edge]), @graph_a.vertices[0].edges
+    assert_equal 1, @graph_a.edges.size
+    assert_equal remain_edge.rgraphum_id, @graph_a.edges[0].rgraphum_id
+    assert_equal 1, @graph_a.vertices[0].edges.size
+    assert_equal remain_edge.rgraphum_id, @graph_a.vertices[0].edges[0].rgraphum_id
 
     remain_edge = @graph_b.vertices[0].edges.where(id: 2).first
     @graph_b.vertices[0].edges.delete(1)
-    assert_equal ([remain_edge]), @graph_b.edges
-    assert_equal ([remain_edge]), @graph_b.vertices[0].edges
+    assert_equal 1, @graph_b.edges.size
+    assert_equal remain_edge.rgraphum_id, @graph_b.edges[0].rgraphum_id
+    assert_equal 1,@graph_b.vertices[0].edges.size
+    assert_equal remain_edge.rgraphum_id, @graph_b.vertices[0].edges[0].rgraphum_id
   end
 
   def test_vertex

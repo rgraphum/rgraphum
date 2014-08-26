@@ -67,7 +67,6 @@ class Rgraphum::Vertices < Rgraphum::Elements
     end
     @id_vertex_map.delete id
     super(target_vertex)
-#    super(id)
   end
 
   def to_community
