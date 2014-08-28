@@ -45,6 +45,7 @@ class Rgraphum::Edge < Hash
     end
   end
 
+
   def redis_dup
     @rgraphum_id = ElementManager.redis_dup(@rgraphum_id)
   end

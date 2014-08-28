@@ -33,6 +33,8 @@ class Rgraphum::Vertex < Hash
     @out_edges = Rgraphum::Edges.new
 
     @edges.vertex = self
+    @in_edges.vertex = self
+    @out_edges.vertex = self
   end
 
   def redis_dup
