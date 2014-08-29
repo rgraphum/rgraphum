@@ -9,6 +9,12 @@ class Rgraphum::Elements < Array
 
   include ElementsManager
 
+  def initialize(elements = [] )
+    super(elements)
+    @rgraphum_id = new_rgraphum_id
+    elements_manager
+  end
+
   def new_id(id=nil,element_rgraphum_id=nil)
     elements_manager.new_id(id,element_rgraphum_id)
   end
@@ -35,8 +41,8 @@ class Rgraphum::Elements < Array
 
   def id_element_hash
     hash = {}
-    id_rgraphum_hash.each do |id,rgraphum_id|
-      hash[id.to_i] = ElemetManager.load(rgraphum_id)
+    id_rgraphum_id_hash.each do |id,element_rgraphum_id|
+      hash[id.to_i] = ElemetManager.load(element_rgraphum_id)
     end
     hash
   end
@@ -46,7 +52,7 @@ class Rgraphum::Elements < Array
   end
 
   def elements_manager
-    @elements_manager ||= ElementsManager.new
+    @elements_manager ||= ElementsManager.new(@rgraphum_id)
   end
 
   def substitute(array, &block)

@@ -11,8 +11,8 @@ end
 class Rgraphum::Vertices < Rgraphum::Elements
   include Rgraphum::RgraphumArrayDividers
 
-  def initialize(vertex_hashes=[])
-    ids = vertex_hashes.each { |vertex| vertex.id }
+  def initialize(vertices=[])
+    ids = vertices.each { |vertex| vertex.id }
     super(ids)
     @id_vertex_map = {}
   end

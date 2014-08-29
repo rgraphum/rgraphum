@@ -4,8 +4,8 @@ module ElementsManager
 
     attr_accessor :rgraphum_id
 
-    def initialize
-      @rgraphum_id = new_rgraphum_id
+    def initialize(rgraphum_id_tmp = nil )
+      @rgraphum_id = rgraphum_id_tmp || new_rgraphum_id
       @counter_id  = new_rgraphum_id
     end
 

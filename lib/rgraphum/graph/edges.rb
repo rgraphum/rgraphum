@@ -14,7 +14,6 @@ class Rgraphum::Edges < Rgraphum::Elements
   attr_accessor :vertex
 
   def initialize(edges=[])
-    elements_manager
     edges.each do |edge|
       self << edge
       elements_manager.add_id(edge.id,edge.rgraphum_id)
