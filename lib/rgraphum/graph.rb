@@ -130,20 +130,22 @@ class Rgraphum::Graph
  
   def element_new_id( id=nil, element_rgraphum_id, counter_id, elements )
     redis = Redis.current
-    id = id.to_i if id
-    id = elements_add_id( elements.rgraphum_id,id, element_rgraphum_id ) if id
-    id = elements_add_id( elements.rgraphum_id,redis.incr( counter_id ), element_rgraphum_id ) unless id
-    unless id
-      redis.set( counter_id, elements.ids.max )
-      id = elements_add_id( elements.rgraphum_id,redis.incr(counter_id), element_rgraphum_id ) 
+
+    if id
+      id = id.to_i
+      return id unless element_id_exists?( elements.rgraphum_id,id )
     end
-    id
+
+    id = redis.incr( counter_id )
+    return id unless element_id_exists?( elements.rgraphum_id, id )
+ 
+    redis.set( counter_id, elements.ids.max )
+    id = redis.incr(counter_id)
   end
 
-  def elements_add_id(elements_rgraphum_id,id,rgraphum_id)
+  def element_id_exists?(elements_rgraphum_id,id)
     redis = Redis.current
-    flg = redis.hsetnx(elements_rgraphum_id,id,rgraphum_id)
-    id if flg
+    redis.hexists(elements_rgraphum_id,id)
   end
 
   def add_edge(edge)
