@@ -11,41 +11,42 @@ class Rgraphum::Graph
 
   attr_accessor :label
 
-  class << self
 
-    def build_from_adjacency_matrix( matrix, vertex_labels = [], options={} )
-      options = { loop: false, limit: 0 }.merge(options)
+  def self.build_from_adjacency_matrix( matrix, vertex_labels = [], options={} )
+    options = { loop: false, limit: 0 }.merge(options)
 
-      graph = new
-      if vertex_labels.size == matrix.size
-        vertex_labels.each do |label|
-          v = graph.vertices.build(label:label)
-        end
-      else
-        matrix.size.times do 
-          graph.vertices.build
-        end
+    graph = new
+    if vertex_labels.size == matrix.size
+      vertex_labels.each do |label|
+        v = graph.vertices.build(label:label)
       end
-
-      matrix.each_with_index do | row,row_index|
-        row.each_with_index do |weight,col_index|
-          next if col_index == row_index and !options[:loop]
-          
-          if weight and weight >= options[:limit]
-            graph.edges.build( {source:graph.vertices[row_index], target:graph.vertices[col_index],weight:weight} )
-          end
-        end
+    else
+      matrix.size.times do 
+        graph.vertices.build
       end
-      graph
     end
 
+    matrix.each_with_index do | row,row_index|
+      row.each_with_index do |weight,col_index|
+        next if col_index == row_index and !options[:loop]
+        
+        if weight and weight >= options[:limit]
+          graph.edges.build( {source:graph.vertices[row_index], target:graph.vertices[col_index],weight:weight} )
+        end
+      end
+    end
+    graph
   end
+
  
   # @param [Hash] options
   # @option options [Rgraphum::Vertices] :vertices   
   # @option options [Rgraphum::Edges]    :edges
   #
   def initialize(options={})
+    @rgraphum_id = new_rgraphum_id
+    @edge_counter_id = new_rgraphum_id
+
     @vertices = Rgraphum::Vertices.new
     if options[:vertices]
       self.vertices = options[:vertices]
@@ -113,9 +114,55 @@ class Rgraphum::Graph
   end
 
   def edges=(edge_array)
-    @edges = @edges.substitute(edge_array) do |edge|
-      Rgraphum::Edge(edge)
+    edge_array.each do |edge|
+      add_edge(edge)
     end
+    @edges
+  end
+
+  def edge_new_id(id=nil,edge_rgraphum_id)
+    element_new_id(id, edge_rgraphum_id, @edge_counter_id, @edges )
+  end
+ 
+  def vertex_new_id(id=nil,vertex_rgraphum_id)
+    element_new_id(id, vertex_rgraphum_id, @vertex_counter_id, @vertices )
+  end
+ 
+  def element_new_id( id=nil, element_rgraphum_id, counter_id, elements )
+    redis = Redis.current
+    id = id.to_i if id
+    id = elements_add_id( elements.rgraphum_id,id, element_rgraphum_id ) if id
+    id = elements_add_id( elements.rgraphum_id,redis.incr( counter_id ), element_rgraphum_id ) unless id
+    unless id
+      redis.set( counter_id, elements.ids.max )
+      id = elements_add_id( elements.rgraphum_id,redis.incr(counter_id), element_rgraphum_id ) 
+    end
+    id
+  end
+
+  def elements_add_id(elements_rgraphum_id,id,rgraphum_id)
+    redis = Redis.current
+    flg = redis.hsetnx(elements_rgraphum_id,id,rgraphum_id)
+    id if flg
+  end
+
+  def add_edge(edge)
+    edge = Rgraphum::Edge(edge)
+    edge.graph = self
+
+    raise ArgumentError, "Source vertex is required" unless edge.source
+    raise ArgumentError, "Target vertex is required" unless edge.target
+    
+    edge.id = edge_new_id(edge.id,edge.rgraphum_id)
+
+    edges.push_with_rgraphum_id edge
+    edge.source.edges.push_with_rgraphum_id edge
+    edge.source.out_edges.push_with_rgraphum_id edge
+
+    edge.target.edges.push_with_rgraphum_id edge 
+    edge.target.in_edges.push_with_rgraphum_id edge
+
+    edge
   end
 
   def dup

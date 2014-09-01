@@ -14,6 +14,7 @@ class Rgraphum::Edges < Rgraphum::Elements
   attr_accessor :vertex
 
   def initialize(edges=[])
+    @rgraphum_id = new_rgraphum_id
     edges.each do |edge|
       self << edge
       elements_manager.add_id(edge.id,edge.rgraphum_id)
@@ -49,42 +50,46 @@ class Rgraphum::Edges < Rgraphum::Elements
   end
 
   def build(edge_or_hash, recursive=true)
-    if @vertex and @vertex.graph
-      edge = Rgraphum::Edge(edge_or_hash)
-
-      if recursive
-        edge = @vertex.graph.edges.build(edge_or_hash, false)
-      else
-        edge = edge_or_hash
-        elements_manager.add_id(edge.id,edge.rgraphum_id)
-        original_push_1 edge
-      end
-    else
-      edge = Rgraphum::Edge(edge_or_hash)
-      if @graph
-        edge.graph = @graph
-
-        raise ArgumentError, "Source vertex is required" unless edge.source
-        raise ArgumentError, "Target vertex is required" unless edge.target
-
-        edge.id = new_id(edge.id,edge.rgraphum_id)
-
-        edge.source.edges.build(edge, false)
-        edge.source.out_edges.build(edge, false)
-
-        edge.target.edges.build(edge, false)
-        edge.target.in_edges.build(edge, false)
-      end
-      original_push_1 edge
-    end
-
-    edge
+    return @graph.add_edge(edge_or_hash) if @graph
+    return @vertex.graph.add_edge(edge_or_hash) if @vertex and @vertex.graph
+    return push_with_rgraphum_id(edge_or_hash)
+#    if @vertex and @vertex.graph
+#      edge = Rgraphum::Edge(edge_or_hash)
+#
+#      if recursive
+#        edge = @vertex.graph.edges.build(edge_or_hash, false)
+#      else
+#        edge = edge_or_hash
+#        elements_manager.add_id(edge.id,edge.rgraphum_id)
+#        original_push_1 edge
+#      end
+#    else
+#      edge = Rgraphum::Edge(edge_or_hash)
+#      if @graph
+#        edge.graph = @graph
+#
+#        raise ArgumentError, "Source vertex is required" unless edge.source
+#        raise ArgumentError, "Target vertex is required" unless edge.target
+#
+#        edge.id = new_id(edge.id,edge.rgraphum_id)
+#
+#       edge.source.edges.build(edge, false)
+#       edge.source.out_edges.build(edge, false)
+#
+#        edge.target.edges.build(edge, false)
+#        edge.target.in_edges.build(edge, false)
+#      end
+#      original_push_1 edge
+#    end
+#
+#    edge
   end
+
 
   alias :original_push_1 :<<
   def <<(edge_or_hash)
     build(edge_or_hash)
-    self
+#    self
   end
 
   alias :original_push_m :push
@@ -93,6 +98,11 @@ class Rgraphum::Edges < Rgraphum::Elements
       build(edge_hash)
     end
     self
+  end
+
+  def push_with_rgraphum_id(edge) 
+    elements_manager.add_id(edge.id,edge.rgraphum_id)
+    original_push_1 (edge)
   end
 
   # Called from delete_if, reject! and reject

@@ -46,6 +46,8 @@ module ElementsManager
     end
 
     def del_id(id)
+      flg = redis.hdel(@rgraphum_id,id)
+      id if flg
     end
 
     def current_id
