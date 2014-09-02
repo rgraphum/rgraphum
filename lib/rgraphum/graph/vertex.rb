@@ -61,13 +61,11 @@ class Rgraphum::Vertex < Hash
   end
 
   def dup
-
-#    other = Rgraphum::Vertex(self.to_h)
     other = super
     other.redis_dup
 
     other.graph = nil
-    other.edges = []
+    other.edges = Rgraphum::Edges.new
     other
   end
 

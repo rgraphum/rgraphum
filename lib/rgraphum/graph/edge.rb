@@ -45,7 +45,6 @@ class Rgraphum::Edge < Hash
     end
   end
 
-
   def redis_dup
     @rgraphum_id = ElementManager.redis_dup(@rgraphum_id)
   end
@@ -92,6 +91,7 @@ class Rgraphum::Edge < Hash
   end
 
   def target
+    return nil unless @graph
     @graph.vertices.find_by_id(self.[](:target).to_i)
   end
   def target=(tmp)

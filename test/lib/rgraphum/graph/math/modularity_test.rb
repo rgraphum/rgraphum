@@ -122,7 +122,9 @@ class RgraphumMathModularityTest < MiniTest::Unit::TestCase
       assert_same vertex, vertices[i]
     end
     @graph.edges.each_with_index do |edge,i|
-      assert_same edge, edges[i]
+      assert_same edge.id, edges[i].id
+      assert_same edge.weight, edges[i].weight
+
       assert_same edge.source, edges[i].source
       assert_same edge.target, edges[i].target
     end

@@ -17,23 +17,22 @@ class Rgraphum::Edges < Rgraphum::Elements
     @rgraphum_id = new_rgraphum_id
     edges.each do |edge|
       self << edge
-      elements_manager.add_id(edge.id,edge.rgraphum_id)
     end
   end
 
-#  def each
-#    if block_given?
-#      id_rgraphum_id_hash.values.each do |rgraphum_id|
-#        edge = Rgraphum::Edge.new
-#        edge.rgraphum_id = rgraphum_id
-#        edge.graph = @graph  if @graph
-#        edge.graph = @vertex.graph if @vertex
-#        yield edge
-#      end
-#    else
-#      to_enum
-#    end
-#  end
+  def each
+    if block_given?
+      id_rgraphum_id_hash.values.each do |rgraphum_id|
+        edge = Rgraphum::Edge.new
+        edge.rgraphum_id = rgraphum_id
+        edge.graph = @graph  if @graph
+        edge.graph = @vertex.graph if @vertex
+        yield edge
+      end
+    else
+      to_enum
+    end
+  end
 
 
   def find_by_id(id)

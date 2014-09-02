@@ -12,6 +12,9 @@ class ElementManager
         if key == "id" or key == "source" or key == "target"
           value = value.to_i
         end
+        if key == "weight"
+          value = value.to_f
+        end
         return_hash[key.to_sym] = value        
       end
       return_hash

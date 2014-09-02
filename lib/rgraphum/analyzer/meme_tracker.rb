@@ -188,7 +188,7 @@ class Rgraphum::Analyzer::MemeTracker
   def find_path( options )
     options = { :vertices=>Rgraphum::Vertices.new, :cut => true }.merge(options)
 
-    vertices = options[:vertices]
+    vertices = options[:vertices]    
 
     source_vertex = options[:source_vertex]
 
@@ -212,9 +212,10 @@ class Rgraphum::Analyzer::MemeTracker
 
     graphes = Rgraphum::Analyzer::PathGraph.build(graph)
 
-    new_graph.vertices = graphes.map { |g| g.vertices }.flatten
-    new_graph.edges = graphes.map { |g| g.edges }.flatten
+p    new_graph.vertices = graphes.map { |g| g.vertices }.flatten
+p    new_graph.edges = graphes.map { |g| g.edges }.flatten
 
+p   new_graph
     new_graph.compact_with(:id)
   end
 
