@@ -24,7 +24,7 @@ class Rgraphum::Edges < Rgraphum::Elements
     if block_given?
       id_rgraphum_id_hash.values.each do |rgraphum_id|
         edge = Rgraphum::Edge.new
-        edge.rgraphum_id = rgraphum_id
+        edge.rgraphum_id = rgraphum_id.to_i
         edge.graph = @graph  if @graph
         edge.graph = @vertex.graph if @vertex
         yield edge
@@ -34,13 +34,22 @@ class Rgraphum::Edges < Rgraphum::Elements
     end
   end
 
+  def [](index)
+    id = id_rgraphum_id_hash.keys[index]
+    rgraphum_id = id_rgraphum_id_hash[id]
+    edge = Rgraphum::Edge.new
+    edge.rgraphum_id = rgraphum_id.to_i
+    edge.graph = @graph  if @graph
+    edge.graph = @vertex.graph if @vertex
+    edge
+  end
 
   def find_by_id(id)
     tmp_id = id_rgraphum_id_hash[id.to_s]
     edge = Rgraphum::Edge.new
     edge.rgraphum_id = tmp_id.to_i
     edge.graph = @graph || @vertex.graph
-    edge
+    edge.reload
   end
 
 
@@ -84,12 +93,17 @@ class Rgraphum::Edges < Rgraphum::Elements
     return edge_or_id unless edge
 
     edge.source.edges.original_delete_if { |item| item.rgraphum_id == edge.rgraphum_id }
+    Redis.current.hdel(edge.source.edges.rgraphum_id,id)
     edge.source.out_edges.original_delete_if { |item| item.rgraphum_id == edge.rgraphum_id }
+    Redis.current.hdel(edge.source.out_edges.rgraphum_id,id)
 
     edge.target.edges.original_delete_if { |item| item.rgraphum_id == edge.rgraphum_id }
+    Redis.current.hdel(edge.target.edges.rgraphum_id,id)
     edge.target.in_edges.original_delete_if { |item| item.rgraphum_id == edge.rgraphum_id }
+    Redis.current.hdel(edge.target.in_edges.rgraphum_id,id)
 
     edge.graph.edges.original_delete_if { |item| item.rgraphum_id == edge.rgraphum_id }
+    Redis.current.hdel(edge.graph.edges.rgraphum_id,id)
 
     ElementManager.delete(edge.rgraphum_id)
 

@@ -75,10 +75,10 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
     assert_equal 1, @graph.edges.size
     assert_equal 1, @vertex0.edges.size
     assert_equal 1, @vertex1.edges.size
-    assert_equal @edge1.object_id,@vertex0.edges[0].object_id
-    assert_equal @edge1.object_id,@vertex1.edges[0].object_id
-    assert_equal @edge1.source.object_id, @vertex1.object_id
-    assert_equal @edge1.target.object_id, @vertex0.object_id
+    assert_equal @edge1.rgraphum_id,@vertex0.edges[0].rgraphum_id
+    assert_equal @edge1.rgraphum_id,@vertex1.edges[0].rgraphum_id
+    assert_equal @edge1.source.rgraphum_id, @vertex1.rgraphum_id
+    assert_equal @edge1.target.rgraphum_id, @vertex0.rgraphum_id
   end
 
   # delete_if calls delete

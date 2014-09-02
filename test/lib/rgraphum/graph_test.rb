@@ -206,12 +206,12 @@ class RgraphumTest < MiniTest::Unit::TestCase
     ]
 
 #    @graph.id_aspect!
-    assert_equal ( {id:1,source:0,target:1,weight:1} ), @graph.edges[0].to_h
-    assert_equal ( {id:2,source:0,target:2,weight:1} ), @graph.edges[1].to_h
-    assert_equal ( {id:3,source:1,target:2,weight:1} ), @graph.edges[2].to_h
-    assert_equal ( {id:4,source:2,target:3,weight:1} ), @graph.edges[3].to_h
-    assert_equal ( {id:5,source:2,target:4,weight:1} ), @graph.edges[4].to_h
-    assert_equal ( {id:6,source:3,target:4,weight:1} ), @graph.edges[5].to_h
+    assert_equal ( {id:1,source:0,target:1,weight:1} ), @graph.edges[0].reload
+    assert_equal ( {id:2,source:0,target:2,weight:1} ), @graph.edges[1].reload
+    assert_equal ( {id:3,source:1,target:2,weight:1} ), @graph.edges[2].reload
+    assert_equal ( {id:4,source:2,target:3,weight:1} ), @graph.edges[3].reload
+    assert_equal ( {id:5,source:2,target:4,weight:1} ), @graph.edges[4].reload
+    assert_equal ( {id:6,source:3,target:4,weight:1} ), @graph.edges[5].reload
 
     # add edge to vertex
     @graph = Rgraphum::Graph.new
@@ -230,12 +230,12 @@ class RgraphumTest < MiniTest::Unit::TestCase
     @graph.vertices[3].edges << {source:3,target:4,weight:1}
 
 #    @graph.id_aspect!
-    assert_equal({id:1,source:0,target:1,weight:1}, @graph.edges[0])
-    assert_equal({id:2,source:0,target:2,weight:1}, @graph.edges[1])
-    assert_equal({id:3,source:1,target:2,weight:1}, @graph.edges[2])
-    assert_equal({id:4,source:2,target:3,weight:1}, @graph.edges[3])
-    assert_equal({id:5,source:2,target:4,weight:1}, @graph.edges[4])
-    assert_equal({id:6,source:3,target:4,weight:1}, @graph.edges[5])
+    assert_equal({id:1,source:0,target:1,weight:1}, @graph.edges[0].reload)
+    assert_equal({id:2,source:0,target:2,weight:1}, @graph.edges[1].reload)
+    assert_equal({id:3,source:1,target:2,weight:1}, @graph.edges[2].reload)
+    assert_equal({id:4,source:2,target:3,weight:1}, @graph.edges[3].reload)
+    assert_equal({id:5,source:2,target:4,weight:1}, @graph.edges[4].reload)
+    assert_equal({id:6,source:3,target:4,weight:1}, @graph.edges[5].reload)
 
   end
 
@@ -253,8 +253,8 @@ class RgraphumTest < MiniTest::Unit::TestCase
 #    @graph.real_aspect!
     @graph.edges << { :source => 1, :target => 2 }
 #    @graph.id_aspect!
-    assert_equal ( { :id => 1, :source => 2, :target => 1, :weight => 1 } ), @graph.edges[0]
-    assert_equal ( { :id => 2, :source => 1, :target => 2, :weight => 1 } ) , @graph.edges[1]
+    assert_equal ( { :id => 1, :source => 2, :target => 1, :weight => 1 } ),  @graph.edges[0].reload
+    assert_equal ( { :id => 2, :source => 1, :target => 2, :weight => 1 } ) , @graph.edges[1].reload
   end
 
   def test_edges_input_with_array
@@ -404,9 +404,9 @@ class RgraphumTest < MiniTest::Unit::TestCase
     assert_equal graphs_dash[0], graphs_dash[2]
     assert_same  graphs_dash[0], graphs_dash[2]
     assert_same  graphs_dash[0].vertices[0], graphs_dash[2].vertices[0]
-    assert_same  graphs_dash[0].edges[0],    graphs_dash[2].edges[0]
+    assert_same  graphs_dash[0].edges[0].rgraphum_id,    graphs_dash[2].edges[0].rgraphum_id
 
-    assert_same  graphs_dash[0].edges[0], graphs_dash[0].vertices[0].edges[0]
+    assert_same  graphs_dash[0].edges[0].rgraphum_id, graphs_dash[0].vertices[0].edges[0].rgraphum_id
   end
 
   def test_rgraphum_marshal

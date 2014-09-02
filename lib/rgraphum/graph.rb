@@ -50,17 +50,16 @@ class Rgraphum::Graph
     @vertices = Rgraphum::Vertices.new
     if options[:vertices]
       self.vertices = options[:vertices]
-    else
-      @vertices.graph = self
     end
+    @vertices.graph = self
+    @vertices.each {|vertex| vertex.graph = self}
+
 
     @edges = Rgraphum::Edges.new
     if options[:edges]
-      @edges.graph = self
       self.edges = options[:edges]
-    else
-      @edges.graph = self
     end
+    @edges.graph = self
 
     self
   end

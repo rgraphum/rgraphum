@@ -71,7 +71,7 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
       vertex.edges.each_with_index do |edge,edge_index|
         duped_edge = duped_vertex.edges[edge_index]
 
-        assert_equal duped_edge,edge.reload
+        assert_equal duped_edge.reload,edge.reload
 #        duped_edge.each do |key,value|
 #          assert_equal value, edge[key]
 #        end
@@ -89,7 +89,7 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
     @graph.edges.each_with_index do |edge,edge_index|
       duped_edge = duped_graph.edges[edge_index]
 
-      assert_equal duped_edge, edge.reload
+      assert_equal duped_edge.reload, edge.reload
       refute_same  duped_edge, edge
     end
   end
