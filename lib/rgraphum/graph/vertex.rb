@@ -29,12 +29,17 @@ class Rgraphum::Vertex < Hash
 
   def object_init
     @edges = Rgraphum::Edges.new
+
     @in_edges = Rgraphum::Edges.new
     @out_edges = Rgraphum::Edges.new
 
     @edges.vertex = self
     @in_edges.vertex = self
     @out_edges.vertex = self
+
+    @edges_rgraphum_id     = @edges.rgraphum_id
+    @in_edges_rgraphum_id  = @in_edges.rgraphum_id
+    @out_edges_rgraphum_id = @out_edges.rgraphum_id
   end
 
   def redis_dup
@@ -242,7 +247,10 @@ class Rgraphum::Vertex < Hash
   end
 
   def edges
-    @edges
+#     @edges = Rgraphum::Edges.new
+#     @edges.vertex = self
+#     @edges.rgraphum_id = @edges_rgraphum_id
+     @edges
   end
 
   def in_edges
@@ -327,21 +335,6 @@ class Rgraphum::Vertex < Hash
     return true if self.out.empty?
     false 
   end
-
-#  def to_hash
-#    hash = {}
-#    @@field_names.each do |name|
-#      value = instance_variable_get("@#{name}")
-#      if value
-#        if value.respond_to?(:to_hash)
-#          hash[name] = value.to_hash
-#        else
-#          hash[name] = value
-#        end
-#      end
-#    end
-#    hash
-#  end
 
   def to_s
     to_hash.to_s

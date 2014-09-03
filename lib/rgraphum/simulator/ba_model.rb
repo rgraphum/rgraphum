@@ -63,11 +63,13 @@ class Rgraphum::Simulator::BAModel
     return graph.vertices.build({label: new_dummy_label}) if graph.edges.size == 0
 
     edge_index = rand( graph.edges.size )
+    source_vertex = nil
     if rand(2) == 0
       source_vertex = graph.edges[edge_index].source
     else
       source_vertex = graph.edges[edge_index].target
     end
+    source_vertex
   end
 
   # selecting target vertex method

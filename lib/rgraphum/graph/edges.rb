@@ -12,6 +12,7 @@ class Rgraphum::Edges < Rgraphum::Elements
   include Rgraphum::RgraphumArrayDividers
 
   attr_accessor :vertex
+  attr_accessor :rgraphum_id
 
   def initialize(edges=[])
     @rgraphum_id = new_rgraphum_id
@@ -42,6 +43,10 @@ class Rgraphum::Edges < Rgraphum::Elements
     edge.graph = @graph  if @graph
     edge.graph = @vertex.graph if @vertex
     edge
+  end
+
+  def size
+    id_rgraphum_id_hash.size
   end
 
   def find_by_id(id)

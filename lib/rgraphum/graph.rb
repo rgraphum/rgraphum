@@ -167,9 +167,9 @@ class Rgraphum::Graph
   end
 
   def dup
-    other = Marshal.load(Marshal.dump(self))
-    other.vertices.each {|vertex| vertex.redis_dup }
-    other.edges.each    {|edge|   edge.redis_dup   }
+    other = Rgraphum::Graph.new
+    @vertices.each { |vertex| other.vertices << vertex.dup }
+    @edges.each { |edge| other.edges << edge.dup } 
     other
   end
 
