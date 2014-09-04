@@ -12,24 +12,21 @@ class Rgraphum::Vertex < Hash
   attr_accessor :graph
   attr_accessor :rgraphum_id
 
-  class << self
-    def from_hash(fields={})
-      tmp = new
-      tmp.rgraphum_id = new_rgraphum_id
-
-      tmp.object_init
-      fields[:words] = fields[:words].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:words]
-      fields[:twits] = fields[:twits].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:twits]
-      fields.each do |key,value|
-        tmp.store(key,value)
-      end
-      tmp
+  def self.from_hash(fields={})
+    tmp = new
+    fields[:words] = fields[:words].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:words]
+    fields[:twits] = fields[:twits].to_json if !fields.instance_of?(Rgraphum::Vertex) and fields[:twits]
+    fields.each do |key,value|
+      tmp.store(key,value)
     end
+    tmp
   end
 
-  def object_init
-    @edges = Rgraphum::Edges.new
+  def initialize
+    @graph = nil
+    @rgraphum_id = new_rgraphum_id
 
+    @edges = Rgraphum::Edges.new
     @in_edges = Rgraphum::Edges.new
     @out_edges = Rgraphum::Edges.new
 
@@ -43,7 +40,7 @@ class Rgraphum::Vertex < Hash
   end
 
   def redis_dup
-    @rgraphum_id = ElementManager.redis_dup(@rgraphum_id)
+    ElementManager.redis_dup(@rgraphum_id)
   end
 
   def [](key)
@@ -58,7 +55,7 @@ class Rgraphum::Vertex < Hash
   alias :[]= :store
 
   def reload
-    hash = ElementManager.load(@rgraohum_id)
+    hash = ElementManager.load(@rgraphum_id)
     hash.each do |key,value|
       self.original_store(key, value)
     end
@@ -66,12 +63,9 @@ class Rgraphum::Vertex < Hash
   end
 
   def dup
-    other = super
-    other.redis_dup
-
-    other.graph = nil
-    other.edges = Rgraphum::Edges.new
-    other
+     other = self.class.new
+     other.rgraphum_id = self.redis_dup
+     other
   end
 
   # Gremlin: inE
@@ -285,7 +279,6 @@ class Rgraphum::Vertex < Hash
 
   def edges=(array)
     return unless array.is_a?(Array)
-    object_init
 
     array.each do |edge|
       self.edges << edge

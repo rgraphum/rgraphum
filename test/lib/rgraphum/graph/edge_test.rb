@@ -31,8 +31,8 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
   end
 
   def test_invalid_source
-    v1 = Rgraphum::Vertex.new(label: "1")
-    v2 = Rgraphum::Vertex.new(label: "2")
+    v1 = Rgraphum::Vertex(label: "1")
+    v2 = Rgraphum::Vertex(label: "2")
 
     assert_raises(ArgumentError) do
       Rgraphum::Edge(target: v2, label: "label")
@@ -44,8 +44,8 @@ class RgraphumEdgeTest < MiniTest::Unit::TestCase
   end
 
   def test_invalid_target
-    v1 = Rgraphum::Vertex.new(label: "1")
-    v2 = Rgraphum::Vertex.new(label: "2")
+    v1 = Rgraphum::Vertex(label: "1")
+    v2 = Rgraphum::Vertex(label: "2")
 
     assert_raises(ArgumentError) do
       Rgraphum::Edge(source: v1, label: "label")

@@ -44,9 +44,9 @@ class RgraphumEdgesTest < MiniTest::Unit::TestCase
   end
 
   def test_edges_dump_and_load
-    vertex1 = Rgraphum::Vertex.new(id: 1, label: "vertex 1")
-    vertex2 = Rgraphum::Vertex.new(id: 2, label: "vertex 2")
-    vertex3 = Rgraphum::Vertex.new(id: 3, label: "vertex 3")
+    vertex1 = Rgraphum::Vertex(id: 1, label: "vertex 1")
+    vertex2 = Rgraphum::Vertex(id: 2, label: "vertex 2")
+    vertex3 = Rgraphum::Vertex(id: 3, label: "vertex 3")
     edge1 = Rgraphum::Edge.new(source: vertex1, target: vertex2)
     edge2 = Rgraphum::Edge.new(source: vertex2, target: vertex3)
     edges = [edge1, edge2, edge1]

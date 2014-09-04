@@ -54,17 +54,13 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
     assert_instance_of Rgraphum::Graph, duped_graph
     refute_same  duped_graph, @graph
 
-    assert_equal duped_graph.vertices, @graph.vertices
-    refute_same  duped_graph.vertices, @graph.vertices
-
     refute_same  duped_graph.vertices.rgraphum_id, @graph.vertices.rgraphum_id
     refute_same  duped_graph.edges.rgraphum_id,    @graph.edges.rgraphum_id
-
 
     @graph.vertices.each_with_index do |vertex, vertex_index|
       duped_vertex = duped_graph.vertices[vertex_index]
 
-      assert_equal duped_vertex, vertex
+      assert_equal duped_vertex.reload, vertex
       refute_same  duped_vertex, vertex
       refute_same  duped_vertex.rgraphum_id, vertex.rgraphum_id
 
@@ -74,11 +70,11 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
         assert_equal duped_edge.reload,edge.reload
         refute_same  duped_edge, edge
 
-        assert_equal duped_edge.source, edge.source
+        assert_equal duped_edge.source.reload, edge.source.reload
         refute_same  duped_edge.source, edge.source
         assert_same  duped_graph.vertices.where(id: duped_edge.source.id).first, duped_edge.source
 
-        assert_equal duped_edge.target, edge.target
+        assert_equal duped_edge.target.reload, edge.target.reload
         refute_same  duped_edge.target, edge.target
       end
     end
