@@ -149,12 +149,17 @@ class RgraphumTest < MiniTest::Unit::TestCase
       {:id=>1, :source=>1, :target=>2, :weight=>1 },
       {:id=>2, :source=>2, :target=>1, :weight=>1 },
     ]
-    assert_equal expected, id_aspect_vertices[0].edges.map{ |edge| edge.to_h }
+
+    expected.each_with_index do |e,i|
+      assert_equal e, id_aspect_vertices[0].edges[i].reload
+    end
     expected = [
       {:id=>1, :source=>1, :target=>2, :weight=>1 },
       {:id=>2, :source=>2, :target=>1, :weight=>1 },
     ]
-    assert_equal expected, id_aspect_vertices[1].edges
+    expected.each_with_index do |e,i|
+      assert_equal e, id_aspect_vertices[1].edges[i].reload
+    end
   end
 
   def test_real_aspect!
@@ -248,7 +253,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
     @graph.edges << { :source => 2, :target => 1 }
 
 #    @graph.id_aspect!
-    assert_equal [ { :id => 1, :source => 2, :target => 1, :weight => 1}], @graph.edges.map { |edge| edge.to_h }.to_a
+    assert_equal [ { :id => 1, :source => 2, :target => 1, :weight => 1}], @graph.edges.map { |edge| edge.reload }
 
 #    @graph.real_aspect!
     @graph.edges << { :source => 1, :target => 2 }
@@ -268,7 +273,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
       {:source => 2, :target => 1, :weight => 1},
     ]
 #    @graph.id_aspect!
-    assert_equal [ {:id => 1, :source => 1, :target => 2, :weight => 1},{ :id => 2, :source => 2, :target => 1, :weight => 1}], @graph.edges.map{ |edge| edge.to_h }
+    assert_equal [ {:id => 1, :source => 1, :target => 2, :weight => 1},{ :id => 2, :source => 2, :target => 1, :weight => 1}], @graph.edges.map{ |edge| edge.reload }
   end
 
 #  def test_divide_by_time

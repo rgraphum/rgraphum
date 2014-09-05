@@ -64,11 +64,7 @@ class Rgraphum::Vertices < Rgraphum::Elements
   def delete(vertex_or_id)
     id = vertex_or_id.id rescue vertex_or_id
     target_vertex = find_by_id(id)
-    unless target_vertex.edges.empty?
-      target_vertex.edges.reverse_each do |edge|
-        target_vertex.edges.delete(edge)
-      end
-    end
+    target_vertex.edges.ids.each { |id| target_vertex.edges.delete(id) }
     @id_vertex_map.delete id
     super(target_vertex)
   end

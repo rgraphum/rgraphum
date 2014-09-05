@@ -241,17 +241,23 @@ class Rgraphum::Vertex < Hash
   end
 
   def edges
-#     @edges = Rgraphum::Edges.new
-#     @edges.vertex = self
-#     @edges.rgraphum_id = @edges_rgraphum_id
+     @edges = Rgraphum::Edges.new
+     @edges.vertex = self
+     @edges.rgraphum_id = @edges_rgraphum_id
      @edges
   end
 
   def in_edges
+#    @in_edges = Rgraphum::Edges.new
+#    @in_edges.vertex = self
+#    @in_edges.rgraphum_id = @in_edges_rgraphum_id
     @in_edges
   end
 
   def out_edges
+#    @out_edges = Rgraphum::Edges.new
+#    @out_edges.vertex = self
+#    @out_edges.rgraphum_id = @out_edges_rgraphum_id
     @out_edges
   end
 
@@ -262,7 +268,7 @@ class Rgraphum::Vertex < Hash
     when :out
       results = @out_edges
     else :both
-      results = @edges
+      results = @edges.load
     end
 
     if labels.empty?

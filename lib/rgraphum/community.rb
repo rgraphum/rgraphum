@@ -33,7 +33,7 @@ class Rgraphum::Community
     return @inter_edges if @inter_edges
     @inter_edges = []
     @vertices.combination(2) do |vertex_a, vertex_b|
-      @inter_edges += (vertex_a.edges & vertex_b.edges)
+      @inter_edges += ( vertex_a.edges.load & vertex_b.edges.load )
     end
     @inter_edges
   end
@@ -43,11 +43,12 @@ class Rgraphum::Community
   end
 
   def edges
-    @edges ||= Rgraphum::Edges.new(@vertices.map(&:edges).flatten.uniq)
+    return @edges if @edges
+    @edges ||= Rgraphum::Edges.new( @vertices.map{ |vertex| vertex.edges.load }.flatten.uniq )
   end
 
   def edges_from(community)
-    edges & community.edges || []
+    edges.load & community.edges.load || []
   end
 
   def degree_weight

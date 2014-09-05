@@ -21,6 +21,14 @@ class Rgraphum::Edges < Rgraphum::Elements
     end
   end
 
+  def load
+    tmp = []
+    self.each do |edge|
+      tmp << edge.reload
+    end
+    tmp
+  end
+
   def each
     if block_given?
       id_rgraphum_id_hash.values.each do |rgraphum_id|

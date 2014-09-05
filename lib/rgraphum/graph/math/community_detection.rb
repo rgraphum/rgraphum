@@ -53,7 +53,7 @@ class Rgraphum::Graph::Math::CommunityDetection
 
     @graph.vertices.each_with_index do |vertex, i|
       vertex.community_id = i
-      unless vertex.edges == []
+      unless vertex.edges.size == 0
         community = Rgraphum::Community.new(id: vertex.community_id, graph: self, vertices: [vertex])
         @id_community_hash[i] = community
         @modularity -= vertex.degree_weight.to_f ** 2 / (2.0 * @m ) ** 2
