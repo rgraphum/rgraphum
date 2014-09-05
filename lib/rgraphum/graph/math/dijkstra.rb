@@ -76,7 +76,7 @@ class Dijkstra
     # make start point
     target_source_min_distance_path_hash_init(vertex)
 
-    out_edges = vertex.out_edges.sort{ |a,b| a.weight <=> b.weight }
+    out_edges = vertex.out_edges.load.sort{ |a,b| a.weight <=> b.weight }
 
     out_edges.each_with_index do |out_edge,index|
       target = out_edge.target
@@ -85,7 +85,7 @@ class Dijkstra
 
         target_source_min_distance_path_hash_init(target)
 
-        target_out_edges = target.out_edges.sort{ |a,b| a.weight <=> b.weight }
+        target_out_edges = target.out_edges.load.sort{ |a,b| a.weight <=> b.weight }
         out_edges.concat(target_out_edges)
         
       end

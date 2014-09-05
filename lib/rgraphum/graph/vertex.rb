@@ -248,34 +248,38 @@ class Rgraphum::Vertex < Hash
   end
 
   def in_edges
-#    @in_edges = Rgraphum::Edges.new
-#    @in_edges.vertex = self
-#    @in_edges.rgraphum_id = @in_edges_rgraphum_id
+    @in_edges = Rgraphum::Edges.new
+    @in_edges.vertex = self
+    @in_edges.rgraphum_id = @in_edges_rgraphum_id
     @in_edges
   end
 
   def out_edges
-#    @out_edges = Rgraphum::Edges.new
-#    @out_edges.vertex = self
-#    @out_edges.rgraphum_id = @out_edges_rgraphum_id
+    @out_edges = Rgraphum::Edges.new
+    @out_edges.vertex = self
+    @out_edges.rgraphum_id = @out_edges_rgraphum_id
     @out_edges
   end
 
   def find_edges(labels=[], direction=:both)
     case direction
     when :in
-      results = @in_edges
+      results = @in_edges.load
     when :out
-      results = @out_edges
+      results = @out_edges.load
     else :both
       results = @edges.load
     end
 
     if labels.empty?
-      Rgraphum::Edges(results)
+      tmp = Rgraphum::Edges(results)
+      tmp.vertex = self
+      tmp
     else
       found_edges = results.find_all { |edge| labels.include?(edge.label) }
-      Rgraphum::Edges(found_edges)
+      tmp = Rgraphum::Edges(found_edges)
+      tmp.vertex = self
+      tmp
     end
   end
 

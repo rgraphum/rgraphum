@@ -41,7 +41,7 @@ module Rgraphum::Graph::Math::ClusteringCoefficient
       ajacency_vertices.combination(2) do |(v1, v2)|
         va, vb = v1, v2
         va, vb = v2, v1 if v1.edges.size > v2.edges.size
-        if va.edges.any? { |e| e.bothV.include?(vb) }
+        if va.edges.load.any? { |e| e.bothV.include?(vb) }
           num_close_triplets += 1
         else
           num_open_triplets += 1
