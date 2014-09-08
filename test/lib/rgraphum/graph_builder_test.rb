@@ -79,12 +79,21 @@ class RgraphumGraphBuilderTest < MiniTest::Unit::TestCase
 
     graph = GraphBuilder.new.similarity_graph(data)
 
-    except_data = [ { source:"hoge", target:"huga", weight:0.5},
-                    { source:"hoge", target:"piyo", weight:0.5},
-                    { source:"huga", target:"piyo", weight:0.5} ]
+    except_data = [ { id:1, label:"hoge" },
+                    { id:2, label:"huga" },
+                    { id:3, label:"piyo" }]
+
+    except_data.zip(graph.vertices) do |pair|
+      assert_equal ( pair[0] ) , ( pair[1] )
+    end
+
+    except_data = [ { id:1, source:1, target:2, weight:0.5},
+                    { id:2, source:1, target:3, weight:0.5},
+                    { id:3, source:2, target:3, weight:0.5} ]
 
 
     except_data.zip(graph.edges) do |pair|
+      assert_equal ( pair[0] ) , ( pair[1] )
     end
 
   end
