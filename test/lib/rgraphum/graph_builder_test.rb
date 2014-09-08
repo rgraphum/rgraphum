@@ -83,6 +83,7 @@ class RgraphumGraphBuilderTest < MiniTest::Unit::TestCase
                     { source:"hoge", target:"piyo", weight:0.5},
                     { source:"huga", target:"piyo", weight:0.5} ]
 
+
     except_data.zip(graph.edges) do |pair|
     end
 

@@ -9,6 +9,10 @@ class ElementManager
       hash = redis.hgetall( rgraphum_id ) || {}
       return_hash = {}
       hash.each do |key,value|
+        next if key == "edges_rgraphum_id"
+        next if key == "in_edges_rgraphum_id"
+        next if key == "out_edges_rgraphum_id"
+
         if key == "id" or key == "source" or key == "target"
           value = value.to_i
         end
@@ -36,15 +40,18 @@ class ElementManager
     end
 
     def fetch(rgraphum_id,key) 
-       redis.hget( rgraphum_id, key.to_s ) 
+      key = key.to_s
+      value = redis.hget( rgraphum_id, key ) 
+      value = value.to_i if key == "id" and value
+      value
     end
 
-    def redis_dup(rgraphum_id)
+    def redis_dup(rgraphum_id, new_one)
       hash = redis.hgetall( rgraphum_id ) 
       hash ||= {}
 
-      redis.mapped_hmset( rgraphum_id = new_rgraphum_id, hash)
-      rgraphum_id
+      redis.mapped_hmset( new_one, hash)
+      new_one
     end
 
     def delete(rgraphum_id)

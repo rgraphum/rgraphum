@@ -40,13 +40,18 @@ class RgraphumVertexTest < MiniTest::Unit::TestCase
     assert_equal vertex, vertex_dash
   end
 
-#  def test_invalid_field
-#    assert_raises(ArgumentError) do
-#      Rgraphum::Vertex.new(labeeeeeeeeeeeeeeeeeeeel: "label")
-#    end
-#
-#    assert_raises(ArgumentError) do
-#      Rgraphum::Vertex.new(label: "label", labeeeeeeeeeeeeeeeeeeeel: "label")
-#    end
-#  end
+  def test_vertex_dup
+    other = @vertex0.dup
+    
+    @vertex0.each do |key,value|
+       assert_equal value, other[key]
+    end
+
+    refute_equal @vertex0.rgraphum_id,        other.rgraphum_id
+    refute_equal @vertex0.edges.rgraphum_id,  other.edges.rgraphum_id
+
+    
+
+  end
+
 end

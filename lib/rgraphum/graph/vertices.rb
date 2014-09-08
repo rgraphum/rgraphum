@@ -22,7 +22,7 @@ class Rgraphum::Vertices < Rgraphum::Elements
     vertex = Rgraphum::Vertex.new
     vertex.rgraphum_id = tmp_id.to_i
     vertex.graph = @graph
-    vertex
+    vertex.reload
 
     @id_vertex_map[id]
   end

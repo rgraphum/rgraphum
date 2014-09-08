@@ -34,13 +34,28 @@ class Rgraphum::Vertex < Hash
     @in_edges.vertex = self
     @out_edges.vertex = self
 
-    @edges_rgraphum_id     = @edges.rgraphum_id
-    @in_edges_rgraphum_id  = @in_edges.rgraphum_id
-    @out_edges_rgraphum_id = @out_edges.rgraphum_id
+    store(:edges_rgraphum_id,    @edges.rgraphum_id)
+    store(:in_edges_rgraphum_id, @in_edges.rgraphum_id)
+    store(:out_edges_rgraphum_id,@out_edges.rgraphum_id)
+    
   end
 
-  def redis_dup
-    ElementManager.redis_dup(@rgraphum_id)
+  def reset_edges
+    @edges = Rgraphum::Edges.new
+    @in_edges = Rgraphum::Edges.new
+    @out_edges = Rgraphum::Edges.new
+
+    @edges.vertex = self
+    @in_edges.vertex = self
+    @out_edges.vertex = self
+
+    store(:edges_rgraphum_id,    @edges.rgraphum_id)
+    store(:in_edges_rgraphum_id, @in_edges.rgraphum_id)
+    store(:out_edges_rgraphum_id,@out_edges.rgraphum_id)
+  end
+
+  def redis_dup( new_one = new_rgraphum_id)
+    ElementManager.redis_dup(@rgraphum_id,new_one)
   end
 
   def [](key)
@@ -50,6 +65,10 @@ class Rgraphum::Vertex < Hash
   alias :original_store :store
   def store(key, value)
     ElementManager.store(@rgraphum_id,key,value)
+    return value if key == :edges_rgraphum_id
+    return value if key == :in_edges_rgraphum_id
+    return value if key == :out_edges_rgraphum_id
+
     self.original_store(key, value)
   end
   alias :[]= :store
@@ -64,7 +83,8 @@ class Rgraphum::Vertex < Hash
 
   def dup
      other = self.class.new
-     other.rgraphum_id = self.redis_dup
+     self.redis_dup(other.rgraphum_id)
+     other.reset_edges
      other
   end
 
@@ -73,8 +93,6 @@ class Rgraphum::Vertex < Hash
   # Gets the incoming edges of the vertex.
   #
   #     gremlin> v = g.v(4)
-  #     ==>v[4]
-  #     gremlin> v.inE.outV
   #     ==>v[1]
   #     gremlin> v.in
   #     ==>v[1]
@@ -243,21 +261,21 @@ class Rgraphum::Vertex < Hash
   def edges
      @edges = Rgraphum::Edges.new
      @edges.vertex = self
-     @edges.rgraphum_id = @edges_rgraphum_id
+     @edges.rgraphum_id = self.[](:edges_rgraphum_id)
      @edges
   end
 
   def in_edges
     @in_edges = Rgraphum::Edges.new
     @in_edges.vertex = self
-    @in_edges.rgraphum_id = @in_edges_rgraphum_id
+    @in_edges.rgraphum_id = self.[](:in_edges_rgraphum_id)
     @in_edges
   end
 
   def out_edges
     @out_edges = Rgraphum::Edges.new
     @out_edges.vertex = self
-    @out_edges.rgraphum_id = @out_edges_rgraphum_id
+    @out_edges.rgraphum_id = self.[](:out_edges_rgraphum_id)
     @out_edges
   end
 
