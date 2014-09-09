@@ -29,14 +29,15 @@ class Rgraphum::Graph::Math::CommunityDetection
   # main loop of community_detection and cale modularity with delta_q( = delta_modularity )
   #
   def modularity
+    delta_q_sum = @modularity * (2.0 * @m ** 2)
 
     loop do
       (community_id_a, community_id_b), delta_q = @delta_q_hash.max { |a, b| a[1] <=> b[1] }
 
-      break unless community_id_a && community_id_b && delta_q
+      break unless delta_q
       break if delta_q <= @limit
 
-      @modularity += delta_q / (2.0 * @m ** 2)
+      delta_q_sum += delta_q
 
       community_a = @id_community_hash[community_id_a]
       community_b = @id_community_hash[community_id_b]
@@ -45,21 +46,21 @@ class Rgraphum::Graph::Math::CommunityDetection
       @delta_q_hash = update_delta_q_hash(community_id_a, community_id_b, @delta_q_hash)
     end
 
-    @modularity
+    @modularity = delta_q_sum / (2.0 * @m ** 2)
   end
 
   
   def initial_modularity_and_communities
-
+    @modularity = 0
     @graph.vertices.each_with_index do |vertex, i|
       vertex.community_id = i
       unless vertex.edges.size == 0
         community = Rgraphum::Community.new(id: vertex.community_id, graph: self, vertices: [vertex])
         @id_community_hash[i] = community
-        @modularity -= vertex.degree_weight.to_f ** 2 / (2.0 * @m ) ** 2
+        @modularity -= vertex.degree_weight.to_f ** 2
       end
     end
-
+    @modularity = @modularity / (2.0 * @m ) ** 2
   end
 
   # delta_q_hash: Hash
@@ -97,9 +98,10 @@ class Rgraphum::Graph::Math::CommunityDetection
     new_keys = []
     used_keys = []
 
+    @delta_q_hash.delete( [a_id,b_id] )
+
     # b_id -> a_id
     @delta_q_hash.delete_if do |key,value|
-      next true if key == [a_id,b_id]
       next false unless index = key.index(b_id)
 
       key_dup = key.dup
@@ -107,24 +109,27 @@ class Rgraphum::Graph::Math::CommunityDetection
       
       key_dup.sort!
       new_keys << key_dup
+      true
     end
 
     new_keys.each do |key|
       @delta_q_hash[key] = 0.0
     end
 
-    # update delta_q_value
+    # update delta_q_value in a_id
     community_a = @id_community_hash[a_id]
-    @delta_q_hash.each do |key, value|
+#   @delta_q_hash.each do |key, value|
+    @delta_q_hash.delete_if do |key, value|
       if a_key_index = key.index(a_id)
         o_key_index = a_key_index - 1
         o_id = key[o_key_index]
         other_community = @id_community_hash[o_id]
 
         delta_q_seed = delta_q_seed(community_a, other_community)
-        next if delta_q_seed <= @limit
+        next true if delta_q_seed <= @limit
         @delta_q_hash[key] = delta_q_seed
       end
+      false
     end
 
     @delta_q_hash
@@ -138,4 +143,5 @@ class Rgraphum::Graph::Math::CommunityDetection
 
     2.0 * @m * ki_in - tot_i * tot_j
   end
+
 end
