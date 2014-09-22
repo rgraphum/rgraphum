@@ -55,7 +55,7 @@ class Rgraphum::Vertex < Hash
   end
 
   def redis_dup( new_one = new_rgraphum_id)
-    ElementManager.redis_dup(@rgraphum_id,new_one)
+    @rgraphum_id = ElementManager.redis_dup(@rgraphum_id,new_one)
   end
 
   def [](key)
@@ -82,8 +82,8 @@ class Rgraphum::Vertex < Hash
   end
 
   def dup
-     other = self.class.new
-     self.redis_dup(other.rgraphum_id)
+     other = super
+     other.redis_dup
      other.reset_edges
      other
   end
@@ -280,13 +280,14 @@ class Rgraphum::Vertex < Hash
   end
 
   def find_edges(labels=[], direction=:both)
+
     case direction
     when :in
-      results = @in_edges.load
+      results  =  in_edges.load
     when :out
-      results = @out_edges.load
+      results =  out_edges.load
     else :both
-      results = @edges.load
+      results  =  edges.load
     end
 
     if labels.empty?
@@ -312,7 +313,6 @@ class Rgraphum::Vertex < Hash
       self.edges << edge
     end
     @edges
-
   end
 
   def inter_edges
@@ -325,11 +325,11 @@ class Rgraphum::Vertex < Hash
   end
 
   def degree
-    @degree ||= @edges.size
+    @degree ||= self.edges.size
   end
 
   def degree_weight
-    @degree_weight ||= @edges.inject(0) { |sum, edge| sum + (edge.weight || 1.0) }
+    @degree_weight ||= self.edges.inject(0) { |sum, edge| sum + (edge.weight || 1.0) }
   end
 
   def sigma_tot

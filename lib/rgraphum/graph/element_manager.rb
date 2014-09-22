@@ -13,7 +13,7 @@ class ElementManager
         next if key == "in_edges_rgraphum_id"
         next if key == "out_edges_rgraphum_id"
 
-        if key == "id" or key == "source" or key == "target"
+        if key == "id" or key == "source" or key == "target" or key == "age"
           value = value.to_i
         end
         if key == "weight"
@@ -42,7 +42,8 @@ class ElementManager
     def fetch(rgraphum_id,key) 
       key = key.to_s
       value = redis.hget( rgraphum_id, key ) 
-      value = value.to_i if key == "id" and value
+      value = value.to_i if key == "id"  and value
+      value = value.to_i if key == "age" and value
       value
     end
 

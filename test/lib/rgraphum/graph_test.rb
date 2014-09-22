@@ -30,15 +30,15 @@ class RgraphumTest < MiniTest::Unit::TestCase
       assert_instance_of Rgraphum::Edge, edge
     end
 
-    assert_equal @graph.vertices[0].edges[0].source.object_id, @graph.vertices[0].object_id
-    assert_equal @graph.vertices[0].edges[1].source.object_id, @graph.vertices[1].object_id
-    assert_equal @graph.vertices[1].edges[0].source.object_id, @graph.vertices[0].object_id
-    assert_equal @graph.vertices[1].edges[1].source.object_id, @graph.vertices[1].object_id
+    assert_equal @graph.vertices[0].edges[0].source.rgraphum_id, @graph.vertices[0].rgraphum_id
+    assert_equal @graph.vertices[0].edges[1].source.rgraphum_id, @graph.vertices[1].rgraphum_id
+    assert_equal @graph.vertices[1].edges[0].source.rgraphum_id, @graph.vertices[0].rgraphum_id
+    assert_equal @graph.vertices[1].edges[1].source.rgraphum_id, @graph.vertices[1].rgraphum_id
 
-    assert_equal @graph.vertices[0].edges[0].target.object_id, @graph.vertices[1].object_id
-    assert_equal @graph.vertices[0].edges[1].target.object_id, @graph.vertices[0].object_id
-    assert_equal @graph.vertices[1].edges[0].target.object_id, @graph.vertices[1].object_id
-    assert_equal @graph.vertices[1].edges[1].target.object_id, @graph.vertices[0].object_id
+    assert_equal @graph.vertices[0].edges[0].target.rgraphum_id, @graph.vertices[1].rgraphum_id
+    assert_equal @graph.vertices[0].edges[1].target.rgraphum_id, @graph.vertices[0].rgraphum_id
+    assert_equal @graph.vertices[1].edges[0].target.rgraphum_id, @graph.vertices[1].rgraphum_id
+    assert_equal @graph.vertices[1].edges[1].target.rgraphum_id, @graph.vertices[0].rgraphum_id
   end
 
   def test_basic_method
@@ -66,12 +66,24 @@ class RgraphumTest < MiniTest::Unit::TestCase
 
     assert edges
     assert_equal 2, edges.size
-    assert_same edges[0].target, edges[1].source
-    assert_same edges[0].source, edges[1].target
-    assert_same @graph_a.vertices[0], edges[0].source
-    assert_same @graph_a.vertices[0], edges[1].target
-    assert_same @graph_a.vertices[1], edges[1].source
-    assert_same @graph_a.vertices[1], edges[0].target
+
+    assert_equal edges[0].target,             edges[1].source
+    assert_equal edges[0].target.rgraphum_id, edges[1].source.rgraphum_id
+
+    assert_equal edges[0].source,             edges[1].target
+    assert_equal edges[0].source.rgraphum_id, edges[1].target.rgraphum_id
+
+    assert_equal @graph_a.vertices[0].reload,      edges[0].source
+    assert_equal @graph_a.vertices[0].rgraphum_id, edges[0].source.rgraphum_id
+
+    assert_equal @graph_a.vertices[0].reload,      edges[1].target
+    assert_equal @graph_a.vertices[0].rgraphum_id, edges[1].target.rgraphum_id
+
+    assert_equal @graph_a.vertices[1].reload,      edges[1].source
+    assert_equal @graph_a.vertices[1].rgraphum_id, edges[1].source.rgraphum_id
+
+    assert_equal @graph_a.vertices[1].reload,      edges[0].target
+    assert_equal @graph_a.vertices[1].rgraphum_id, edges[0].target.rgraphum_id
 
     assert_equal 2, @graph_a.vertices[0].edges.size
     assert_equal 2, @graph_a.vertices[1].edges.size
@@ -132,14 +144,14 @@ class RgraphumTest < MiniTest::Unit::TestCase
   def test_find_by_some_key
     # find_by_labbel
     vertex = @graph_a.vertices.where(label: "hoge").first
-    assert_equal @graph_a.vertices[0], vertex
-    assert_same @graph_a.vertices[0], vertex
+    assert_equal @graph_a.vertices[0].reload,      vertex
+    assert_equal @graph_a.vertices[0].rgraphum_id, vertex.rgraphum_id
   end
 
   def test_where_condition
     vertex = @graph_a.vertices.where(label: "hoge").first
-    assert_equal @graph_a.vertices[0].object_id, vertex.object_id
-    assert_same @graph_a.vertices[0], vertex
+    assert_equal @graph_a.vertices[0].rgraphum_id, vertex.rgraphum_id
+    assert_equal @graph_a.vertices[0].reload, vertex
   end
 
   def test_id_aspect!
@@ -166,10 +178,10 @@ class RgraphumTest < MiniTest::Unit::TestCase
     real_aspect_vertices = @graph_a.vertices
 
     assert_equal 2, real_aspect_vertices.size
-    assert_equal real_aspect_vertices[0].object_id, real_aspect_vertices[0].edges[0].source.object_id
-    assert_equal real_aspect_vertices[1].object_id, real_aspect_vertices[0].edges[0].target.object_id
-    assert_equal real_aspect_vertices[1].object_id, real_aspect_vertices[1].edges[1].source.object_id
-    assert_equal real_aspect_vertices[0].object_id, real_aspect_vertices[1].edges[1].target.object_id
+    assert_equal real_aspect_vertices[0].rgraphum_id, real_aspect_vertices[0].edges[0].source.rgraphum_id
+    assert_equal real_aspect_vertices[1].rgraphum_id, real_aspect_vertices[0].edges[0].target.rgraphum_id
+    assert_equal real_aspect_vertices[1].rgraphum_id, real_aspect_vertices[1].edges[1].source.rgraphum_id
+    assert_equal real_aspect_vertices[0].rgraphum_id, real_aspect_vertices[1].edges[1].target.rgraphum_id
   end
 
   def test_add_vertex_with_no_id_added_id
@@ -408,7 +420,7 @@ class RgraphumTest < MiniTest::Unit::TestCase
     refute_equal graphs_dash[0], graphs_dash[1]
     assert_equal graphs_dash[0], graphs_dash[2]
     assert_same  graphs_dash[0], graphs_dash[2]
-    assert_same  graphs_dash[0].vertices[0], graphs_dash[2].vertices[0]
+    assert_equal graphs_dash[0].vertices[0], graphs_dash[2].vertices[0]
     assert_same  graphs_dash[0].edges[0].rgraphum_id,    graphs_dash[2].edges[0].rgraphum_id
 
     assert_same  graphs_dash[0].edges[0].rgraphum_id, graphs_dash[0].vertices[0].edges[0].rgraphum_id

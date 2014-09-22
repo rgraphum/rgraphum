@@ -119,14 +119,17 @@ class RgraphumMathModularityTest < MiniTest::Unit::TestCase
 
     # same graph befor after
     @graph.vertices.each_with_index do |vertex,i|
-      assert_same vertex, vertices[i]
+      assert_same vertex.rgraphum_id, vertices[i].rgraphum_id
     end
     @graph.edges.each_with_index do |edge,i|
       assert_same edge.id, edges[i].id
       assert_same edge.weight, edges[i].weight
 
-      assert_same edge.source, edges[i].source
-      assert_same edge.target, edges[i].target
+      assert_equal edge.source,             edges[i].source
+      assert_equal edge.source.rgraphum_id, edges[i].source.rgraphum_id
+
+      assert_equal edge.target,             edges[i].target
+      assert_equal edge.target.rgraphum_id, edges[i].target.rgraphum_id
     end
 
     gexf = @graph.to_gephi

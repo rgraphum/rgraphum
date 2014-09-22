@@ -72,7 +72,7 @@ class RgraphumDupTest < MiniTest::Unit::TestCase
 
         assert_equal duped_edge.source.reload, edge.source.reload
         refute_same  duped_edge.source, edge.source
-        assert_same  duped_graph.vertices.where(id: duped_edge.source.id).first, duped_edge.source
+        assert_equal duped_graph.vertices.where(id: duped_edge.source.id).first, duped_edge.source
 
         assert_equal duped_edge.target.reload, edge.target.reload
         refute_same  duped_edge.target, edge.target

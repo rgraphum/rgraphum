@@ -48,7 +48,8 @@ class RgraphumPlusTest < MiniTest::Unit::TestCase
 
         assert_equal edge.source.reload,      added_edge.source.reload
         refute_same  edge.source.rgraphum_id, added_edge.source.rgraphum_id
-        assert_same  added_edge.source,  added_graph.vertices.where(id: added_edge.source.id).first
+        assert_equal added_edge.source,              added_graph.vertices.where(id: added_edge.source.id).first
+        assert_equal added_edge.source.rgraphum_id,  added_graph.vertices.where(id: added_edge.source.id).first.rgraphum_id
 
         assert_equal edge.target.reload,       added_edge.target.reload
         refute_same  edge.target.rgraphum_id,  added_edge.target.rgraphum_id
@@ -66,8 +67,9 @@ class RgraphumPlusTest < MiniTest::Unit::TestCase
 
         assert_equal edge.id + 2,        added_edge.id
 
-        refute_same  edge.source,        added_edge.source
-        assert_same  added_edge.source,  added_graph.vertices.where(id: added_edge.source.id).first
+        refute_same   edge.source,        added_edge.source
+        assert_equal  added_edge.source,              added_graph.vertices.where(id: added_edge.source.id).first
+        assert_equal  added_edge.source.rgraphum_id,  added_graph.vertices.where(id: added_edge.source.id).first.rgraphum_id
 
         assert_equal edge.target.id + 2, added_edge.target.id
         assert_equal edge.target.label,  added_edge.target.label

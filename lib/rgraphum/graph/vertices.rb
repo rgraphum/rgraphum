@@ -12,9 +12,23 @@ class Rgraphum::Vertices < Rgraphum::Elements
   include Rgraphum::RgraphumArrayDividers
 
   def initialize(vertices=[])
-    ids = vertices.each { |vertex| vertex.id }
-    super(ids)
-    @id_vertex_map = {}
+    @rgraphum_id = new_rgraphum_id
+    vertices.each do |vertex|
+      self << vertex
+    end
+  end
+
+  def [](index)
+    id = id_rgraphum_id_hash.keys[index]
+    rgraphum_id = id_rgraphum_id_hash[id]
+    vertex = Rgraphum::Vertex.new
+    vertex.rgraphum_id = rgraphum_id.to_i
+    vertex.graph = @graph if @graph
+    vertex
+  end
+
+  def size
+    id_rgraphum_id_hash.size
   end
 
   def find_by_id(id)
@@ -23,18 +37,6 @@ class Rgraphum::Vertices < Rgraphum::Elements
     vertex.rgraphum_id = tmp_id.to_i
     vertex.graph = @graph
     vertex.reload
-
-    @id_vertex_map[id]
-  end
-
-  # FIXME use initialize_copy instead
-  def dup
-    edges = map{ |vertex| vertex.edges }.flatten.uniq
-    vertices = super
-    vertices.graph = nil
-    vertices.each {|vertex| vertex.edges = Rgraphum::Edges.new }
-
-    vertices
   end
 
   def build(vertex_hash)
@@ -42,7 +44,6 @@ class Rgraphum::Vertices < Rgraphum::Elements
     vertex.graph = @graph
     vertex.id = new_id(vertex[:id],vertex.rgraphum_id)
     original_push_1(vertex)
-    @id_vertex_map[vertex.id] = vertex
     vertex
   end
 
@@ -65,8 +66,9 @@ class Rgraphum::Vertices < Rgraphum::Elements
     id = vertex_or_id.id rescue vertex_or_id
     target_vertex = find_by_id(id)
     target_vertex.edges.ids.each { |id| target_vertex.edges.delete(id) }
-    @id_vertex_map.delete id
-    super(target_vertex)
+
+    Redis.current.hdel( @rgraphum_id,id )
+    ElementManager.delete( target_vertex.rgraphum_id )
   end
 
   def to_community

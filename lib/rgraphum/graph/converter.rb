@@ -10,6 +10,7 @@ class Rgraphum::Graph::Converter
 
     def to_undirected(pre_graph)
       graph = pre_graph.dup
+
       start_edge_id = graph.edges.id.max
 
       return graph if pre_graph.directed
